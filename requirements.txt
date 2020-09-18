@@ -20,6 +20,6 @@ six==1.15.0               # via patsy, python-dateutil
 starlette==0.13.6         # via fastapi
 statsd==3.3.0             # via ep-stats (setup.py)
 statsmodels==0.11.1       # via ep-stats (setup.py)
-uvicorn==0.11.6           # via ep-stats (setup.py)
+uvicorn==0.11.7           # via ep-stats (setup.py)
 uvloop==0.14.0            # via uvicorn
 websockets==8.1           # via uvicorn
