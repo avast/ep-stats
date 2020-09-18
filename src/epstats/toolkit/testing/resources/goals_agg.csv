@@ -1,0 +1,123 @@
+exp_id	date	exp_variant_id	unit_type	agg_type	goal	dimension	dimension_value	count	sum_sqr_count	sum_value	sum_sqr_value	count_unique
+test-conversion		a	test_unit_type	unit	click			5	5	5	5	5
+test-conversion		b	test_unit_type	unit	click			7	7	7	7	7
+test-conversion		c	test_unit_type	unit	click			9	9	9	9	9
+test-conversion		a	test_unit_type	global	exposure			21	21	21	21	21
+test-conversion		b	test_unit_type	global	exposure			26	26	26	26	26
+test-conversion		c	test_unit_type	global	exposure			30	30	30	30	30
+test-real-valued		a	test_unit_type	global	exposure			23	23	23	23	23
+test-real-valued		b	test_unit_type	global	exposure			27	27	27	27	27
+test-real-valued		a	test_unit_type	unit	conversion			8	8	92	1068	8
+test-real-valued		b	test_unit_type	unit	conversion			17	17	197	2305	17
+test-unique		a	test_unit_type	global	exposure			1000	1000	1000	1000	1000
+test-unique		b	test_unit_type	global	exposure			1010	1010	1010	1010	1010
+test-unique		c	test_unit_type	global	exposure			1020	1020	1020	1020	1020
+test-unique		a	test_unit_type	unit	click			512	542	512	542	455
+test-unique		b	test_unit_type	unit	click			493	523	493	523	448
+test-unique		c	test_unit_type	unit	click			478	508	478	508	432
+test-multiple		a	test_unit_type	global	exposure			3000	3000	3000	3000	3000
+test-multiple		b	test_unit_type	global	exposure			3030	3030	3030	3030	3030
+test-multiple		c	test_unit_type	global	exposure			3020	3020	3020	3020	3020
+test-multiple		a	test_unit_type	unit	conversion			300	330	3000	30000	280
+test-multiple		b	test_unit_type	unit	conversion			310	350	3100	31000	300
+test-multiple		c	test_unit_type	unit	conversion			290	310	3200	34000	280
+test-multiple		a	test_unit_type	unit	visit			0	0	0	0	0
+test-multiple		b	test_unit_type	unit	visit			0	0	0	0	0
+test-multiple		c	test_unit_type	unit	visit			0	0	0	0	0
+test-multiple		a	test_unit_type	unit	click			455	512	455	512	455
+test-multiple		b	test_unit_type	unit	click			448	493	448	493	448
+test-multiple		c	test_unit_type	unit	click			432	478	432	478	432
+test-multiple		a	test_unit_type	unit	view			0	0	0	0	0
+test-multiple		b	test_unit_type	unit	view			0	0	0	0	0
+test-multiple		c	test_unit_type	unit	view			0	0	0	0	0
+test-multiple		a	test_unit_type	global	conversion			300	330	3000	30000	280
+test-multiple		b	test_unit_type	global	conversion			310	350	3100	31000	300
+test-multiple		c	test_unit_type	global	conversion			290	310	3200	34000	280
+test-missing-default		b	test_unit_type	unit	click			10	10	10	10	10
+test-missing-default		b	test_unit_type	global	exposure			20	20	20	20	20
+test-missing-default-exposure		a	test_unit_type	unit	click			30	30	30	30	30
+test-missing-default-exposure		b	test_unit_type	global	exposure			50	50	50	50	50
+test-missing-default-exposure		b	test_unit_type	unit	click			20	20	20	20	20
+test-missing-default-value		a	test_unit_type	global	exposure			42	42	42	42	42
+test-missing-default-value		b	test_unit_type	global	exposure			40	40	40	40	40
+test-missing-default-value		b	test_unit_type	unit	click			10	10	10	10	10
+test-missing-value		a	test_unit_type	unit	click			30	30	30	30	30
+test-missing-value		a	test_unit_type	global	exposure			50	50	50	50	50
+test-missing-value		b	test_unit_type	global	exposure			60	60	60	60	60
+test-missing-exposure		a	test_unit_type	unit	click			30	30	30	30	30
+test-missing-exposure		a	test_unit_type	global	exposure			50	50	50	50	50
+test-missing-exposure		b	test_unit_type	unit	click			20	20	20	20	20
+test-missing-all-value		a	test_unit_type	global	exposure			120	120	120	120	120
+test-missing-all-value		b	test_unit_type	global	exposure			125	125	125	125	125
+test-srm		a	test_unit_type	global	exposure			5000	5000	5000	5000	5000
+test-srm		b	test_unit_type	global	exposure			5100	5100	5100	5100	5100
+test-srm		c	test_unit_type	global	exposure			5200	5200	5200	5200	5200
+test-srm		a	test_unit_type	unit	click			1000	1000	1000	1000	1000
+test-srm		b	test_unit_type	unit	click			1100	1100	1100	1100	1100
+test-srm		c	test_unit_type	unit	click			900	900	900	900	900
+test-srm-negative		a	test_unit_type	global	exposure			5000	5000	5000	5000	5000
+test-srm-negative		b	test_unit_type	global	exposure			5100	5100	5100	5100	5100
+test-srm-negative		c	test_unit_type	global	exposure			5300	5300	5300	5300	5300
+test-srm-negative		a	test_unit_type	unit	click			1000	1000	1000	1000	1000
+test-srm-negative		b	test_unit_type	unit	click			1100	1100	1100	1100	1100
+test-srm-negative		c	test_unit_type	unit	click			900	900	900	900	900
+test-srm-one-variant		b	test_unit_type	global	exposure			5100	5100	5100	5100	5100
+test-srm-one-variant		b	test_unit_type	unit	click			1100	1100	1100	1100	1100
+bad-experiment-unit		a	test_unit_type	global	exposure			299	299	299	299	299
+bad-experiment-unit		b	test_unit_type	global	exposure			268	268	268	268	268
+bad-experiment-unit		a	test_unit_type	unit	click			386	386	386	386	386
+bad-experiment-unit		b	test_unit_type	unit	click			710	710	710	710	710
+test-value-error		a	test_unit_type	global	exposure			450	450	450	450	450
+test-value-error		b	test_unit_type	global	exposure			460	460	460	460	460
+test-value-error		a	test_unit_type	unit	click			100	100	100	100	100
+test-value-error		b	test_unit_type	unit	click			110	110	110	110	110
+test-sequential-v1	2020-01-01	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v1	2020-01-01	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v1	2020-01-05	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v1	2020-01-05	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v1	2020-01-10	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v1	2020-01-10	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v1	2020-01-14	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v1	2020-01-14	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v1	2020-01-01	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v1	2020-01-01	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v1	2020-01-05	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v1	2020-01-05	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v1	2020-01-10	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v1	2020-01-10	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v1	2020-01-14	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v1	2020-01-14	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v2	2020-01-01	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v2	2020-01-01	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v2	2020-01-05	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v2	2020-01-05	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v2	2020-01-10	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v2	2020-01-10	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v2	2020-01-14	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v2	2020-01-14	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v2	2020-01-01	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v2	2020-01-01	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v2	2020-01-05	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v2	2020-01-05	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v2	2020-01-10	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v2	2020-01-10	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v2	2020-01-14	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v2	2020-01-14	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v3	2020-01-01	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v3	2020-01-01	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v3	2020-01-05	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v3	2020-01-05	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v3	2020-01-10	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v3	2020-01-10	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v3	2020-01-14	a	test_unit_type	global	exposure			2000	2000	2000	2000	2000
+test-sequential-v3	2020-01-14	b	test_unit_type	global	exposure			2020	2020	2020	2020	2020
+test-sequential-v3	2020-01-01	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v3	2020-01-01	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v3	2020-01-05	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v3	2020-01-05	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v3	2020-01-10	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v3	2020-01-10	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-sequential-v3	2020-01-14	a	test_unit_type	unit	conversion			888	1332	44400	2308800	888
+test-sequential-v3	2020-01-14	b	test_unit_type	unit	conversion			750	1000	35000	1700000	750
+test-missing-variant		a	test_unit_type	unit	click			30	30	30	30	30
+test-missing-variant		a	test_unit_type	global	exposure			50	50	50	50	50

@@ -1,0 +1,76 @@
+site_name: Ep-Stats
+repo_name: doodlebug/ep-stats-lib
+repo_url: https://git.int.avast.com/doodlebug/ep-stats-lib
+edit_uri: edit/master/docs/
+site_url: https://git.int.avast.com/pages/doodlebug/ep-stats-lib
+site_description: Evaluation package for experimentation platform.
+site_author: Team Doodlebug
+use_directory_urls: false
+
+nav:
+  - Home:
+    - Introduction: 'index.md'
+    - Principles: 'principles.md'
+    - Resources: 'resources.md'
+  - User Guide:
+    - Quick Start: 'user_guide/quick_start.md'
+    - Experimentation Protocol: 'user_guide/protocol.md'
+    - Using Ep-Stats in Jupyter: 'user_guide/ep_in_python.ipynb'
+    - Aggregation: 'user_guide/aggregation.md'
+    - Configuring API: 'user_guide/configuring_api.md'
+    - Test Data: 'user_guide/test_data.md'
+  - Statistics:
+      - Basics: 'stats/basics.md'
+      - Sample Size: 'stats/sample_size.md'
+      - Sequential Evaluation: 'stats/sequential.md'
+      - CTR Metric Redefined: 'stats/ctr.md'
+      - Multiple Comparison Correction: 'stats/multiple.md'
+  - API:
+    - Experiment: 'api/experiment.md'
+    - Evaluation: 'api/evaluation.md'
+    - Statistics: 'api/statistics.md'
+    - Check: 'api/check.md'
+    - SrmCheck: 'api/srm_check.md'
+    - Dao: 'api/dao.md'
+    - DaoFactory: 'api/dao_factory.md'
+    - TestData: 'api/test_data.md'
+
+plugins:
+  - mkdocstrings:
+      watch:
+        - src
+  - search
+  # - mkdocs-jupyter:
+  #     include_source: True
+  #     execute: False
+
+copyright: Copyright &copy; 2020 Maintained by <a href="https://github.com/avast">Avast</a>.
+
+theme:
+  name: material
+  custom_dir: theme/
+  favicon: experiment_b.png
+  logo: experiment_w.png
+  features:
+    - tabs
+
+extra_javascript:
+  - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.arithmatex
+  - footnotes
+  - codehilite
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.tabbed
+  - pymdownx.highlight:
+      use_pygments: true
+  - toc:
+      permalink: true
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
