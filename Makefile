@@ -22,6 +22,9 @@ install-dev:
 	source venv/bin/activate && python -m pip install ipykernel
 	source venv/bin/activate && ipython kernel install --user --name=ep-stats
 
+install-test:
+	python -m pip install -e ".[test]"
+
 clean:
 	rm -rf build src/__pycache__ src/epstats/__pycache__ src/epstats/server/__pycache__ __pycache__ \
 	tests/__pycache__ tests/epstats/__pycache__ .pytest_cache src/*.egg-info .eggs tests/epstats/__pycache__\
