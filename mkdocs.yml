@@ -1,8 +1,8 @@
 site_name: Ep-Stats
-repo_name: doodlebug/ep-stats-lib
-repo_url: https://git.int.avast.com/doodlebug/ep-stats-lib
+repo_name: avast/ep-stats
+repo_url: https://github.com/avast/ep-stats
 edit_uri: edit/master/docs/
-site_url: https://git.int.avast.com/pages/doodlebug/ep-stats-lib
+site_url: https://github.com/avast/ep-stats
 site_description: Evaluation package for experimentation platform.
 site_author: Team Doodlebug
 use_directory_urls: false

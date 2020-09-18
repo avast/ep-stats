@@ -1,5 +1,3 @@
-artifactory="https://artifactory.srv.int.avast.com/artifactory/api/pypi/pypi/simple"
-
 brunette:
 	brunette src/epstats tests setup.py --check
 
@@ -19,7 +17,7 @@ install:
 install-dev:
 	python -m pip install virtualenv
 	python -m virtualenv venv
-	source venv/bin/activate && python -m pip install -e ".[dev]" --index-url=${artifactory}
+	source venv/bin/activate && python -m pip install -e ".[dev]"
 	source venv/bin/activate && pre-commit install
 	source venv/bin/activate && python -m pip install ipykernel
 	source venv/bin/activate && ipython kernel install --user --name=ep-stats

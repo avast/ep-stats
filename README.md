@@ -17,7 +17,7 @@ in AB test experiment.
 
 ## Documentation
 
-We have got a lovely [documentation](https://git.int.avast.com/pages/doodlebug/ep-stats-lib/).
+We have got a lovely [documentation](https://avast.github.io/ep-stats/).
 
 ## Base Example
 
