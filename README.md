@@ -124,6 +124,6 @@ mkdocs gh-deploy
 
 It updates documentation in GitHub pages stored in branch `gh-pages`.
 
-## Acknowledgement
+## Inspiration
 
 Software engineering practices of this package have been heavily inspired by marvelous [calmcode.io](https://calmcode.io/) site managed by [Vincent D. Warmerdam](https://github.com/koaning).
