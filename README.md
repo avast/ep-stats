@@ -1,3 +1,9 @@
+![](https://img.shields.io/github/workflow/status/avast/ep-stats/Code%20Checks?color=yellowgreen)
+[![PyPI version](https://img.shields.io/pypi/v/ep-stats?color=yellowgreen)](https://pypi.org/project/ep-stats/)
+[![Python versions](https://img.shields.io/pypi/pyversions/ep-stats?color=yellowgreen)](https://pypi.org/project/ep-stats/)
+[![Code style](https://img.shields.io/badge/formatted%20with-brunette-362511)](https://github.com/odwyersoftware/brunette)
+[![Code style](https://img.shields.io/badge/styled%20with-flake8-yellowgreen)](https://flake8.pycqa.org/en/latest/)
+![](https://img.shields.io/github/languages/code-size/avast/ep-stats?color=yellowgreen)
 <img src="theme/experiment_b.png" align="right" />
 
 # Ep-Stats
