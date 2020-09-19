@@ -10,13 +10,13 @@ test:
 check: brunette flake test
 
 install:
-	python -m pip install virtualenv
-	python -m virtualenv venv
-	source venv/bin/activate && python -m pip install -e .
+	python -m pip install -e .
 
-install-dev:
+venv:
 	python -m pip install virtualenv
 	python -m virtualenv venv
+
+install-dev: venv
 	source venv/bin/activate && python -m pip install -e ".[dev]"
 	source venv/bin/activate && pre-commit install
 	source venv/bin/activate && python -m pip install ipykernel
