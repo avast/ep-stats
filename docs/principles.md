@@ -22,6 +22,8 @@ the tested change we consider the diff to be *Statistically Significant* (with s
 
 ![](images/oce.png)
 
+Source: [Ron Kohavi, Trustworthy Online Controlled Experiments: A Practical Guide to A/B Testing](https://www.amazon.com/Trustworthy-Online-Controlled-Experiments-Practical/dp/1108724264).
+
 > Colloquially put, to evaluate some **metric** in the experiment, we need a way how to calculate the metric
 from **goals** that we collect in form of **events** from units **exposed** to the experiment.
 
