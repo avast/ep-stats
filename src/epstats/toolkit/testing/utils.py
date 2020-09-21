@@ -40,25 +40,49 @@ def assert_experiment(experiment: Experiment, target: Evaluation, test_dao: Test
     assert_exposures(experiment.id, target.exposures, test_dao, unit_type=experiment.unit_type)
 
 
-def assert_metrics(experiment_id: str, metric_id: int, target: pd.DataFrame, test_dao: TestDao, precision=3,) -> None:
+def assert_metrics(
+    experiment_id: str,
+    metric_id: int,
+    target: pd.DataFrame,
+    test_dao: TestDao,
+    precision=3,
+) -> None:
     target = target[(target.exp_id == experiment_id) & (target.metric_id == metric_id)]
 
     expected = test_dao.load_evaluations_metrics(experiment_id)
     expected = expected[expected.metric_id == metric_id]
 
     assert_array_equal(target.exp_variant_id, expected.exp_variant_id)
-    t = target[['sum_value', 'diff', 'mean', 'p_value', 'confidence_interval', 'confidence_level',]].astype(float)
+    t = target[
+        [
+            'sum_value',
+            'diff',
+            'mean',
+            'p_value',
+            'confidence_interval',
+            'confidence_level',
+        ]
+    ].astype(float)
     atol = 10 ** -precision
     assert allclose(t['sum_value'], expected['sum_value'], atol=atol, equal_nan=True)
     assert allclose(t['diff'], expected['diff'], atol=atol, equal_nan=True)
     assert allclose(t['mean'], expected['mean'], atol=atol, equal_nan=True)
     assert allclose(t['p_value'], expected['p_value'], atol=atol * 10, equal_nan=True)
-    assert allclose(t['confidence_interval'], expected['confidence_interval'], atol=atol * 10, equal_nan=True,)
+    assert allclose(
+        t['confidence_interval'],
+        expected['confidence_interval'],
+        atol=atol * 10,
+        equal_nan=True,
+    )
     assert allclose(t['confidence_level'], expected['confidence_level'], atol=atol, equal_nan=True)
 
 
 def assert_checks(
-    experiment_id: str, check_id: int, target: pd.DataFrame, test_dao: TestDao, precision: int = 4,
+    experiment_id: str,
+    check_id: int,
+    target: pd.DataFrame,
+    test_dao: TestDao,
+    precision: int = 4,
 ) -> None:
     target = target[(target.exp_id == experiment_id) & (target.check_id == check_id)]
 

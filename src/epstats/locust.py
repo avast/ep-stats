@@ -31,6 +31,12 @@ class WebsiteUser(HttpUser):
                         'denominator': 'count(test_unit_type.global.exposure)',
                     },
                 ],
-                'checks': [{'id': 1, 'name': 'SRM', 'denominator': 'count(test_unit_type.global.exposure)',}],
+                'checks': [
+                    {
+                        'id': 1,
+                        'name': 'SRM',
+                        'denominator': 'count(test_unit_type.global.exposure)',
+                    }
+                ],
             },
         )

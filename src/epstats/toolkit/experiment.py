@@ -127,8 +127,30 @@ class Experiment:
         self.confidence_level = confidence_level
         self.variants = variants
         self._exposure_goals = [
-            EpGoal(['count', '(', UnitType([unit_type]), '.', AggType(['global']), '.', Goal(['exposure']), ')',]),
-            EpGoal(['count', '(', UnitType([unit_type]), '.', AggType(['unit']), '.', Goal(['exposure']), ')',]),
+            EpGoal(
+                [
+                    'count',
+                    '(',
+                    UnitType([unit_type]),
+                    '.',
+                    AggType(['global']),
+                    '.',
+                    Goal(['exposure']),
+                    ')',
+                ]
+            ),
+            EpGoal(
+                [
+                    'count',
+                    '(',
+                    UnitType([unit_type]),
+                    '.',
+                    AggType(['unit']),
+                    '.',
+                    Goal(['exposure']),
+                    ')',
+                ]
+            ),
         ]
         self.statsd = statsd
 
@@ -210,7 +232,10 @@ class Experiment:
         """
         g = self._fix_missing_agg(goals)
         return self._evaluate(
-            g, Experiment._metrics_column_fce_agg, Experiment._checks_fce_agg, Experiment._exposures_fce_agg,
+            g,
+            Experiment._metrics_column_fce_agg,
+            Experiment._checks_fce_agg,
+            Experiment._exposures_fce_agg,
         )
 
     def evaluate_by_unit(self, goals: pd.DataFrame) -> Evaluation:
@@ -294,7 +319,15 @@ class Experiment:
             pd.pivot_table(
                 g,
                 values=['count', 'sum_value'],
-                index=['exp_id', 'exp_variant_id', 'unit_type', 'agg_type', 'unit_id', 'dimension', 'dimension_value',],
+                index=[
+                    'exp_id',
+                    'exp_variant_id',
+                    'unit_type',
+                    'agg_type',
+                    'unit_id',
+                    'dimension',
+                    'dimension_value',
+                ],
                 columns='goal',
                 aggfunc=np.sum,
                 fill_value=0,
@@ -445,7 +478,16 @@ class Experiment:
         # join to existing data and use zeros for only missing variants and goals
         m = (
             pd.concat([g, empty_df], axis=0)
-            .groupby(['exp_variant_id', 'unit_type', 'agg_type', 'dimension', 'dimension_value', 'goal',])
+            .groupby(
+                [
+                    'exp_variant_id',
+                    'unit_type',
+                    'agg_type',
+                    'dimension',
+                    'dimension_value',
+                    'goal',
+                ]
+            )
             .sum()
             .reset_index()
         )

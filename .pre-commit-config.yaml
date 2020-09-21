@@ -13,7 +13,7 @@ repos:
     hooks:
     -   id: flake8
 -   repo: https://github.com/odwyersoftware/brunette
-    rev: b8fc75f460885f986a01842664e0571769b2cc12
+    rev: 238bead5ec5c58935d6bb12c70f435f70b2bf785
     hooks:
         - id: brunette
           entry: brunette --config=setup.cfg

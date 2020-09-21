@@ -94,7 +94,11 @@ class SrmCheck(Check):
     """
 
     def __init__(
-        self, id: int, name: str, denominator: str, confidence_level: float = 0.999,
+        self,
+        id: int,
+        name: str,
+        denominator: str,
+        confidence_level: float = 0.999,
     ):
         super().__init__(id, name, denominator)
         self.confidence_level = confidence_level

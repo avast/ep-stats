@@ -19,7 +19,12 @@ def dao():
 @pytest.fixture(scope='module')
 def metrics():
     return [
-        Metric(1, 'Click-through Rate', 'count(test_unit_type.unit.click)', 'count(test_unit_type.global.exposure)',)
+        Metric(
+            1,
+            'Click-through Rate',
+            'count(test_unit_type.unit.click)',
+            'count(test_unit_type.global.exposure)',
+        )
     ]
 
 
@@ -44,7 +49,10 @@ def test_real_valued(dao, checks, unit_type):
         'a',
         [
             Metric(
-                2, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                2,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             )
         ],
         checks,
@@ -77,7 +85,10 @@ def test_real_by_unit(dao, unit_type):
         'a',
         [
             Metric(
-                2, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.unit.exposure)',
+                2,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.unit.exposure)',
             )
         ],
         [SrmCheck(1, 'SRM', 'count(test_unit_type.unit.exposure)')],
@@ -92,13 +103,22 @@ def test_single_metrics_in_multiple_experiment(dao, checks, unit_type):
         'a',
         [
             Metric(
-                1, 'Click-through Rate', 'count(test_unit_type.unit.click)', 'count(test_unit_type.global.exposure)',
+                1,
+                'Click-through Rate',
+                'count(test_unit_type.unit.click)',
+                'count(test_unit_type.global.exposure)',
             ),
             Metric(
-                2, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                2,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             ),
             Metric(
-                3, 'Conversion Rate', 'count(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                3,
+                'Conversion Rate',
+                'count(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             ),
         ],
         checks,
@@ -113,7 +133,10 @@ def test_single_metric_in_multiple_experiment_1(dao, checks, unit_type):
         'a',
         [
             Metric(
-                2, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                2,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             )
         ],
         checks,
@@ -134,7 +157,10 @@ def test_sequential_first_day(dao, unit_type):
         'a',
         [
             Metric(
-                1, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                1,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             )
         ],
         [],
@@ -153,7 +179,10 @@ def test_sequential_middle(dao, unit_type):
         'a',
         [
             Metric(
-                1, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                1,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             )
         ],
         [],
@@ -172,7 +201,10 @@ def test_sequential_last_day(dao, unit_type):
         'a',
         [
             Metric(
-                1, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                1,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             )
         ],
         [],
@@ -191,7 +223,10 @@ def test_sequential_today(dao, unit_type):
         'a',
         [
             Metric(
-                1, 'Average Bookings', 'value(test_unit_type.unit.conversion)', 'count(test_unit_type.global.exposure)',
+                1,
+                'Average Bookings',
+                'value(test_unit_type.unit.conversion)',
+                'count(test_unit_type.global.exposure)',
             )
         ],
         [],
@@ -203,54 +238,109 @@ def test_sequential_today(dao, unit_type):
 
 
 def test_missing_variant(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-variant', 'a', metrics, checks, unit_type=unit_type, variants=['a', 'b'],)
+    experiment = Experiment(
+        'test-missing-variant',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+        variants=['a', 'b'],
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 @pytest.mark.filterwarnings('ignore:invalid value')
 def test_missing_default(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-default', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'test-missing-default',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 @pytest.mark.filterwarnings('ignore:invalid value')
 @pytest.mark.filterwarnings('ignore:divide by zero')
 def test_missing_default_exposure(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-default-exposure', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'test-missing-default-exposure',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 @pytest.mark.filterwarnings('ignore:invalid value')
 def test_missing_default_value(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-default-value', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'test-missing-default-value',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 @pytest.mark.filterwarnings('ignore:invalid value')
 @pytest.mark.filterwarnings('ignore:divide by zero')
 def test_missing_exposure(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-exposure', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'test-missing-exposure',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 def test_missing_value(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-value', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'test-missing-value',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 @pytest.mark.filterwarnings('ignore:invalid value')
 def test_bad_experiment_unit(dao, metrics, checks, unit_type):
-    experiment = Experiment('bad-experiment-unit', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'bad-experiment-unit',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 @pytest.mark.filterwarnings('ignore:invalid value')
 def test_missing_all_value(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-all-value', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'test-missing-all-value',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
 @pytest.mark.filterwarnings('ignore:invalid value')
 def test_missing_all(dao, metrics, checks, unit_type):
-    experiment = Experiment('test-missing-all', 'a', metrics, checks, unit_type=unit_type,)
+    experiment = Experiment(
+        'test-missing-all',
+        'a',
+        metrics,
+        checks,
+        unit_type=unit_type,
+    )
     evaluate_experiment_agg(experiment, dao)

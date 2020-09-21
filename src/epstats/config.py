@@ -8,9 +8,22 @@ config = {
             },
         },
         'handlers': {
-            'console': {'class': 'logging.StreamHandler', 'formatter': 'standard', 'stream': 'ext://sys.stdout',},
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'standard',
+                'stream': 'ext://sys.stdout',
+            },
         },
-        'loggers': {'epstats': {'level': 'INFO', 'handlers': ['console'], 'propagate': False,},},
-        'root': {'level': 'INFO', 'handlers': ['console'],},
+        'loggers': {
+            'epstats': {
+                'level': 'INFO',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+        },
+        'root': {
+            'level': 'INFO',
+            'handlers': ['console'],
+        },
     },
 }
