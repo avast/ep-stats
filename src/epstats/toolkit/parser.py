@@ -22,7 +22,7 @@ class Parser:
         func = Word(alphas)
         unit_type = Word(alphas + '_').setParseAction(UnitType)
         agg_type = Word(alphas).setParseAction(AggType)
-        goal = Word(alphas + '_').setParseAction(Goal)
+        goal = Word(alphas + '_' + nums).setParseAction(Goal)
         number = Word(nums).setParseAction(Number)
         dimension = Word(alphas + '_').setParseAction(Dimension)
         dimension_value = Word(alphanums + '_' + '-' + '.').setParseAction(DimensionValue)
@@ -89,11 +89,7 @@ class Parser:
         value_variants, value = self._nominator_expr.evaluate_by_unit(goals, 'sum_value')
         value_df = (
             pd.DataFrame(
-                {
-                    'exp_variant_id': value_variants,
-                    'sum_value': value,
-                    'sum_sqr_value': value * value,
-                }
+                {'exp_variant_id': value_variants, 'sum_value': value, 'sum_sqr_value': value * value,}  # noqa
             )
             .groupby('exp_variant_id')
             .sum()
