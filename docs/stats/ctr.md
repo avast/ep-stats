@@ -96,7 +96,7 @@ $$ \hat{\sigma_{SN}} = \sum_{i=1}^{K} (S_{i} - \bar{S}_{n}) (N_{i} - \bar{N}_{n}
 
 ### Step 2
 
-Now we apply **multivariate delta method** with a link function $g: \mathbb{R}^2 \rightarrow \mathbb{R}$ defined as $g(x, y) = \frac{x}{y}$. Gradient in point $(\mu_{S}, \mu_{N})$ equals to 
+Now we apply **multivariate delta method** with a link function $g: \mathbb{R}^2 \rightarrow \mathbb{R}$ defined as $g(x, y) = \frac{x}{y}$. Gradient in point $(\mu_{S}, \mu_{N})$ equals to
 
 $$\nabla g (\mu_{S}, \mu_{N}) = (\frac{1}{\mu_{N}}, -\frac{\mu_{S}}{\mu_{N}}).$$
 
@@ -116,7 +116,7 @@ We have derived asymptotic distribution fot control group. Analogously we would 
 $$\sqrt{K} \, \big( \bar{Y}_{A} - \mu_{A} \big) \stackrel{d}{\longrightarrow} \mathcal{N} \big(0, \, \sigma_{A}^2 \big),$$
 $$\sqrt{L} \, \big( \bar{Y}_{B} - \mu_{B} \big) \stackrel{d}{\longrightarrow} \mathcal{N} \big(0, \, \sigma_{B}^2 \big),$$
 
-where $\sigma_{A}^2$ and $\sigma_{B}^2$ follows derivations right above (the complicated fomula) and $K$ and $L$ are number of observations in control and treatment group respectively. 
+where $\sigma_{A}^2$ and $\sigma_{B}^2$ follows derivations right above (the complicated fomula) and $K$ and $L$ are number of observations in control and treatment group respectively.
 
 Since we have again two asymptotic normal distributions, we can join them into two dimensional normal distribution
 
@@ -128,7 +128,7 @@ In A/B testing we are usually interested in whether the difference between treat
 
 ### Absolute Difference
 
-Absolute difference is easier. We will use **multivariate delta method** with simple link function $g: \mathbb{R}^2 \rightarrow \mathbb{R}$ defined as $g(x, y) = y - x$. Be aware of order $x$ and $y$ - it is $y - x$, not $x - y$. Gradient in point $(\mu_{A}, \mu_{B})$ equals to 
+Absolute difference is easier. We will use **multivariate delta method** with simple link function $g: \mathbb{R}^2 \rightarrow \mathbb{R}$ defined as $g(x, y) = y - x$. Be aware of order $x$ and $y$ - it is $y - x$, not $x - y$. Gradient in point $(\mu_{A}, \mu_{B})$ equals to
 
 $$ \nabla g (\mu_{A}, \mu_{B}) = (-1, 1) $$
 
@@ -172,7 +172,7 @@ where $\text{CDF}_{t,f}$ is cumulative distribution function of t-distribution w
 
 ### Relative Difference
 
-To derive asymptotic distribution for relative difference we will again use **multivariate delta method** with a link function $g: \mathbb{R}^2 \rightarrow \mathbb{R}$ defined as $g(x, y) = \frac{y - x}{x}$. Be aware of order $x$ and $y$. Gradient in point $(\mu_{A}, \mu_{B})$ equals to 
+To derive asymptotic distribution for relative difference we will again use **multivariate delta method** with a link function $g: \mathbb{R}^2 \rightarrow \mathbb{R}$ defined as $g(x, y) = \frac{y - x}{x}$. Be aware of order $x$ and $y$. Gradient in point $(\mu_{A}, \mu_{B})$ equals to
 
 $$ \nabla g (\mu_{A}, \mu_{B}) = \big( -\frac{\mu_{B}}{\mu_{A}^2}, \frac{1}{\mu_{A}} \big).$$
 

@@ -1,7 +1,7 @@
 # Test Data
 
 We made testing data part of the `epstats` python package to simplify development and to provide real
-example of input data and formats required by `epstats`. 
+example of input data and formats required by `epstats`.
 
 There are test goal data in both pre-aggregated and by-unit forms. See [`TestData`](../api/test_data.md) for various access methods.
 

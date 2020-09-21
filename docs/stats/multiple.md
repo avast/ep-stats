@@ -19,10 +19,10 @@ Source [Bonferroni correction (Wikipedia)](https://en.wikipedia.org/wiki/Bonferr
 
 This is the simplest way how to deal with Multiple comparisons problem. It is easy to implement, on the other hand, it is too conservative and tests loose too much power. This correction works in the worst-case scenario that all tests are independent. Since we test difference between A and B, A and C, A and D variant, these tests are dependent and therefore this correction is too stringent.
 
-### Algorithm 
+### Algorithm
 
 1. Compute p-values $p_{1}, \dots, p_{m}$ for all $m$ hypotheses $H_{0}^{1}, \dots, H_{0}^{m}$.
-2. Compute adjusted p-values using formula 
+2. Compute adjusted p-values using formula
 
 $$\tilde{p}_{i} = \min \big\{ m \, p_{i}, 1 \big\}, \,\,\, i = 1, \dots, m$$
 
@@ -48,7 +48,7 @@ Source [HolmBonferroni method (Wikipedia)](https://en.wikipedia.org/wiki/HolmBon
 
 Holm-Bonferroni method is more powerful than Bonferroni and it is valid under the same assumptions.
 
-### Algorithm 
+### Algorithm
 
 1. Compute p-values $p_{1}, \dots, p_{m}$ for all $m$ hypotheses $H_{0}^{1}, \dots, H_{0}^{m}$.
 2. Order p-values from lowest to highest $p_{(1)} \leq \dots \leq p_{(m)}$
