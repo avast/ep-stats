@@ -89,7 +89,11 @@ class Parser:
         value_variants, value = self._nominator_expr.evaluate_by_unit(goals, 'sum_value')
         value_df = (
             pd.DataFrame(
-                {'exp_variant_id': value_variants, 'sum_value': value, 'sum_sqr_value': value * value,}  # noqa
+                {
+                    'exp_variant_id': value_variants,  # go through variants
+                    'sum_value': value,
+                    'sum_sqr_value': value * value,
+                }
             )
             .groupby('exp_variant_id')
             .sum()
