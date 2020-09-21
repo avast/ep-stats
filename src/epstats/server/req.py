@@ -143,9 +143,7 @@ class Experiment(BaseModel):
     Experiment to evaluate.
     """
 
-    id: str = Field(
-        title='Experiment Id',
-    )
+    id: str = Field(title='Experiment Id',)
     control_variant: str = Field(
         title='Identification of the control variant',
         description="""All other variant data
@@ -280,12 +278,6 @@ class Experiment(BaseModel):
                         'denominator': 'count(test_unit_type.global.exposure)',
                     }
                 ],
-                'checks': [
-                    {
-                        'id': 1,
-                        'name': 'SRM',
-                        'denominator': 'count(test_unit_type.global.exposure)',
-                    }
-                ],
+                'checks': [{'id': 1, 'name': 'SRM', 'denominator': 'count(test_unit_type.global.exposure)',}],
             }
         }

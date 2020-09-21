@@ -69,8 +69,7 @@ class MetricResult(BaseModel):
     """
 
     id: int = Field(
-        title='Metric Id',
-        description="""Database id of the metric, not used at the moment in ep-stats""",
+        title='Metric Id', description="""Database id of the metric, not used at the moment in ep-stats""",
     )
     name: str = Field(
         title='Metric Name',
@@ -113,8 +112,7 @@ class CheckResult(BaseModel):
     """
 
     id: int = Field(
-        title='Check Id',
-        description='Database id of the check, not used at the moment.',
+        title='Check Id', description='Database id of the check, not used at the moment.',
     )
     name: str = Field(
         title='Check Name',
@@ -139,8 +137,7 @@ class ExposureStat(BaseModel):
 
     exp_variant_id: str = Field(title='Variant in the Experiment')
     count: int = Field(
-        title='Per-variant exposures',
-        description="""Exposure count of experiment (randomization) unit.""",
+        title='Per-variant exposures', description="""Exposure count of experiment (randomization) unit.""",
     )
 
     @staticmethod
@@ -159,8 +156,7 @@ class ExposureResult(BaseModel):
     needed to correctly retrieve number of exposures per experiment variant.""",
     )
     stats: List[ExposureStat] = Field(
-        title='Experiment Exposures',
-        description="""List with experiment variant exposure counts per entry.""",
+        title='Experiment Exposures', description="""List with experiment variant exposure counts per entry.""",
     )
 
     @staticmethod
@@ -175,16 +171,12 @@ class Result(BaseModel):
     Top-level element in the response.
     """
 
-    id: str = Field(
-        title='Experiment Id',
-    )
+    id: str = Field(title='Experiment Id',)
     metrics: List[MetricResult] = Field(
-        title='Metric Results',
-        description="""List with one entry per evaluated metric.""",
+        title='Metric Results', description="""List with one entry per evaluated metric.""",
     )
     checks: List[CheckResult] = Field(
-        title='Check Results',
-        description="""List with one entry per evaluated check.""",
+        title='Check Results', description="""List with one entry per evaluated check.""",
     )
     exposure: ExposureResult = Field(title='Experiment Exposures')
 

@@ -39,8 +39,7 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
             _logger.exception(e)
             statsd.incr('errors.experiment')
             raise HTTPException(
-                status_code=500,
-                detail=f'Cannot evaluate experiment [{experiment.id}] because of {e}',
+                status_code=500, detail=f'Cannot evaluate experiment [{experiment.id}] because of {e}',
             )
 
     router = APIRouter()

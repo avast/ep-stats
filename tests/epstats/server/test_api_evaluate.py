@@ -34,13 +34,7 @@ def test_conversion_evaluate():
                 'denominator': 'count(test_unit_type.global.exposure)',
             }
         ],
-        'checks': [
-            {
-                'id': 1,
-                'name': 'SRM',
-                'denominator': 'count(test_unit_type.global.exposure)',
-            }
-        ],
+        'checks': [{'id': 1, 'name': 'SRM', 'denominator': 'count(test_unit_type.global.exposure)',}],
     }
 
     resp = client.post('/evaluate', json=json_blob)
@@ -61,13 +55,7 @@ def test_real_valued_evaluate():
                 'denominator': 'count(test_unit_type.global.exposure)',
             }
         ],
-        'checks': [
-            {
-                'id': 1,
-                'name': 'SRM',
-                'denominator': 'count(test_unit_type.global.exposure)',
-            }
-        ],
+        'checks': [{'id': 1, 'name': 'SRM', 'denominator': 'count(test_unit_type.global.exposure)',}],
     }
 
     resp = client.post('/evaluate', json=json_blob)
@@ -94,13 +82,7 @@ def test_multiple_evaluate():
                 'denominator': 'count(test_unit_type.global.exposure)',
             },
         ],
-        'checks': [
-            {
-                'id': 1,
-                'name': 'SRM',
-                'denominator': 'count(test_unit_type.global.exposure)',
-            }
-        ],
+        'checks': [{'id': 1, 'name': 'SRM', 'denominator': 'count(test_unit_type.global.exposure)',}],
     }
 
     resp = client.post('/evaluate', json=json_blob)

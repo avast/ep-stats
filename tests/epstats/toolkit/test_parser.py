@@ -29,10 +29,7 @@ class TestParser(TestCase):
             }
         )
 
-        parser = Parser(
-            'count(test_unit_type.unit.click)',
-            'count(test_unit_type.unit.exposure)',
-        )
+        parser = Parser('count(test_unit_type.unit.click)', 'count(test_unit_type.unit.exposure)',)
         assert_count_value(
             parser.evaluate_agg(goals),
             goals[goals.goal == 'exposure']['count'].values,
@@ -44,18 +41,17 @@ class TestParser(TestCase):
             'value(test_unit_type.unit.conversion) - value(test_unit_type.unit.refund)',
             'count(test_unit_type.unit.exposure)',
         )
+
+        conversion_sqr_value = goals[goals.goal == 'conversion']['sum_sqr_value'].values
+        refund_sqr_value = goals[goals.goal == 'refund']['sum_sqr_value'].values
         assert_count_value(
             parser.evaluate_agg(goals),
             goals[goals.goal == 'exposure']['count'],
             goals[goals.goal == 'conversion']['sum_value'].values - goals[goals.goal == 'refund']['sum_value'].values,
-            goals[goals.goal == 'conversion']['sum_sqr_value'].values
-            - goals[goals.goal == 'refund']['sum_sqr_value'].values,
+            conversion_sqr_value - refund_sqr_value,
         )
 
-        parser = Parser(
-            'value(test_unit_type.unit.conversion)',
-            'count(test_unit_type.unit.exposure) / 1000',
-        )
+        parser = Parser('value(test_unit_type.unit.conversion)', 'count(test_unit_type.unit.exposure) / 1000',)
         assert_count_value(
             parser.evaluate_agg(goals),
             goals[goals.goal == 'exposure']['count'].values / 1000,
@@ -65,15 +61,11 @@ class TestParser(TestCase):
 
     def test_equal(self):
         parser = Parser(
-            'value(test_unit_type.unit.conversion(product=p_1))',
-            'value(test_unit_type.unit.conversion(product=p_1))',
+            'value(test_unit_type.unit.conversion(product=p_1))', 'value(test_unit_type.unit.conversion(product=p_1))',
         )
         assert len(parser.get_goals()) == 1
 
-        parser = Parser(
-            'value(test_unit_type.unit.conversion(product=p_1))',
-            'value(test_unit_type.unit.conversion)',
-        )
+        parser = Parser('value(test_unit_type.unit.conversion(product=p_1))', 'value(test_unit_type.unit.conversion)',)
         assert len(parser.get_goals()) == 2
 
         parser = Parser(
@@ -100,10 +92,7 @@ class TestParser(TestCase):
 
     def test_parsing(self):
         with pytest.raises(ParseException):
-            parser = Parser(
-                ' / count(test_unit_type.global.exposure)',
-                'count(test_unit_type.unit.bar)',
-            )
+            parser = Parser(' / count(test_unit_type.global.exposure)', 'count(test_unit_type.unit.bar)',)
             parser.evaluate_agg(pd.DataFrame({'foo': np.ones(10)}))
 
     def test_get_goals(self):
@@ -117,10 +106,7 @@ class TestParser(TestCase):
             'test_unit_type.global.exposure',
         }
 
-        parser = Parser(
-            'value(test_unit_type.global.conversion)',
-            'count(test_unit_type.global.exposure)',
-        )
+        parser = Parser('value(test_unit_type.global.conversion)', 'count(test_unit_type.global.exposure)',)
         assert parser.get_goals_str() == {
             'test_unit_type.global.conversion',
             'test_unit_type.global.exposure',
