@@ -442,7 +442,7 @@ class Experiment:
         """
         Adds zero values for missing goals and variants that are needed for metric evaluation.
 
-        Does that in the best effort - fills in `count`, `sum_value`, `sum_sqr_value` with zeros.
+        Does that in the best effort - fills in `count`, `sum_sqr_count`, `sum_value`, `sum_sqr_value` and `count_unique` with zeros.
         """
         # what variants and goals there should be from all the goals needed to evaluate all metrics
         self.variants = (
@@ -472,6 +472,7 @@ class Experiment:
                 'sum_sqr_count': np.zeros(ln),
                 'sum_value': np.zeros(ln),
                 'sum_sqr_value': np.zeros(ln),
+                'count_unique': np.zeros(ln),
             }
         )
 
