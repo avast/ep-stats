@@ -43,3 +43,5 @@ test-sequential-v3	a	test_unit_type	global	exposure	8000
 test-sequential-v3	b	test_unit_type	global	exposure	8080
 test-missing-variant	a	test_unit_type	global	exposure	50
 test-missing-variant	b	test_unit_type	global	exposure	0
+test-missing-data-unique-goal	a	test_unit_type	global	exposure	0
+test-missing-data-unique-goal	b	test_unit_type	global	exposure	0
