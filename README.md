@@ -6,18 +6,18 @@
 ![](https://img.shields.io/github/languages/code-size/avast/ep-stats?color=green)
 <img src="theme/experiment_b.png" align="right" />
 
-# Ep-Stats
+# ep-stats
 
-**Statistical package for experimentation platform.**
+**Statistical package for the experimentation platform.**
 
-It provides a general python package and REST API that can be used to evaluate any metric
-in AB test experiment.
+It provides a general Python package and REST API that can be used to evaluate any metric
+in an AB test experiment.
 
 ## Features
 
-* Robust two-tailed t-test implementation with multiple p-value corrections and delta-methods applied.
-* Sequential evaluations allowing to stop experiments early.
-* Connect it to any data source to either get pre-aggregated or per randomization unit data.
+* Robust two-tailed t-test implementation with multiple p-value corrections and delta methods applied.
+* Sequential evaluations allow experiments to be stopped early.
+* Connect it to any data source to get either pre-aggregated or per randomization unit data.
 * Simple expression language to define arbitrary metrics.
 * REST API to integrate it as a service in experimentation portal with score cards.
 
@@ -27,7 +27,7 @@ We have got a lovely [documentation](https://avast.github.io/ep-stats/).
 
 ## Base Example
 
-Ep-stats allows for quick experiment evaluation. We are using provided testing data to evaluate metric `Click-through Rate` in experiment `test-conversion`.
+ep-stats allows for a quick experiment evaluation. We are using sample testing data to evaluate metric `Click-through Rate` in experiment `test-conversion`.
 
 ```python
 from epstats.toolkit import Experiment, Metric, SrmCheck
@@ -51,7 +51,7 @@ goals = TestData.load_goals_agg(experiment.id)
 ev = experiment.evaluate_agg(goals)
 ```
 
-`ev` contains evaluations of exposures, metrics and checks. This will have following output.
+`ev` contains evaluations of exposures, metrics, and checks. This will provide the following output.
 
 `ev.exposures`:
 
@@ -91,7 +91,7 @@ You can run a testing version of ep-stats via
 python -m epstats
 ```
 
-Then see Swagger on [http://localhost:8080/docs](http://localhost:8080/docs) for API documentation.
+Then, see Swagger on [http://localhost:8080/docs](http://localhost:8080/docs) for API documentation.
 
 ## Contributing
 
