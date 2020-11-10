@@ -249,6 +249,25 @@ def test_missing_variant(dao, metrics, checks, unit_type):
     evaluate_experiment_agg(experiment, dao)
 
 
+def test_missing_data_unique_goal(dao, metrics, checks, unit_type):
+    experiment = Experiment(
+        'test-missing-data-unique-goal',
+        'a',
+        [
+            Metric(
+                1,
+                'Unique Click-through Rate',
+                'unique(test_unit_type.unit.click)',
+                'count(test_unit_type.global.exposure)',
+            )
+        ],
+        [SrmCheck(1, 'SRM', 'count(test_unit_type.global.exposure)')],
+        unit_type=unit_type,
+        variants=['a', 'b'],
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
 @pytest.mark.filterwarnings('ignore:invalid value')
 def test_missing_default(dao, metrics, checks, unit_type):
     experiment = Experiment(

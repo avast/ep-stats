@@ -44,3 +44,6 @@ bad-experiment-unit	1	SRM	confidence_level	0.999
 test-missing-variant	1	SRM	p_value	0
 test-missing-variant	1	SRM	test_stat	50
 test-missing-variant	1	SRM	confidence_level	0.999
+test-missing-data-unique-goal	1	SRM	p_value	N/A
+test-missing-data-unique-goal	1	SRM	test_stat	N/A
+test-missing-data-unique-goal	1	SRM	confidence_level	0.999
