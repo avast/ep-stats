@@ -40,9 +40,9 @@ plugins:
       watch:
         - src
   - search
-  # - mkdocs-jupyter:
-  #     include_source: True
-  #     execute: False
+  - mkdocs-jupyter:
+      include_source: True
+      execute: False
 
 copyright: Copyright &copy; 2020 Maintained by <a href="https://github.com/avast">Avast</a>.
 
