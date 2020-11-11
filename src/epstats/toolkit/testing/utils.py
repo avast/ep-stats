@@ -55,26 +55,26 @@ def assert_metrics(
     assert_array_equal(target.exp_variant_id, expected.exp_variant_id)
     t = target[
         [
-            'sum_value',
-            'diff',
-            'mean',
-            'p_value',
-            'confidence_interval',
-            'confidence_level',
+            "sum_value",
+            "diff",
+            "mean",
+            "p_value",
+            "confidence_interval",
+            "confidence_level",
         ]
     ].astype(float)
     atol = 10 ** -precision
-    assert allclose(t['sum_value'], expected['sum_value'], atol=atol, equal_nan=True)
-    assert allclose(t['diff'], expected['diff'], atol=atol, equal_nan=True)
-    assert allclose(t['mean'], expected['mean'], atol=atol, equal_nan=True)
-    assert allclose(t['p_value'], expected['p_value'], atol=atol * 10, equal_nan=True)
+    assert allclose(t["sum_value"], expected["sum_value"], atol=atol, equal_nan=True)
+    assert allclose(t["diff"], expected["diff"], atol=atol, equal_nan=True)
+    assert allclose(t["mean"], expected["mean"], atol=atol, equal_nan=True)
+    assert allclose(t["p_value"], expected["p_value"], atol=atol * 10, equal_nan=True)
     assert allclose(
-        t['confidence_interval'],
-        expected['confidence_interval'],
+        t["confidence_interval"],
+        expected["confidence_interval"],
         atol=atol * 10,
         equal_nan=True,
     )
-    assert allclose(t['confidence_level'], expected['confidence_level'], atol=atol, equal_nan=True)
+    assert allclose(t["confidence_level"], expected["confidence_level"], atol=atol, equal_nan=True)
 
 
 def assert_checks(
@@ -91,18 +91,18 @@ def assert_checks(
 
     assert_array_equal(target.check_id, expected.check_id)
     assert_array_almost_equal(
-        target[target['variable_id'] == 'p_value']['value'],
-        expected[expected['variable_id'] == 'p_value']['value'],
+        target[target["variable_id"] == "p_value"]["value"],
+        expected[expected["variable_id"] == "p_value"]["value"],
         precision,
     )
     assert_array_almost_equal(
-        target[target['variable_id'] == 'test_stat']['value'],
-        expected[expected['variable_id'] == 'test_stat']['value'],
+        target[target["variable_id"] == "test_stat"]["value"],
+        expected[expected["variable_id"] == "test_stat"]["value"],
         precision,
     )
     assert_array_almost_equal(
-        target[target['variable_id'] == 'confidence_level']['value'],
-        expected[expected['variable_id'] == 'confidence_level']['value'],
+        target[target["variable_id"] == "confidence_level"]["value"],
+        expected[expected["variable_id"] == "confidence_level"]["value"],
         precision,
     )
 
@@ -111,14 +111,14 @@ def assert_exposures(
     experiment_id: str,
     target: pd.DataFrame,
     test_dao: TestDao,
-    unit_type: str = 'test_unit_type',
-    agg_type: str = 'global',
+    unit_type: str = "test_unit_type",
+    agg_type: str = "global",
 ) -> None:
     expected = test_dao.load_evaluations_exposures(experiment_id)
     expected = (
-        expected[(expected.unit_type == unit_type) & (expected.agg_type == agg_type) & (expected.goal == 'exposure')]
-        .groupby('exp_variant_id')
-        .agg(exposures=('count', 'sum'))
+        expected[(expected.unit_type == unit_type) & (expected.agg_type == agg_type) & (expected.goal == "exposure")]
+        .groupby("exp_variant_id")
+        .agg(exposures=("count", "sum"))
         .reset_index()
     )
 
@@ -134,10 +134,10 @@ def check_docstring(doc, indent):
     """
     if not doc:
         return
-    start = doc.find('```python\n')
-    end = doc.find('```\n')
+    start = doc.find("```python\n")
+    end = doc.find("```\n")
     if start != -1:
         if end != -1:
-            code_part = doc[(start + 10) : end].replace(' ' * indent, '')  # noqa: E203
+            code_part = doc[(start + 10) : end].replace(" " * indent, "")  # noqa: E203
             print(code_part)
             exec(code_part)
