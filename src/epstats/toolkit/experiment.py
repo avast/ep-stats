@@ -46,22 +46,22 @@ class Evaluation:
         1. `degrees_of_freedom` - degrees of freedom of this variant mean
         """
         return [
-            'timestamp',
-            'exp_id',
-            'metric_id',
-            'metric_name',
-            'exp_variant_id',
-            'count',
-            'mean',
-            'std',
-            'sum_value',
-            'confidence_level',
-            'diff',
-            'test_stat',
-            'p_value',
-            'confidence_interval',
-            'standard_error',
-            'degrees_of_freedom',
+            "timestamp",
+            "exp_id",
+            "metric_id",
+            "metric_name",
+            "exp_variant_id",
+            "count",
+            "mean",
+            "std",
+            "sum_value",
+            "confidence_level",
+            "diff",
+            "test_stat",
+            "p_value",
+            "confidence_interval",
+            "standard_error",
+            "degrees_of_freedom",
         ]
 
     @classmethod
@@ -76,7 +76,7 @@ class Evaluation:
         `test_stat`, `confidence_level`
         1. `value` - value of the variable
         """
-        return ['timestamp', 'exp_id', 'check_id', 'check_name', 'variable_id', 'value']
+        return ["timestamp", "exp_id", "check_id", "check_name", "variable_id", "value"]
 
     @classmethod
     def exposure_columns(cls) -> List[str]:
@@ -88,7 +88,7 @@ class Evaluation:
         1. `exp_variant_id` - variant id
         1. `exposures` - number of exposures of this variant
         """
-        return ['exp_variant_id', 'exposures']
+        return ["exp_variant_id", "exposures"]
 
 
 class Experiment:
@@ -113,42 +113,42 @@ class Experiment:
         variants: List[str] = None,
         statsd: StatsClient = StatsClient(),
     ):
-        self._logger = logging.getLogger(f'{__name__}.{self.__class__.__name__}')
+        self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.id = id
         self.control_variant = control_variant
         self.unit_type = unit_type
         self.metrics = metrics
         self.checks = checks
-        self.date_from = datetime.strptime(date_from, '%Y-%m-%d').date() if date_from is not None else None
-        self.date_to = datetime.strptime(date_to, '%Y-%m-%d').date() if date_to is not None else None
+        self.date_from = datetime.strptime(date_from, "%Y-%m-%d").date() if date_from is not None else None
+        self.date_to = datetime.strptime(date_to, "%Y-%m-%d").date() if date_to is not None else None
         self.date_for = (
-            datetime.strptime(date_for, '%Y-%m-%d').date() if date_for is not None else datetime.today().date()
+            datetime.strptime(date_for, "%Y-%m-%d").date() if date_for is not None else datetime.today().date()
         )
         self.confidence_level = confidence_level
         self.variants = variants
         self._exposure_goals = [
             EpGoal(
                 [
-                    'count',
-                    '(',
+                    "count",
+                    "(",
                     UnitType([unit_type]),
-                    '.',
-                    AggType(['global']),
-                    '.',
-                    Goal(['exposure']),
-                    ')',
+                    ".",
+                    AggType(["global"]),
+                    ".",
+                    Goal(["exposure"]),
+                    ")",
                 ]
             ),
             EpGoal(
                 [
-                    'count',
-                    '(',
+                    "count",
+                    "(",
                     UnitType([unit_type]),
-                    '.',
-                    AggType(['unit']),
-                    '.',
-                    Goal(['exposure']),
-                    ')',
+                    ".",
+                    AggType(["unit"]),
+                    ".",
+                    Goal(["exposure"]),
+                    ")",
                 ]
             ),
         ]
@@ -318,17 +318,17 @@ class Experiment:
         g = (
             pd.pivot_table(
                 g,
-                values=['count', 'sum_value'],
+                values=["count", "sum_value"],
                 index=[
-                    'exp_id',
-                    'exp_variant_id',
-                    'unit_type',
-                    'agg_type',
-                    'unit_id',
-                    'dimension',
-                    'dimension_value',
+                    "exp_id",
+                    "exp_variant_id",
+                    "unit_type",
+                    "agg_type",
+                    "unit_id",
+                    "dimension",
+                    "dimension_value",
                 ],
-                columns='goal',
+                columns="goal",
                 aggfunc=np.sum,
                 fill_value=0,
             )
@@ -392,12 +392,12 @@ class Experiment:
         Evaluates checks from already aggregated goals.
         """
         df = (
-            goals[(goals['unit_type'] == unit_type) & (goals['agg_type'] == 'global') & (goals['goal'] == 'exposure')]
-            .groupby('exp_variant_id')
-            .agg(exposures=('count', 'sum'))
+            goals[(goals["unit_type"] == unit_type) & (goals["agg_type"] == "global") & (goals["goal"] == "exposure")]
+            .groupby("exp_variant_id")
+            .agg(exposures=("count", "sum"))
             .reset_index()
         )
-        df['exp_id'] = exp_id
+        df["exp_id"] = exp_id
         return df
 
     @staticmethod
@@ -405,13 +405,13 @@ class Experiment:
         """
         Evaluates checks from already aggregated goals.
         """
-        df = goals[(goals['unit_type'] == unit_type) & (goals['agg_type'] == 'unit')][
-            [('exp_variant_id', ''), ('exposure', 'count')]
+        df = goals[(goals["unit_type"] == unit_type) & (goals["agg_type"] == "unit")][
+            [("exp_variant_id", ""), ("exposure", "count")]
         ]
         df = df.droplevel(0, axis=1)
-        df.columns = ['exp_variant_id', 'exposures']
-        d = df.groupby('exp_variant_id').agg(exposures=('exposures', 'sum')).reset_index()
-        d['exp_id'] = exp_id
+        df.columns = ["exp_variant_id", "exposures"]
+        d = df.groupby("exp_variant_id").agg(exposures=("exposures", "sum")).reset_index()
+        d["exp_id"] = exp_id
         return d
 
     def _evaluate(self, goals: pd.DataFrame, metrics_column_fce, checks_fce, exposures_fce):
@@ -428,14 +428,14 @@ class Experiment:
         for c in self.checks:
             try:
                 r = check_fce(c, goals, self.control_variant)
-                r['exp_id'] = self.id
+                r["exp_id"] = self.id
                 res.append(r)
             except Exception as e:
-                self._logger.warning(f'Cannot evaluate check [{c.id} in experiment [{self.id}] because of {e}')
-                self.statsd.incr('errors.check')
+                self._logger.warning(f"Cannot evaluate check [{c.id} in experiment [{self.id}] because of {e}")
+                self.statsd.incr("errors.check")
 
         c = pd.concat(res, axis=1) if res != [] else pd.DataFrame([], columns=Evaluation.check_columns())
-        c['timestamp'] = round(get_utc_timestamp(datetime.now()).timestamp())
+        c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         return c[Evaluation.check_columns()]
 
     def _fix_missing_agg(self, goals: pd.DataFrame) -> pd.DataFrame:
@@ -448,7 +448,7 @@ class Experiment:
         self.variants = (
             self.variants
             if self.variants is not None
-            else np.unique(np.append(goals['exp_variant_id'], self.control_variant))
+            else np.unique(np.append(goals["exp_variant_id"], self.control_variant))
         )
         g = goals[goals.exp_variant_id.isin(self.variants)]
         nvs = self.variants
@@ -462,17 +462,17 @@ class Experiment:
         # create zero data frame for all variants and goals
         empty_df = pd.DataFrame(
             {
-                'exp_variant_id': np.tile(nvs, lngs),
-                'unit_type': np.repeat([g.unit_type for g in ngs], lnvs),
-                'agg_type': np.repeat([g.agg_type for g in ngs], lnvs),
-                'goal': np.repeat([g.goal for g in ngs], lnvs),
-                'dimension': np.repeat([g.dimension for g in ngs], lnvs),
-                'dimension_value': np.repeat([g.dimension_value for g in ngs], lnvs),
-                'count': np.zeros(ln),
-                'sum_sqr_count': np.zeros(ln),
-                'sum_value': np.zeros(ln),
-                'sum_sqr_value': np.zeros(ln),
-                'count_unique': np.zeros(ln),
+                "exp_variant_id": np.tile(nvs, lngs),
+                "unit_type": np.repeat([g.unit_type for g in ngs], lnvs),
+                "agg_type": np.repeat([g.agg_type for g in ngs], lnvs),
+                "goal": np.repeat([g.goal for g in ngs], lnvs),
+                "dimension": np.repeat([g.dimension for g in ngs], lnvs),
+                "dimension_value": np.repeat([g.dimension_value for g in ngs], lnvs),
+                "count": np.zeros(ln),
+                "sum_sqr_count": np.zeros(ln),
+                "sum_value": np.zeros(ln),
+                "sum_sqr_value": np.zeros(ln),
+                "count_unique": np.zeros(ln),
             }
         )
 
@@ -481,12 +481,12 @@ class Experiment:
             pd.concat([g, empty_df], axis=0)
             .groupby(
                 [
-                    'exp_variant_id',
-                    'unit_type',
-                    'agg_type',
-                    'dimension',
-                    'dimension_value',
-                    'goal',
+                    "exp_variant_id",
+                    "unit_type",
+                    "agg_type",
+                    "dimension",
+                    "dimension_value",
+                    "goal",
                 ]
             )
             .sum()
@@ -504,7 +504,7 @@ class Experiment:
         self.variants = (
             self.variants
             if self.variants is not None
-            else np.unique(np.append(goals['exp_variant_id'], self.control_variant))
+            else np.unique(np.append(goals["exp_variant_id"], self.control_variant))
         )
         g = goals[goals.exp_variant_id.isin(self.variants)]
         nvs = self.variants
@@ -518,16 +518,16 @@ class Experiment:
         # create zero data frame for all variants and goals
         empty_df = pd.DataFrame(
             {
-                'exp_id': np.repeat(self.id, ln),
-                'exp_variant_id': np.tile(nvs, lngs),
-                'unit_type': np.repeat([g.unit_type for g in ngs], lnvs),
-                'agg_type': np.repeat([g.agg_type for g in ngs], lnvs),
-                'goal': np.repeat([g.goal for g in ngs], lnvs),
-                'dimension': np.repeat([g.dimension for g in ngs], lnvs),
-                'dimension_value': np.repeat([g.dimension_value for g in ngs], lnvs),
-                'unit_id': np.repeat('fillna', ln),
-                'count': np.zeros(ln),
-                'sum_value': np.zeros(ln),
+                "exp_id": np.repeat(self.id, ln),
+                "exp_variant_id": np.tile(nvs, lngs),
+                "unit_type": np.repeat([g.unit_type for g in ngs], lnvs),
+                "agg_type": np.repeat([g.agg_type for g in ngs], lnvs),
+                "goal": np.repeat([g.goal for g in ngs], lnvs),
+                "dimension": np.repeat([g.dimension for g in ngs], lnvs),
+                "dimension_value": np.repeat([g.dimension_value for g in ngs], lnvs),
+                "unit_id": np.repeat("fillna", ln),
+                "count": np.zeros(ln),
+                "sum_value": np.zeros(ln),
             }
         )
 
@@ -535,16 +535,16 @@ class Experiment:
         m = pd.concat([g, empty_df], axis=0)
         return m[
             [
-                'exp_id',
-                'exp_variant_id',
-                'unit_type',
-                'agg_type',
-                'dimension',
-                'dimension_value',
-                'goal',
-                'unit_id',
-                'count',
-                'sum_value',
+                "exp_id",
+                "exp_variant_id",
+                "unit_type",
+                "agg_type",
+                "dimension",
+                "dimension_value",
+                "goal",
+                "unit_id",
+                "count",
+                "sum_value",
             ]
         ]
 
@@ -563,7 +563,7 @@ class Experiment:
         count = stats[:, :, 0]
         sum_value = stats[:, :, 1]
         sum_sqr_value = stats[:, :, 2]
-        with np.errstate(divide='ignore', invalid='ignore'):
+        with np.errstate(divide="ignore", invalid="ignore"):
             # We fill in zeros, when goal data are missing for some variant.
             # There could be division by zero here which is expected as we return
             # nan or inf values to the caller.
@@ -587,7 +587,7 @@ class Experiment:
             (
                 np.repeat([m.id for m in self.metrics], variants).reshape(metrics, variants, -1),
                 np.repeat([m.name for m in self.metrics], variants).reshape(metrics, variants, -1),
-                np.tile(goals['exp_variant_id'].unique(), metrics).reshape(metrics, variants, -1),
+                np.tile(goals["exp_variant_id"].unique(), metrics).reshape(metrics, variants, -1),
                 stats,
             )
         )
@@ -601,6 +601,6 @@ class Experiment:
         if variants > 2:
             c = Statistics.multiple_comparisons_correction(c, variants, metrics, confidence_level)
 
-        c['exp_id'] = self.id
-        c['timestamp'] = round(get_utc_timestamp(datetime.now()).timestamp())
+        c["exp_id"] = self.id
+        c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         return c[Evaluation.metric_columns()]

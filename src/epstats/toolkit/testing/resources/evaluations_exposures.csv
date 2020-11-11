@@ -45,3 +45,5 @@ test-missing-variant	a	test_unit_type	global	exposure	50
 test-missing-variant	b	test_unit_type	global	exposure	0
 test-missing-data-unique-goal	a	test_unit_type	global	exposure	0
 test-missing-data-unique-goal	b	test_unit_type	global	exposure	0
+test-dimension	a	test_unit_type	global	exposure	1000
+test-dimension	b	test_unit_type	global	exposure	1001

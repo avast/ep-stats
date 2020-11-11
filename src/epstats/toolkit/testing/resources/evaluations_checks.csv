@@ -1,4 +1,4 @@
-exp_id	check_id	check_name	variable_id	value	hint
+exp_id	check_id	check_name	variable_id	value
 test-srm	1	SRM	p_value	0.140747987
 test-srm	1	SRM	test_stat	3.9215686
 test-srm	1	SRM	confidence_level	0.999
@@ -47,3 +47,6 @@ test-missing-variant	1	SRM	confidence_level	0.999
 test-missing-data-unique-goal	1	SRM	p_value	N/A
 test-missing-data-unique-goal	1	SRM	test_stat	N/A
 test-missing-data-unique-goal	1	SRM	confidence_level	0.999
+test-dimension	1	SRM	p_value	0.98216470
+test-dimension	1	SRM	test_stat	0.00049975
+test-dimension	1	SRM	confidence_level	0.999

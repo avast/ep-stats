@@ -121,7 +121,7 @@ class SrmCheck(Check):
         exposures, _, _ = self._parser.evaluate_agg(goals)
 
         # chi-square test
-        with np.errstate(divide='ignore', invalid='ignore'):
+        with np.errstate(divide="ignore", invalid="ignore"):
             # we fill in zeros, when goal data are missing for some variant.
             # There could be division by zero here which is expected as we return
             # nan or inf values to the caller.
@@ -129,10 +129,10 @@ class SrmCheck(Check):
 
         r = pd.DataFrame(
             {
-                'check_id': [self.id, self.id, self.id],
-                'check_name': [self.name, self.name, self.name],
-                'variable_id': ['p_value', 'test_stat', 'confidence_level'],
-                'value': [pval, stat, self.confidence_level],
+                "check_id": [self.id, self.id, self.id],
+                "check_name": [self.name, self.name, self.name],
+                "variable_id": ["p_value", "test_stat", "confidence_level"],
+                "value": [pval, stat, self.confidence_level],
             }
         )
         return r
@@ -149,10 +149,10 @@ class SrmCheck(Check):
 
         r = pd.DataFrame(
             {
-                'check_id': [self.id, self.id, self.id],
-                'check_name': [self.name, self.name, self.name],
-                'variable_id': ['p_value', 'test_stat', 'confidence_level'],
-                'value': [pval, stat, self.confidence_level],
+                "check_id": [self.id, self.id, self.id],
+                "check_name": [self.name, self.name, self.name],
+                "variable_id": ["p_value", "test_stat", "confidence_level"],
+                "value": [pval, stat, self.confidence_level],
             }
         )
         return r
