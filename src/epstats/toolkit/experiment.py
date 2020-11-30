@@ -1,9 +1,11 @@
 import logging
-from typing import List
+from typing import List, Any
+from enum import Enum
 import pandas as pd
 import numpy as np
 from datetime import datetime
 from statsd import StatsClient
+from dataclasses import dataclass
 
 from .metric import Metric
 from .check import Check
@@ -91,6 +93,26 @@ class Evaluation:
         return ["exp_variant_id", "exposures"]
 
 
+class FilterScope(str, Enum):
+    """
+    Scope of data where to apply the filter.
+    """
+
+    exposure = "exposure"
+    goal = "goal"
+
+
+@dataclass
+class Filter:
+    """
+    Filter specification for data to evaluate.
+    """
+
+    dimension: str
+    value: List[Any]
+    scope: FilterScope
+
+
 class Experiment:
     """
     Evaluate one experiment described as a list of metrics and checks.
@@ -112,6 +134,7 @@ class Experiment:
         confidence_level: float = 0.95,
         variants: List[str] = None,
         statsd: StatsClient = StatsClient(),
+        filters: List[Filter] = None,
     ):
         self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.id = id
@@ -138,21 +161,10 @@ class Experiment:
                     Goal(["exposure"]),
                     ")",
                 ]
-            ),
-            EpGoal(
-                [
-                    "count",
-                    "(",
-                    UnitType([unit_type]),
-                    ".",
-                    AggType(["unit"]),
-                    ".",
-                    Goal(["exposure"]),
-                    ")",
-                ]
-            ),
+            )
         ]
         self.statsd = statsd
+        self.filters = filters if filters is not None else []
 
     def evaluate_agg(self, goals: pd.DataFrame) -> Evaluation:
         """

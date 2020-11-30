@@ -2,7 +2,7 @@ import pytest
 
 from epstats.toolkit.metric import Metric
 from epstats.toolkit.check import SrmCheck
-from epstats.toolkit.experiment import Experiment
+from epstats.toolkit.experiment import Experiment, Filter, FilterScope
 from epstats.toolkit.testing import (
     evaluate_experiment_agg,
     evaluate_experiment_by_unit,
@@ -289,6 +289,26 @@ def test_dimension(dao, metrics, checks, unit_type):
         [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
         unit_type=unit_type,
         variants=["a", "b"],
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
+def test_filter_scope_goal(dao, metrics, checks, unit_type):
+    experiment = Experiment(
+        "test-dimension",
+        "a",
+        [
+            Metric(
+                1,
+                "Views per User of Screen S",
+                "count(test_unit_type.unit.view)",
+                "count(test_unit_type.global.exposure)",
+            ),
+        ],
+        [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
+        unit_type=unit_type,
+        variants=["a", "b"],
+        filters=[Filter("element", ["button-1"], FilterScope.goal)],
     )
     evaluate_experiment_agg(experiment, dao)
 

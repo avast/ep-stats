@@ -152,6 +152,75 @@ def test_sequential():
     assert_experiment(resp.json(), dao_factory.get_dao(), expected_metrics=1, expected_checks=0)
 
 
+def test_dimension_evaluate():
+    json_blob = {
+        "id": "test-dimension",
+        "control_variant": "a",
+        "variants": ["a", "b"],
+        "unit_type": "test_unit_type",
+        "metrics": [
+            {
+                "id": 1,
+                "name": "Views per User of Screen button-1",
+                "nominator": "count(test_unit_type.unit.view(element=button-1))",
+                "denominator": "count(test_unit_type.global.exposure)",
+            },
+            {
+                "id": 2,
+                "name": "Views per User of Screen button-%",
+                "nominator": "count(test_unit_type.unit.view(element=button-%))",
+                "denominator": "count(test_unit_type.global.exposure)",
+            },
+        ],
+        "checks": [
+            {
+                "id": 1,
+                "name": "SRM",
+                "denominator": "count(test_unit_type.global.exposure)",
+            }
+        ],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 200
+    assert_experiment(resp.json(), dao_factory.get_dao(), 2)
+
+
+def test_filter_scope_goal():
+    json_blob = {
+        "id": "test-dimension",
+        "control_variant": "a",
+        "variants": ["a", "b"],
+        "unit_type": "test_unit_type",
+        "filter": [
+            {
+                "dimension": "element",
+                "value": ["button-1"],
+                "scope": "goal",
+            },
+        ],
+        "metrics": [
+            {
+                "id": 1,
+                "name": "Views per User of Screen S",
+                "nominator": "count(test_unit_type.unit.view)",
+                "denominator": "count(test_unit_type.global.exposure)",
+            }
+        ],
+        "checks": [
+            {
+                "id": 1,
+                "name": "SRM",
+                "denominator": "count(test_unit_type.global.exposure)",
+            }
+        ],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 200
+    assert_experiment(resp.json(), dao_factory.get_dao(), 1)
+
+
 def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected_checks: int = 1) -> None:
     result = Result(**target)
     assert len(result.metrics) == expected_metrics

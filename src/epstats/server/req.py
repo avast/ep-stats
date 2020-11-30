@@ -1,11 +1,10 @@
-from typing import List, Optional
-from enum import Enum
+from typing import List, Optional, Any
 from pydantic import BaseModel, validator, root_validator, Field
 from pyparsing import ParseException
 from datetime import datetime
 from statsd import StatsClient
 
-from ..toolkit import Experiment as EvExperiment
+from ..toolkit import Experiment as EvExperiment, Filter as EvFilter, FilterScope
 from ..toolkit import Metric as EvMetric
 from ..toolkit import SrmCheck as EvSrmCheck
 from ..toolkit import Parser
@@ -139,15 +138,6 @@ class Check(BaseModel):
         return EvSrmCheck(self.id, self.name, self.denominator)
 
 
-class FilterScope(str, Enum):
-    """
-    Scope of data where to apply the filter.
-    """
-
-    exposure = "exposure"
-    goal = "goal"
-
-
 class Filter(BaseModel):
     """
     Filter specification for data to evaluate.
@@ -155,11 +145,32 @@ class Filter(BaseModel):
 
     dimension: str = Field(title="Name of the dimension")
 
-    value: List = Field(title="List of possible values")
+    value: List[Any] = Field(title="List of possible values")
 
     scope: FilterScope = Field(
         title="Scope of the filter", description="Scope of the filter is either `exposure` or `goal`."
     )
+
+    @validator("dimension")
+    def dimension_must_be_not_empty(cls, value):
+        if not value:
+            raise ValueError("we expect dimension to be non-empty")
+        return value
+
+    @validator("scope")
+    def scope_must_be_not_empty(cls, value):
+        if not value:
+            raise ValueError("we expect scope to be either `exposure` or `goal`")
+        return value
+
+    @validator("value")
+    def value_must_be_not_empty(cls, value):
+        if not value:
+            raise ValueError("we expect value to be non-empty")
+        return value
+
+    def to_filter(self):
+        return EvFilter(self.dimension, self.value, self.scope)
 
 
 class Experiment(BaseModel):
@@ -292,6 +303,7 @@ class Experiment(BaseModel):
             unit_type=self.unit_type,
             variants=self.variants,
             statsd=statsd,
+            filters=[f.to_filter() for f in self.filter] if self.filter else [],
         )
 
     class Config:
