@@ -1,4 +1,5 @@
 from typing import List, Optional
+from enum import Enum
 from pydantic import BaseModel, validator, root_validator, Field
 from pyparsing import ParseException
 from datetime import datetime
@@ -138,6 +139,29 @@ class Check(BaseModel):
         return EvSrmCheck(self.id, self.name, self.denominator)
 
 
+class FilterScope(str, Enum):
+    """
+    Scope of data where to apply the filter.
+    """
+
+    exposure = "exposure"
+    goal = "goal"
+
+
+class Filter(BaseModel):
+    """
+    Filter specification for data to evaluate.
+    """
+
+    dimension: str = Field(title="Name of the dimension")
+
+    value: List = Field(title="List of possible values")
+
+    scope: FilterScope = Field(
+        title="Scope of the filter", description="Scope of the filter is either `exposure` or `goal`."
+    )
+
+
 class Experiment(BaseModel):
     """
     Experiment to evaluate.
@@ -146,6 +170,7 @@ class Experiment(BaseModel):
     id: str = Field(
         title="Experiment Id",
     )
+
     control_variant: str = Field(
         title="Identification of the control variant",
         description="""All other variant data
@@ -187,6 +212,10 @@ class Experiment(BaseModel):
     metrics: List[Metric] = Field(title="List of metrics to evaluate")
 
     checks: List[Check] = Field(title="List of checks to evaluate")
+
+    filter: Optional[List[Filter]] = Field(
+        title="Filtering conditions", description="""List of filtering conditions to apply on exposure and goals."""
+    )
 
     @validator("id")
     def id_must_be_not_empty(cls, value):
@@ -272,6 +301,10 @@ class Experiment(BaseModel):
                 "variants": ["a", "b", "c"],
                 "control_variant": "a",
                 "unit_type": "test_unit_type",
+                "filter": [
+                    {"dimension": "element", "value": ["button-1"], "scope": "goal"},
+                    {"dimension": "browser", "value": ["firefox"], "scope": "exposure"},
+                ],
                 "metrics": [
                     {
                         "id": 1,
