@@ -21,8 +21,8 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        df = pd.read_csv(pkg_resources.open_text(resources, 'goals_agg.csv'), sep='\t').fillna(
-            {'dimension': '', 'dimension_value': ''}
+        df = pd.read_csv(pkg_resources.open_text(resources, "goals_agg.csv"), sep="\t").fillna(
+            {"dimension": "", "dimension_value": ""}
         )
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
@@ -37,8 +37,8 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        df = pd.read_csv(pkg_resources.open_text(resources, 'goals_by_unit.csv'), sep='\t').fillna(
-            {'dimension': '', 'dimension_value': ''}
+        df = pd.read_csv(pkg_resources.open_text(resources, "goals_by_unit.csv"), sep="\t").fillna(
+            {"dimension": "", "dimension_value": ""}
         )
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
@@ -52,7 +52,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        df = pd.read_csv(pkg_resources.open_text(resources, 'evaluations_checks.csv'), sep='\t')
+        df = pd.read_csv(pkg_resources.open_text(resources, "evaluations_checks.csv"), sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
     @classmethod
@@ -65,7 +65,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        df = pd.read_csv(pkg_resources.open_text(resources, 'evaluations_exposures.csv'), sep='\t')
+        df = pd.read_csv(pkg_resources.open_text(resources, "evaluations_exposures.csv"), sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
     @classmethod
@@ -78,5 +78,5 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        df = pd.read_csv(pkg_resources.open_text(resources, 'evaluations_metrics.csv'), sep='\t')
+        df = pd.read_csv(pkg_resources.open_text(resources, "evaluations_metrics.csv"), sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df

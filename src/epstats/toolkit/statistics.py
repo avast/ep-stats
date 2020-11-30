@@ -88,7 +88,7 @@ class Statistics:
                 std_treat ** 4 / (count_treat ** 2 * (count_treat - 1))
             )
 
-            with np.errstate(divide='ignore', invalid='ignore'):
+            with np.errstate(divide="ignore", invalid="ignore"):
                 # We fill in zeros, when goal data are missing for some variant.
                 # There could be division by zero here which is expected as we return
                 # nan or inf values to the caller.
@@ -96,11 +96,11 @@ class Statistics:
 
             # t-quantile
             with warnings.catch_warnings():
-                warnings.filterwarnings('ignore', category=RuntimeWarning)
+                warnings.filterwarnings("ignore", category=RuntimeWarning)
                 t_quantile = st.t.ppf(conf_level + (1 - conf_level) / 2, f)  # right quantile
 
             # relative difference and test statistics
-            with np.errstate(divide='ignore', invalid='ignore'):
+            with np.errstate(divide="ignore", invalid="ignore"):
                 # We fill in zeros, when goal data are missing for some variant.
                 # There could be division by zero here which is expected as we return
                 # nan or inf values to the caller.
@@ -116,7 +116,7 @@ class Statistics:
 
             # p-value
             with warnings.catch_warnings():
-                warnings.filterwarnings('ignore', category=RuntimeWarning)
+                warnings.filterwarnings("ignore", category=RuntimeWarning)
                 pval = 2 * (1 - st.t.cdf(np.abs(test_stat), f))
 
             # confidence interval
@@ -133,20 +133,20 @@ class Statistics:
 
         # Output dataframe
         col = [
-            'metric_id',
-            'metric_name',
-            'exp_variant_id',
-            'count',
-            'mean',
-            'std',
-            'sum_value',
-            'confidence_level',
-            'diff',
-            'test_stat',
-            'p_value',
-            'confidence_interval',
-            'standard_error',
-            'degrees_of_freedom',
+            "metric_id",
+            "metric_name",
+            "exp_variant_id",
+            "count",
+            "mean",
+            "std",
+            "sum_value",
+            "confidence_level",
+            "diff",
+            "test_stat",
+            "p_value",
+            "confidence_interval",
+            "standard_error",
+            "degrees_of_freedom",
         ]
         r = pd.DataFrame(arr, columns=col)
         return r
@@ -186,23 +186,23 @@ class Statistics:
             index_to = (m + 1) * variants - 1
 
             # p-value adjustment
-            pvals = df.loc[index_from:index_to, 'p_value'].to_list()  # select old p-values
-            adj_pvals = multipletests(pvals=pvals, alpha=alpha, method='holm')[1]  # compute adjusted p-values
+            pvals = df.loc[index_from:index_to, "p_value"].to_list()  # select old p-values
+            adj_pvals = multipletests(pvals=pvals, alpha=alpha, method="holm")[1]  # compute adjusted p-values
 
             # confidence interval adjustment
             # we set ratio to 1 when test_stat is so big that pvals are zero, no reason to update ci
             adj_ratio = np.nan_to_num(pvals / adj_pvals, nan=1)  # adjustment ratio
             adj_alpha = adj_ratio * alpha  # adjusted level alpha
 
-            f = df.loc[index_from:index_to, 'degrees_of_freedom'].to_list()  # degrees of freedom
-            se = df.loc[index_from:index_to, 'standard_error'].to_list()  # standard error
+            f = df.loc[index_from:index_to, "degrees_of_freedom"].to_list()  # degrees of freedom
+            se = df.loc[index_from:index_to, "standard_error"].to_list()  # standard error
 
             t_quantile = st.t.ppf(np.ones(variants - 1) - adj_alpha + adj_alpha / 2, f)  # right t-quantile
             adj_conf_int = se * t_quantile  # adjusted confidence interval
 
             # replace (unadjusted) p-values and confidence intervals with new adjusted ones
-            df.loc[index_from:index_to, 'p_value'] = adj_pvals
-            df.loc[index_from:index_to, 'confidence_interval'] = adj_conf_int
+            df.loc[index_from:index_to, "p_value"] = adj_pvals
+            df.loc[index_from:index_to, "confidence_interval"] = adj_conf_int
         return df
 
     @classmethod

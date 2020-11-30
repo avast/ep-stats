@@ -19,7 +19,7 @@ def get_api(settings: ApiSettings, get_dao, get_executor_pool, get_statsd) -> Fa
     api = FastAPI(
         title=settings.app_title,
         description=settings.app_description,
-        version='0.2.1',
+        version="0.2.1",
         default_response_class=DataScienceJsonResponse,
     )
 
@@ -28,8 +28,8 @@ def get_api(settings: ApiSettings, get_dao, get_executor_pool, get_statsd) -> Fa
         """
         We override default exception handler to send exception to the log.
         """
-        logger = logging.getLogger('epstats')
-        logger.error(f'HttpException status code [{exc.status_code}] detail [{exc.detail}]')
+        logger = logging.getLogger("epstats")
+        logger.error(f"HttpException status code [{exc.status_code}] detail [{exc.detail}]")
         return await http_exception_handler(request, exc)
 
     @api.exception_handler(RequestValidationError)
@@ -37,14 +37,14 @@ def get_api(settings: ApiSettings, get_dao, get_executor_pool, get_statsd) -> Fa
         """
         We override default exception handler to send exception to the log.
         """
-        logger = logging.getLogger('epstats')
-        logger.exception(f'RequestValidationError: [{exc}], [{exc.body}]')
+        logger = logging.getLogger("epstats")
+        logger.exception(f"RequestValidationError: [{exc}], [{exc.body}]")
         return await request_validation_exception_handler(request, exc)
 
-    @api.get('/health', tags=['Health'])
+    @api.get("/health", tags=["Health"])
     async def readiness_liveness_probe(statsd: StatsClient = Depends(get_statsd)):
-        statsd.incr('requests.health')
-        return {'message': 'ep-stats-api is ready'}
+        statsd.incr("requests.health")
+        return {"message": "ep-stats-api is ready"}
 
     api.include_router(get_evaluate_router(get_dao, get_executor_pool, get_statsd))
 
@@ -52,11 +52,11 @@ def get_api(settings: ApiSettings, get_dao, get_executor_pool, get_statsd) -> Fa
 
 
 def serve(api: str, settings: ApiSettings, log_config: Dict):
-    logger = logging.getLogger('epstats')
-    logger.info(f'Starting {settings.app_name} in env {settings.app_env}')
-    logger.info(f'Listening on http://{settings.host}:{settings.port}')
-    logger.info(f'Starting with log level {settings.log_level}')
-    logger.info(f'Using {settings.web_workers} web server worker threads')
+    logger = logging.getLogger("epstats")
+    logger.info(f"Starting {settings.app_name} in env {settings.app_env}")
+    logger.info(f"Listening on http://{settings.host}:{settings.port}")
+    logger.info(f"Starting with log level {settings.log_level}")
+    logger.info(f"Using {settings.web_workers} web server worker threads")
     uvicorn.run(
         api,
         host=settings.host,
@@ -65,5 +65,5 @@ def serve(api: str, settings: ApiSettings, log_config: Dict):
         workers=settings.web_workers,
         timeout_keep_alive=0,
         log_config=log_config,
-        http='h11',
+        http="h11",
     )

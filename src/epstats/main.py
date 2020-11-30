@@ -10,7 +10,7 @@ from .server import get_api, serve, ApiSettings
 class Settings(BaseSettings):
     api: ApiSettings = ApiSettings()
 
-    statsd_host: str = 'localhost'
+    statsd_host: str = "localhost"
     statsd_port: int = 8888
 
     evaluation_pool_size: int = 5
@@ -42,7 +42,7 @@ def get_executor_pool():
 
 def get_statsd():
     try:
-        prefix = f'{settings.api.app_name}.{settings.api.app_env}'
+        prefix = f"{settings.api.app_name}.{settings.api.app_env}"
         statsd = StatsClient(settings.statsd_host, settings.statsd_port, prefix=prefix)
         yield statsd
     finally:
@@ -55,9 +55,9 @@ api = get_api(settings.api, get_dao, get_executor_pool, get_statsd)
 def main():
     from .config import config
 
-    logging.config.dictConfig(config['logging'])
-    serve('epstats:api', settings.api, config['logging'])
+    logging.config.dictConfig(config["logging"])
+    serve("epstats:api", settings.api, config["logging"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

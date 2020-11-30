@@ -26,14 +26,14 @@ class TestDao(Dao):
         # already.
         if experiment.date_from is not None and experiment.date_to is not None:
             return goals[
-                (goals.date >= experiment.date_from.strftime('%Y-%m-%d'))
-                & (goals.date <= experiment.date_to.strftime('%Y-%m-%d'))
-                & (goals.date <= experiment.date_for.strftime('%Y-%m-%d'))
+                (goals.date >= experiment.date_from.strftime("%Y-%m-%d"))
+                & (goals.date <= experiment.date_to.strftime("%Y-%m-%d"))
+                & (goals.date <= experiment.date_for.strftime("%Y-%m-%d"))
             ]
         if experiment.date_from is not None:
-            return goals[goals.date >= experiment.date_from.strftime('%Y-%m-%d')]
+            return goals[goals.date >= experiment.date_from.strftime("%Y-%m-%d")]
         if experiment.date_to is not None:
-            return goals[goals.date <= experiment.date_to.strftime('%Y-%m-%d')]
+            return goals[goals.date <= experiment.date_to.strftime("%Y-%m-%d")]
 
         return goals
 
