@@ -15,7 +15,7 @@ def get_test_dao():
 
 
 def get_test_statsd():
-    statsd = StatsClient('localhost', port='8888', prefix='epstats')
+    statsd = StatsClient("localhost", port="8888", prefix="epstats")
     try:
         yield statsd
     finally:

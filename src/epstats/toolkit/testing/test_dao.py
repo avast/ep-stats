@@ -4,6 +4,7 @@ from ..dao import Dao
 from ..dao import DaoFactory
 from ..experiment import Experiment
 from ..experiment import Evaluation
+from ..experiment import FilterScope
 from .test_data import TestData
 
 
@@ -25,15 +26,21 @@ class TestDao(Dao):
         # We take min from date_to and date_for in case we evaluate historical experiment where date_for >> date_to
         # already.
         if experiment.date_from is not None and experiment.date_to is not None:
-            return goals[
-                (goals.date >= experiment.date_from.strftime('%Y-%m-%d'))
-                & (goals.date <= experiment.date_to.strftime('%Y-%m-%d'))
-                & (goals.date <= experiment.date_for.strftime('%Y-%m-%d'))
+            goals = goals[
+                (goals.date >= experiment.date_from.strftime("%Y-%m-%d"))
+                & (goals.date <= experiment.date_to.strftime("%Y-%m-%d"))
+                & (goals.date <= experiment.date_for.strftime("%Y-%m-%d"))
             ]
         if experiment.date_from is not None:
-            return goals[goals.date >= experiment.date_from.strftime('%Y-%m-%d')]
+            goals = goals[goals.date >= experiment.date_from.strftime("%Y-%m-%d")]
         if experiment.date_to is not None:
-            return goals[goals.date <= experiment.date_to.strftime('%Y-%m-%d')]
+            goals = goals[goals.date <= experiment.date_to.strftime("%Y-%m-%d")]
+
+        for f in experiment.filters:
+            if f.scope == FilterScope.exposure:
+                goals = goals[(goals.goal != "exposure") | (goals[f.dimension].isin(f.value))]
+            if f.scope == FilterScope.goal:
+                goals = goals[(goals.goal == "exposure") | (goals[f.dimension].isin(f.value))]
 
         return goals
 

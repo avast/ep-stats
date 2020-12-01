@@ -1,10 +1,10 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 from pydantic import BaseModel, validator, root_validator, Field
 from pyparsing import ParseException
 from datetime import datetime
 from statsd import StatsClient
 
-from ..toolkit import Experiment as EvExperiment
+from ..toolkit import Experiment as EvExperiment, Filter as EvFilter, FilterScope
 from ..toolkit import Metric as EvMetric
 from ..toolkit import SrmCheck as EvSrmCheck
 from ..toolkit import Parser
@@ -138,6 +138,41 @@ class Check(BaseModel):
         return EvSrmCheck(self.id, self.name, self.denominator)
 
 
+class Filter(BaseModel):
+    """
+    Filter specification for data to evaluate.
+    """
+
+    dimension: str = Field(title="Name of the dimension")
+
+    value: List[Any] = Field(title="List of possible values")
+
+    scope: FilterScope = Field(
+        title="Scope of the filter", description="Scope of the filter is either `exposure` or `goal`."
+    )
+
+    @validator("dimension")
+    def dimension_must_be_not_empty(cls, value):
+        if not value:
+            raise ValueError("we expect dimension to be non-empty")
+        return value
+
+    @validator("scope")
+    def scope_must_be_not_empty(cls, value):
+        if not value:
+            raise ValueError("we expect scope to be either `exposure` or `goal`")
+        return value
+
+    @validator("value")
+    def value_must_be_not_empty(cls, value):
+        if not value:
+            raise ValueError("we expect value to be non-empty")
+        return value
+
+    def to_filter(self):
+        return EvFilter(self.dimension, self.value, self.scope)
+
+
 class Experiment(BaseModel):
     """
     Experiment to evaluate.
@@ -146,6 +181,7 @@ class Experiment(BaseModel):
     id: str = Field(
         title="Experiment Id",
     )
+
     control_variant: str = Field(
         title="Identification of the control variant",
         description="""All other variant data
@@ -187,6 +223,10 @@ class Experiment(BaseModel):
     metrics: List[Metric] = Field(title="List of metrics to evaluate")
 
     checks: List[Check] = Field(title="List of checks to evaluate")
+
+    filter: Optional[List[Filter]] = Field(
+        title="Filtering conditions", description="""List of filtering conditions to apply on exposure and goals."""
+    )
 
     @validator("id")
     def id_must_be_not_empty(cls, value):
@@ -263,6 +303,7 @@ class Experiment(BaseModel):
             unit_type=self.unit_type,
             variants=self.variants,
             statsd=statsd,
+            filters=[f.to_filter() for f in self.filter] if self.filter else [],
         )
 
     class Config:
@@ -272,6 +313,10 @@ class Experiment(BaseModel):
                 "variants": ["a", "b", "c"],
                 "control_variant": "a",
                 "unit_type": "test_unit_type",
+                "filter": [
+                    {"dimension": "element", "value": ["button-1"], "scope": "goal"},
+                    {"dimension": "browser", "value": ["firefox"], "scope": "exposure"},
+                ],
                 "metrics": [
                     {
                         "id": 1,
