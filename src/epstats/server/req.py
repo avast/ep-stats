@@ -224,7 +224,7 @@ class Experiment(BaseModel):
 
     checks: List[Check] = Field(title="List of checks to evaluate")
 
-    filter: Optional[List[Filter]] = Field(
+    filters: Optional[List[Filter]] = Field(
         title="Filtering conditions", description="""List of filtering conditions to apply on exposure and goals."""
     )
 
@@ -303,7 +303,7 @@ class Experiment(BaseModel):
             unit_type=self.unit_type,
             variants=self.variants,
             statsd=statsd,
-            filters=[f.to_filter() for f in self.filter] if self.filter else [],
+            filters=[f.to_filter() for f in self.filters] if self.filters else [],
         )
 
     class Config:
@@ -313,7 +313,7 @@ class Experiment(BaseModel):
                 "variants": ["a", "b", "c"],
                 "control_variant": "a",
                 "unit_type": "test_unit_type",
-                "filter": [
+                "filters": [
                     {"dimension": "element", "value": ["button-1"], "scope": "goal"},
                     {"dimension": "browser", "value": ["firefox"], "scope": "exposure"},
                 ],

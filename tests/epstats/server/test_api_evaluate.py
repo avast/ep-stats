@@ -192,7 +192,7 @@ def test_filter_scope_goal():
         "control_variant": "a",
         "variants": ["a", "b"],
         "unit_type": "test_unit_type",
-        "filter": [
+        "filters": [
             {
                 "dimension": "element",
                 "value": ["button-1"],
