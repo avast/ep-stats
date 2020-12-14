@@ -22,3 +22,4 @@ htmlcov/
 .vscode
 site/
 !src/epstats/toolkit/testing/resources/*.csv
+*-checkpoint.ipynb
