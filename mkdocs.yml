@@ -75,6 +75,6 @@ markdown_extensions:
       repo_url_shorthand: true
       user: squidfunk
       repo: mkdocs-material
-#  - pymdownx.emoji:
-#      emoji_generator: !!python/name:materialx.emoji.to_svg
-#      emoji_index: !!python/name:materialx.emoji.twemoji
+  - pymdownx.emoji:
+      emoji_generator: "!!python/name:materialx.emoji.to_svg"
+      emoji_index: "!!python/name:materialx.emoji.twemoji"
