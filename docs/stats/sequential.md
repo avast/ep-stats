@@ -1,4 +1,4 @@
-# Sequential Analysis
+# Sequential Evaluation
 
 There is a strong demand from experimenters to statisticians for support of online decision making in online controlled experiments (OCE). Given big volume of observations and real-time nature of modern data pipelines, this demand is validated.
 

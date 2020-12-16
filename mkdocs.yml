@@ -25,6 +25,7 @@ nav:
       - Sequential Evaluation: 'stats/sequential.md'
       - CTR Metric Redefined: 'stats/ctr.md'
       - Multiple Comparison Correction: 'stats/multiple.md'
+      - Compound Metrics: 'stats/compound_metrics.md'
   - API:
     - Experiment: 'api/experiment.md'
     - Evaluation: 'api/evaluation.md'
@@ -74,3 +75,6 @@ markdown_extensions:
       repo_url_shorthand: true
       user: squidfunk
       repo: mkdocs-material
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:materialx.emoji.twemoji
