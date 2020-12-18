@@ -313,6 +313,26 @@ def test_filter_scope_goal(dao, metrics, checks, unit_type):
     evaluate_experiment_agg(experiment, dao)
 
 
+def test_degrees_of_freedom(dao, metrics, checks, unit_type):
+    """Testing functions np.round() and np.trunc() used when converting degrees of freedom from float to int."""
+    experiment = Experiment(
+        "test-degrees-of-freedom",
+        "a",
+        [
+            Metric(
+                1,
+                "Click-through Rate",
+                "count(test_unit_type.unit.click)",
+                "count(test_unit_type.global.exposure)",
+            ),
+        ],
+        [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
+        unit_type=unit_type,
+        variants=["a", "b"],
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
 @pytest.mark.filterwarnings("ignore:invalid value")
 def test_missing_default(dao, metrics, checks, unit_type):
     experiment = Experiment(

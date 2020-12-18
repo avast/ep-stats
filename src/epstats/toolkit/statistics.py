@@ -92,7 +92,8 @@ class Statistics:
                 # We fill in zeros, when goal data are missing for some variant.
                 # There could be division by zero here which is expected as we return
                 # nan or inf values to the caller.
-                f = num / den  # degrees of freedom
+                # np.round() in case of roundoff errors, e.g. f = 9.999999998 => trunc(round(f, 5)) = 10
+                f = np.trunc(np.round(num / den, 5))  # (rounded & truncated) degrees of freedom
 
             # t-quantile
             with warnings.catch_warnings():
