@@ -68,12 +68,7 @@ def assert_metrics(
     assert allclose(t["diff"], expected["diff"], atol=atol, equal_nan=True)
     assert allclose(t["mean"], expected["mean"], atol=atol, equal_nan=True)
     assert allclose(t["p_value"], expected["p_value"], atol=atol * 10, equal_nan=True)
-    assert allclose(
-        t["confidence_interval"],
-        expected["confidence_interval"],
-        atol=atol * 10,
-        equal_nan=True,
-    )
+    assert allclose(t["confidence_interval"], expected["confidence_interval"], atol=atol * 10, equal_nan=True)
     assert allclose(t["confidence_level"], expected["confidence_level"], atol=atol, equal_nan=True)
 
 

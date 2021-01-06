@@ -135,3 +135,7 @@ test-dimension		a	test_unit_type	unit	view			button-2	100	100	100	100	100
 test-dimension		b	test_unit_type	unit	view			button-2	180	180	180	180	180
 test-dimension		a	test_unit_type	unit	view			button-%	300	300	300	300	300
 test-dimension		b	test_unit_type	unit	view			button-%	400	400	400	400	400
+test-degrees-of-freedom		a	test_unit_type	global	exposure				6	6	6	6	6
+test-degrees-of-freedom		b	test_unit_type	global	exposure				4	4	4	4	4
+test-degrees-of-freedom		a	test_unit_type	unit	click				5	8	5	8	4
+test-degrees-of-freedom		b	test_unit_type	unit	click				2	4	2	4	1
