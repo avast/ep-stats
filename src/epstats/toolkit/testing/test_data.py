@@ -1,6 +1,6 @@
 import pandas as pd
 
-import importlib.resources as pkg_resources
+import importlib_resources as pkg_resources
 from . import resources  # relative-import the *package* containing the templates
 
 
