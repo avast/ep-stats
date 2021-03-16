@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 from .metric import Metric
 from .check import Check
-from .utils import get_utc_timestamp
+from .utils import get_utc_timestamp, goals_wide_to_long
 from .parser import EpGoal, UnitType, AggType, Goal
 
 from .statistics import Statistics
@@ -249,6 +249,76 @@ class Experiment:
             Experiment._checks_fce_agg,
             Experiment._exposures_fce_agg,
         )
+
+    def evaluate_wide_agg(self, goals: pd.DataFrame) -> Evaluation:
+        """
+        This is a simplified version of the method [`evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_agg].
+
+        It consumes simple input `goals` dataframe, transfers it into suitable dataframe format and evaluate it using general method [`evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_agg].
+
+        It assumes that the first two columns are name of the experiment and variants. Than follows columns with data.
+
+        Arguments:
+            goals: dataframe with one row per variant and aggregated data in columns
+
+        Possible `goals` dataframe columns (check the input dataframe example):
+
+        1. `exp_id` - experiment id
+        1. `exp_variant_id` - variant
+        1. `clicks` - sum of clicks
+        1. `views` - sum of views
+        1. `bookings` - sum of bookings
+        1. `bookings_squared` - sum of bookings squared
+
+        Returns:
+            set of dataframes with evaluation
+
+        Usage:
+
+        ```python
+        from epstats.toolkit import Experiment, SimpleMetric, SimpleSrmCheck
+        from epstats.toolkit.results import results_long_to_wide, format_results
+        from epstats.toolkit.testing import TestData
+
+        # Load Test Data
+        goals = TestData.load_goals_simple_agg()
+
+        # Define the experiment
+        unit_type = 'test_unit_type'
+        experiment = Experiment(
+            'my-experiment',
+            'a',
+            [
+                SimpleMetric(1, 'Click-through Rate (CTR)', 'clicks', 'views', unit_type),
+                SimpleMetric(2, 'Conversion Rate', 'conversions', 'views', unit_type),
+                SimpleMetric(3, 'Revenue per Mille (RPM)', 'bookings', 'views', unit_type, metric_format='${:,.2f}', metric_value_multiplier=1000),
+            ],
+            [SimpleSrmCheck(1, 'SRM', 'views')],
+            unit_type=unit_type)
+
+        # Evaluate the experiment
+        ev = experiment.evaluate_wide_agg(goals)
+
+        # Work with results
+        print(ev.exposures)
+        print(ev.metrics)
+        print(ev.checks)
+
+        # Possible formatting of metrics
+        ev.metrics.pipe(results_long_to_wide).pipe(format_results, experiment, format_pct='{:.1%}', format_pval='{:.3f}')
+        ```
+
+        Input dataframe example:
+        ```
+        experiment_id   variant_id  views   clicks  conversions     bookings    bookings_squared
+        my-exp          a           473661  48194   413             17152       803105
+        my-exp          b           471485  47184   360             14503       677178
+        my-exp          c           477159  48841   406             15892       711661
+        my-exp          d           474934  49090   289             11995       566700
+        ```
+        """
+        g = goals_wide_to_long(goals)
+        return self.evaluate_agg(g)
 
     def evaluate_by_unit(self, goals: pd.DataFrame) -> Evaluation:
         """

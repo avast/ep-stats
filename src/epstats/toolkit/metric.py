@@ -9,18 +9,43 @@ class Metric:
     Definition of a metric to evaluate in an experiment.
     """
 
-    id: int
-    name: str
-    nominator: str
-    denominator: str
+    def __init__(
+        self, id: int, name: str, nominator: str, denominator: str, format: str = "{:.2%}", multiplier: int = 1
+    ):
+        """
+        Constructor of the general metric definition.
 
-    def __init__(self, id: int, name: str, nominator: str, denominator: str):
-        super().__init__()
+        Parameters `nominator` and `denominator` specify exactly type of data and aggregation of the metric nominator
+        and denominator.
+
+        Parameters `format` and `multiplier` does not play any role in metric evaluation. They are used independently
+        after the metric evaluation.
+
+        Arguments:
+            id: metric (order) id
+            name: metric name
+            nominator: definition of nominator
+            denominator: definition of denominator
+            format: specify format of the metric, e.g. '${:,.1f}' for RPM
+            multiplier: specify multiplier, e.g. 1000 for RPM
+
+        Usage:
+
+        ```python
+        Metric(
+            1,
+            'Click-through Rate',
+            'count(test_unit_type.unit.click)',
+            'count(test_unit_type.global.exposure)')
+        ```
+        """
 
         self.id = id
         self.name = name
         self.nominator = nominator
         self.denominator = denominator
+        self.format = format
+        self.multiplier = multiplier
         self._parser = Parser(nominator, denominator)
         self._goals = self._parser.get_goals()
 
@@ -63,3 +88,53 @@ class Metric:
             (count, sum_value, sum_sqr_value)
         """
         return self._parser.evaluate_by_unit(goals)
+
+
+class SimpleMetric(Metric):
+    """
+    Simplified metric definition to evaluate in an axperiment.
+    """
+
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        numerator: str,
+        denominator: str,
+        unit_type: str = "test_unit_type",
+        metric_format: str = "{:.2%}",
+        metric_value_multiplier: int = 1,
+    ):
+        """
+        Constructor of the simplified metric definition.
+
+        It modifies parameters numerator and denominator in a way that it is in line with general Metric definition.
+        It adds all the niceties necessary for proper Metric format. Finaly it calls constructor of the parent Metric
+        class.
+
+        Arguments:
+            id: metric (order) id
+            name: metric name
+            numerator: value (column) of the numerator
+            denominator: value (column) of the denominator
+            unit_type: unit type
+            metric_format: specify format of the metric, e.g. '${:,.1f}' for RPM
+            metric_value_multiplier: specify multiplier, e.g. 1000 for RPM
+
+        Usage:
+
+        ```python
+        SimpleMetric(
+            1,
+            'Click-through Rate',
+            'clicks',
+            'views',
+            unit_type='test_unit_type',
+            metric_format='{:.2%}',
+            metric_value_multiplier=1)
+        ```
+        """
+        agg_type = "global"  # technical parameter; it has no impact
+        num = "value" + "(" + unit_type + "." + agg_type + "." + numerator + ")"
+        den = "value" + "(" + unit_type + "." + agg_type + "." + denominator + ")"
+        super().__init__(id, name, num, den, metric_format, metric_value_multiplier)

@@ -53,3 +53,6 @@ test-dimension	1	SRM	confidence_level	0.999
 test-degrees-of-freedom	1	SRM	p_value	0.52708926
 test-degrees-of-freedom	1	SRM	test_stat	0.4
 test-degrees-of-freedom	1	SRM	confidence_level	0.999
+test-simple-metric	1	SRM	p_value	0.02520447203
+test-simple-metric	1	SRM	test_stat	5.009782616
+test-simple-metric	1	SRM	confidence_level	0.999

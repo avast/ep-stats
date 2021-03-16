@@ -4,6 +4,7 @@ from numpy.testing import assert_array_equal, assert_array_almost_equal
 
 from ..experiment import Experiment, Evaluation
 from .test_dao import TestDao
+from .test_data import TestData
 
 
 def evaluate_experiment_agg(experiment: Experiment, test_dao: TestDao):
@@ -11,6 +12,19 @@ def evaluate_experiment_agg(experiment: Experiment, test_dao: TestDao):
     goals = goals[goals.exp_id == experiment.id]
 
     target = experiment.evaluate_agg(goals)
+
+    assert_experiment(experiment, target, test_dao)
+
+    return target
+
+
+def evaluate_experiment_simple_agg(experiment: Experiment, test_dao: TestDao):
+    """
+    This method is used exclusively for test evaluation of an experiment
+    with aggregated data in a wide and simple data frame.
+    """
+    goals = TestData.load_goals_simple_agg()
+    target = experiment.evaluate_wide_agg(goals)
 
     assert_experiment(experiment, target, test_dao)
 

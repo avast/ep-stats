@@ -49,3 +49,5 @@ test-dimension	a	test_unit_type	global	exposure	1000
 test-dimension	b	test_unit_type	global	exposure	1001
 test-degrees-of-freedom	a	test_unit_type	global	exposure	6
 test-degrees-of-freedom	b	test_unit_type	global	exposure	4
+test-simple-metric	a	test_unit_type	global	exposure	0
+test-simple-metric	b	test_unit_type	global	exposure	0

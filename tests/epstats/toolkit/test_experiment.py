@@ -1,10 +1,11 @@
 import pytest
 
-from epstats.toolkit.metric import Metric
-from epstats.toolkit.check import SrmCheck
+from epstats.toolkit.metric import Metric, SimpleMetric
+from epstats.toolkit.check import SrmCheck, SimpleSrmCheck
 from epstats.toolkit.experiment import Experiment, Filter, FilterScope
 from epstats.toolkit.testing import (
     evaluate_experiment_agg,
+    evaluate_experiment_simple_agg,
     evaluate_experiment_by_unit,
     TestDao,
     TestData,
@@ -59,6 +60,25 @@ def test_real_valued(dao, checks, unit_type):
         unit_type=unit_type,
     )
     evaluate_experiment_agg(experiment, dao)
+
+
+def test_simple_metric(dao, checks, unit_type):
+    """
+    This test tests SimpleMetric and SimpleSrmCheck.
+    Input data are pre-aggregated in wide dataframe format.
+    """
+    experiment = Experiment(
+        "test-simple-metric",
+        "a",
+        [
+            SimpleMetric(1, "Click-through Rate", "clicks", "views"),
+            SimpleMetric(2, "Conversion Rate", "conversions", "views"),
+            SimpleMetric(3, "RPM", "bookings", "views"),
+        ],
+        [SimpleSrmCheck(1, "SRM", "views")],
+        unit_type=unit_type,
+    )
+    evaluate_experiment_simple_agg(experiment, dao)
 
 
 def test_unique(dao, unit_type):
