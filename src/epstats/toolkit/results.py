@@ -84,8 +84,8 @@ def format_results(
     r.index.names = ["Experiment Id", "Variant"]
 
     # How should mean (metric value) formated
-    format_mean = [metric.format for metric in experiment.metrics]
-    metric_mean_multipliers = [metric.multiplier for metric in experiment.metrics]
+    format_mean = [metric.metric_format for metric in experiment.metrics]
+    metric_mean_multipliers = [metric.metric_value_multiplier for metric in experiment.metrics]
 
     # Select appropriate columns
     columns_pct = [col for col in r.columns if ("interval" in col[1]) | ("Impact" in col[1])]

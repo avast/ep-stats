@@ -9,9 +9,7 @@ class Metric:
     Definition of a metric to evaluate in an experiment.
     """
 
-    def __init__(
-        self, id: int, name: str, nominator: str, denominator: str, format: str = "{:.2%}", multiplier: int = 1
-    ):
+    def __init__(self, id: int, name: str, nominator: str, denominator: str):
         """
         Constructor of the general metric definition.
 
@@ -44,8 +42,6 @@ class Metric:
         self.name = name
         self.nominator = nominator
         self.denominator = denominator
-        self.format = format
-        self.multiplier = multiplier
         self._parser = Parser(nominator, denominator)
         self._goals = self._parser.get_goals()
 
@@ -137,4 +133,8 @@ class SimpleMetric(Metric):
         agg_type = "global"  # technical parameter; it has no impact
         num = "value" + "(" + unit_type + "." + agg_type + "." + numerator + ")"
         den = "value" + "(" + unit_type + "." + agg_type + "." + denominator + ")"
-        super().__init__(id, name, num, den, metric_format, metric_value_multiplier)
+
+        super().__init__(id, name, num, den)
+
+        self.metric_format = metric_format
+        self.metric_value_multiplier = metric_value_multiplier
