@@ -16,6 +16,7 @@ nav:
     - Quick Start: 'user_guide/quick_start.md'
     - Experimentation Protocol: 'user_guide/protocol.md'
     - Using Ep-Stats in Jupyter: 'user_guide/ep_in_python.ipynb'
+    - Ad-hoc A/B test evaluation using Ep-Stats: 'user_guide/ab_test_simple_evaluation.ipynb'
     - Aggregation: 'user_guide/aggregation.md'
     - Configuring API: 'user_guide/configuring_api.md'
     - Test Data: 'user_guide/test_data.md'
@@ -27,6 +28,7 @@ nav:
       - Multiple Comparison Correction: 'stats/multiple.md'
       - Compound Metrics: 'stats/compound_metrics.md'
   - API:
+    - Metric: 'api/metric.md'
     - Experiment: 'api/experiment.md'
     - Evaluation: 'api/evaluation.md'
     - Statistics: 'api/statistics.md'

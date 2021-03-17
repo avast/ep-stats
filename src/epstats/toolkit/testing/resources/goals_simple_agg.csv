@@ -1,0 +1,3 @@
+experiment	variant	views	clicks	conversions	bookings	bookings_squared
+test-simple-metric	a	473661	48194	413	17152	803105
+test-simple-metric	b	471485	47184	360	14503	677178

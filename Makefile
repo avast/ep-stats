@@ -1,5 +1,8 @@
-brunette:
+brunette-check:
 	brunette src/epstats tests setup.py --check
+
+brunette:
+	brunette src/epstats tests setup.py
 
 flake:
 	flake8 src/epstats tests setup.py
@@ -7,7 +10,7 @@ flake:
 test:
 	pytest
 
-check: brunette flake test
+check: brunette-check flake test
 
 install:
 	python -m pip install -e .
