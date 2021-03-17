@@ -14,13 +14,7 @@ class Check:
     data quality checks and [`Evaluation`][epstats.toolkit.experiment.Evaluation] for description of output.
     """
 
-    id: int
-    name: str
-    denominator: str
-
     def __init__(self, id: int, name: str, denominator: str):
-        super().__init__()
-
         self.id = id
         self.name = name
         self.denominator = denominator
@@ -100,6 +94,20 @@ class SrmCheck(Check):
         denominator: str,
         confidence_level: float = 0.999,
     ):
+        """
+        Constructor of the SRM check.
+
+        Arguments:
+            id: check (order) id
+            name: check name
+            denominator: values to check
+            confidence_level: confidence level of the statistical test
+
+        Usage:
+        ```python
+        SrmCheck(1, 'SRM', 'count(test_unit_type.global.exposure)')
+        ```
+        """
         super().__init__(id, name, denominator)
         self.confidence_level = confidence_level
 
@@ -156,3 +164,37 @@ class SrmCheck(Check):
             }
         )
         return r
+
+
+class SimpleSrmCheck(SrmCheck):
+    """Simplified definition of SRM check."""
+
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        denominator: str,
+        confidence_level: float = 0.999,
+        unit_type: str = "test_unit_type",
+    ):
+        """
+        Constructor of the simplified SRM check.
+
+        It modifies parameter denominator in a way that it is in line with general SRM Check definition. It adds all
+        the niceties necessary for proper SrmCheck format. Finaly it calls constructor of the parent SrmCheck class.
+
+        Arguments:
+            id: check (order) id
+            name: check name
+            denominator: value (column) of the denominator
+            confidence_level: confidence level of the statistical test
+            unit_type: unit type
+
+        Usage:
+        ```python
+        SimpleSrmCheck(1, 'SRM', 'exposures')
+        ```
+        """
+        agg_type = "global"
+        den = "value" + "(" + unit_type + "." + agg_type + "." + denominator + ")"
+        super().__init__(id, name, den, confidence_level)

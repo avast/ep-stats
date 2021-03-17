@@ -27,6 +27,19 @@ class TestData:
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
     @classmethod
+    def load_goals_simple_agg(cls) -> pd.DataFrame:
+        """
+        Load sample of aggregated test data in simple wide format. File `goals_simple_agg.csv` contains only one
+        experiment, so it is sufficient to just open it.
+
+        We use this dataset in unit testing and we are making it available here for other possible use-cases too.
+
+        See `load_evaluations` set of functions to load corresponding evaluation results.
+        """
+        df = pd.read_csv(pkg_resources.open_text(resources, "goals_simple_agg.csv"), sep="\t")
+        return df
+
+    @classmethod
     def load_goals_by_unit(cls, exp_id: str = None) -> pd.DataFrame:
         """
         Load sample of test data by unit to evaluate metrics. We use this dataset

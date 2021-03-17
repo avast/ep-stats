@@ -139,3 +139,11 @@ test-degrees-of-freedom		a	test_unit_type	global	exposure				6	6	6	6	6
 test-degrees-of-freedom		b	test_unit_type	global	exposure				4	4	4	4	4
 test-degrees-of-freedom		a	test_unit_type	unit	click				5	8	5	8	4
 test-degrees-of-freedom		b	test_unit_type	unit	click				2	4	2	4	1
+test-simple-metric		a	test_unit_type	global	views				0	0	473661	473661	0
+test-simple-metric		b	test_unit_type	global	views				0	0	471485	471485	0
+test-simple-metric		a	test_unit_type	global	clicks				0	0	48194	48194	0
+test-simple-metric		b	test_unit_type	global	clicks				0	0	47184	47184	0
+test-simple-metric		a	test_unit_type	global	conversions				0	0	413	413	0
+test-simple-metric		b	test_unit_type	global	conversions				0	0	360	360	0
+test-simple-metric		a	test_unit_type	global	bookings				0	0	17152	803105	0
+test-simple-metric		b	test_unit_type	global	bookings				0	0	14503	677178	0
