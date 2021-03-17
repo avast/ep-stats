@@ -13,5 +13,5 @@ jobs:
         with:
           python-version: 3.9
       - run: |
-        pip install -e ".[dev]"
-        mkdocs gh-deploy --force
+          pip install -e ".[dev]"
+          mkdocs gh-deploy --force
