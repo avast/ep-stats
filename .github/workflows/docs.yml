@@ -11,6 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.x
-      - run: pip install -e ".[dev]"
-      - run: mkdocs gh-deploy --force
+          python-version: 3.9
+      - run: |
+          pip install -e ".[dev]"
+          mkdocs gh-deploy --force
