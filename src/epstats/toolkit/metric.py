@@ -1,5 +1,6 @@
 from typing import Set
 import pandas as pd
+import numpy as np
 
 from .parser import Parser
 
@@ -24,8 +25,6 @@ class Metric:
             name: metric name
             nominator: definition of nominator
             denominator: definition of denominator
-            format: specify format of the metric, e.g. '${:,.1f}' for RPM
-            multiplier: specify multiplier, e.g. 1000 for RPM
 
         Usage:
 
@@ -51,7 +50,7 @@ class Metric:
         """
         return self._goals
 
-    def get_evaluate_columns_agg(self, goals: pd.DataFrame):
+    def get_evaluate_columns_agg(self, goals: pd.DataFrame) -> np.array:
         """
         Get `count`, `sum_value`, `sum_value_sqr` numpy array of shape (variants, metrics) after
         evaluating nominator and denominator expressions from pre-aggregated goals.
@@ -68,7 +67,7 @@ class Metric:
         """
         return self._parser.evaluate_agg(goals)
 
-    def get_evaluate_columns_by_unit(self, goals: pd.DataFrame):
+    def get_evaluate_columns_by_unit(self, goals: pd.DataFrame) -> np.array:
         """
         Get `count`, `sum_value`, `sum_value_sqr` numpy array of shape (variants, metrics) after
         evaluating nominator and denominator expressions from goals aggregated by unit.
