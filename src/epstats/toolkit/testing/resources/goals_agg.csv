@@ -147,3 +147,7 @@ test-simple-metric		a	test_unit_type	global	conversions				0	0	413	413	0
 test-simple-metric		b	test_unit_type	global	conversions				0	0	360	360	0
 test-simple-metric		a	test_unit_type	global	bookings				0	0	17152	803105	0
 test-simple-metric		b	test_unit_type	global	bookings				0	0	14503	677178	0
+test-control-variant-b		a	test_unit_type	global	exposure				3000	3000	3000	3000	3000
+test-control-variant-b		b	test_unit_type	global	exposure				3030	3030	3030	3030	3030
+test-control-variant-b		a	test_unit_type	unit	click				455	512	455	512	455
+test-control-variant-b		b	test_unit_type	unit	click				448	493	448	493	448
