@@ -677,7 +677,7 @@ class Experiment:
         # dimensions of `stats` array: (metrics, variants, stats)
         # elements of `stats` array: metrics_id, exp_variant_id, count, mean, std, sum_value, confidence_level
         # hypothesis evaluation (standard way using t-test)
-        c = Statistics.ttest_evaluation(stats)
+        c = Statistics.ttest_evaluation(stats, self.control_variant)
 
         # multiple variants (comparisons) correction - applied when we have multiple treatment variants
         if variants > 2:

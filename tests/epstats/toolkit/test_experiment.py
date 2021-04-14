@@ -117,6 +117,29 @@ def test_real_by_unit(dao, unit_type):
     evaluate_experiment_by_unit(experiment, dao)
 
 
+def test_different_control_variant(dao, checks, unit_type):
+    """
+    This test tests situation when control variant is not the first one as usual.
+    Assume experiment with two variants `a` and `b`. Variant `b` is control variant
+    and variant `a` is treatment variant.
+    """
+    experiment = Experiment(
+        "test-control-variant-b",
+        "b",
+        [
+            Metric(
+                1,
+                "Click-through Rate",
+                "count(test_unit_type.unit.click)",
+                "count(test_unit_type.global.exposure)",
+            ),
+        ],
+        [],  # no check
+        unit_type=unit_type,
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
 def test_single_metrics_in_multiple_experiment(dao, checks, unit_type):
     experiment = Experiment(
         "test-multiple",
