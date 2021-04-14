@@ -11,7 +11,7 @@ class Statistics:
     """
 
     @classmethod
-    def ttest_evaluation(cls, stats: np.array) -> pd.DataFrame:
+    def ttest_evaluation(cls, stats: np.array, control_variant: str) -> pd.DataFrame:
         """
         Testing statistical significance of relative difference in means of treatment and control variant.
 
@@ -26,6 +26,7 @@ class Statistics:
 
         Arguments:
             stats: array with dimensions (metrics, variants, stats)
+            control_variant: string with the name of control variant
 
         `stats` array values:
 
@@ -66,12 +67,17 @@ class Statistics:
         # get only stats (not metric_id, metric_name, exp_variant_id) from the stats array as floats
         stats_values = stats[:, 3:8, :].astype(float)
 
+        # select stats data for control variant
+        for s in stats:
+            if s[2][0] == control_variant:
+                stats_values_control_variant = s[3:8, :].astype(float)
+                break
+
         # control variant values
-        s = stats_values[0]
-        count_cont = s[0]  # number of observations
-        mean_cont = s[1]  # mean
-        std_cont = s[2]  # standard deviation
-        conf_level = s[4]  # confidence level
+        count_cont = stats_values_control_variant[0]  # number of observations
+        mean_cont = stats_values_control_variant[1]  # mean
+        std_cont = stats_values_control_variant[2]  # standard deviation
+        conf_level = stats_values_control_variant[4]  # confidence level
 
         # this for loop goes over variants and compares one variant values against control variant values for
         # all metrics at once. Similar to scipy.stats.ttest_ind_from_stats
