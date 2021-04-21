@@ -60,8 +60,8 @@ def goals_wide_to_long(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _change_variable_name(variable):
-    """Change variable name, e.g. `bookings_squared` to `bookings`."""
-    return variable.split("_")[0]
+    """Change variable name, e.g. `transaction_bookings_squared` to `transaction_bookings`."""
+    return variable[:-8]
 
 
 def _add_value_squared_where_missing(row):
