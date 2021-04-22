@@ -32,18 +32,18 @@ def goals_wide_to_long(df: pd.DataFrame) -> pd.DataFrame:
 
     # DataFrame `sum_value` to long format
     # Select non squared columns and switch from long to wide
-    cols = [col for col in df.columns.to_list()[2:] if "squared" not in col]
+    cols = [col for col in df.columns.to_list()[2:] if "square" not in col]
     df_long = pd.melt(
         df, id_vars=["exp_id", "exp_variant_id"], value_vars=cols, var_name="goal", value_name="sum_value"
     )
 
     # DataFrame `sum_sqr_value` to long format
     # Select squared columns and swich from long to wide
-    cols_squared = [col for col in df.columns.to_list()[2:] if "squared" in col]
+    cols_squared = [col for col in df.columns.to_list()[2:] if "square" in col]
     df_long_sqr = pd.melt(
         df, id_vars=["exp_id", "exp_variant_id"], value_vars=cols_squared, var_name="goal", value_name="sum_sqr_value"
     )
-    df_long_sqr["goal"] = df_long_sqr["goal"].apply(_change_variable_name)
+    df_long_sqr["goal"] = df_long_sqr["goal"].apply(lambda x: "_".join(x.split("_")[:-1]))
 
     # Merge together and add other necessary columns for evaluation
     goals = pd.merge(left=df_long, right=df_long_sqr, how="outer", on=["exp_id", "exp_variant_id", "goal"])
@@ -57,11 +57,6 @@ def goals_wide_to_long(df: pd.DataFrame) -> pd.DataFrame:
     goals["sum_sqr_value"] = goals.apply(_add_value_squared_where_missing, axis="columns")
 
     return goals
-
-
-def _change_variable_name(variable):
-    """Change variable name, e.g. `transaction_bookings_squared` to `transaction_bookings`."""
-    return variable[:-8]
 
 
 def _add_value_squared_where_missing(row):
