@@ -258,6 +258,8 @@ class Experiment:
 
         It assumes that the first two columns are name of the experiment and variants. Than follows columns with data.
 
+        See usage of the method in the notebook [Ad-hoc A/B test evaluation using Ep-Stats](../user_guide/ab_test_simple_evaluation.html).
+
         Arguments:
             goals: dataframe with one row per variant and aggregated data in columns
 
