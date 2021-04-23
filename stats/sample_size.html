@@ -1,0 +1,1067 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Evaluation package for experimentation platform.">
+      
+      
+      
+        <meta name="author" content="Team Doodlebug">
+      
+      
+        <link rel="canonical" href="https://github.com/avast/ep-stats/stats/sample_size.html">
+      
+      <link rel="icon" href="../experiment_b.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.1.2">
+    
+    
+      
+        <title>Sample Size - Ep-Stats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f955dcd.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ef6f36e2.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sample-size" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ep-Stats" class="md-header__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ep-Stats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sample Size
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/avast/ep-stats/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ep-Stats" class="md-nav__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    Ep-Stats
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/avast/ep-stats/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      <label class="md-nav__link" for="__nav_1">
+        Home
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Home" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Home
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../principles.html" class="md-nav__link">
+        Principles
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources.html" class="md-nav__link">
+        Resources
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        User Guide
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="User Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/quick_start.html" class="md-nav__link">
+        Quick Start
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/protocol.html" class="md-nav__link">
+        Experimentation Protocol
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ep_in_python.html" class="md-nav__link">
+        Using Ep-Stats in Jupyter
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ab_test_simple_evaluation.html" class="md-nav__link">
+        Ad-hoc A/B test evaluation using Ep-Stats
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/aggregation.html" class="md-nav__link">
+        Aggregation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/configuring_api.html" class="md-nav__link">
+        Configuring API
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/test_data.html" class="md-nav__link">
+        Test Data
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      <label class="md-nav__link" for="__nav_3">
+        Statistics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Statistics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Statistics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="basics.html" class="md-nav__link">
+        Basics
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Sample Size
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="sample_size.html" class="md-nav__link md-nav__link--active">
+        Sample Size
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-impacts-sample-size" class="md-nav__link">
+    What Impacts Sample Size
+  </a>
+  
+    <nav class="md-nav" aria-label="What Impacts Sample Size">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#small-baseline" class="md-nav__link">
+    Small Baseline
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bigger-baseline" class="md-nav__link">
+    Bigger Baseline
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calculating-sample-size" class="md-nav__link">
+    Calculating Sample Size
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-do-if-sample-size-is-too-big" class="md-nav__link">
+    What to Do If Sample Size is Too Big
+  </a>
+  
+    <nav class="md-nav" aria-label="What to Do If Sample Size is Too Big">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-metrics" class="md-nav__link">
+    Proxy Metrics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sequential.html" class="md-nav__link">
+        Sequential Evaluation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ctr.html" class="md-nav__link">
+        CTR Metric Redefined
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="multiple.html" class="md-nav__link">
+        Multiple Comparison Correction
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="compound_metrics.html" class="md-nav__link">
+        Compound Metrics
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        API
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/metric.html" class="md-nav__link">
+        Metric
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/experiment.html" class="md-nav__link">
+        Experiment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/evaluation.html" class="md-nav__link">
+        Evaluation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/statistics.html" class="md-nav__link">
+        Statistics
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/check.html" class="md-nav__link">
+        Check
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/srm_check.html" class="md-nav__link">
+        SrmCheck
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao.html" class="md-nav__link">
+        Dao
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao_factory.html" class="md-nav__link">
+        DaoFactory
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/test_data.html" class="md-nav__link">
+        TestData
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-impacts-sample-size" class="md-nav__link">
+    What Impacts Sample Size
+  </a>
+  
+    <nav class="md-nav" aria-label="What Impacts Sample Size">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#small-baseline" class="md-nav__link">
+    Small Baseline
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bigger-baseline" class="md-nav__link">
+    Bigger Baseline
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calculating-sample-size" class="md-nav__link">
+    Calculating Sample Size
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-do-if-sample-size-is-too-big" class="md-nav__link">
+    What to Do If Sample Size is Too Big
+  </a>
+  
+    <nav class="md-nav" aria-label="What to Do If Sample Size is Too Big">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-metrics" class="md-nav__link">
+    Proxy Metrics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/avast/ep-stats/edit/master/docs/stats/sample_size.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="sample-size">Sample Size<a class="headerlink" href="#sample-size" title="Permanent link">&para;</a></h1>
+<p>Setting a correct sample size is a key step in launching successful experiments. We discuss what has an effect
+on required experiment sample size, how to calculate it and how to proceed if required sample size is too big.</p>
+<p>There is no free lunch in experimenting, everyone doing experiments navigates between trade-offs of significance, baseline metric conversion rate, measured differences and sample size.</p>
+<h2 id="what-impacts-sample-size">What Impacts Sample Size<a class="headerlink" href="#what-impacts-sample-size" title="Permanent link">&para;</a></h2>
+<p>Sample size depends on selected primary metric, on its baseline conversion rate and on a size of <em>minimal detectable effect (MDE)</em>. MDE is a minimal relative difference in primary metric between treatment and control variant, which we are willing to detect, i.e. which will be statistically significant.</p>
+<p>One way how to look at MDE is as experimenters estimate size of the impact the change in the experiment will have. But there's more practical view of MDE.</p>
+<p>While it is always good to run an experiment that detects +1% change as statistically significant, it does not make always sense to full-scale such experiment. The change of +1% is simply too small so it does not have business impact offsetting the cost of full-scaled solution. Moreover to detect small change such as +1%, you need to have a great amount of users in the experiment.</p>
+<p>Let assume we full-scale the experiment if the effect on primary metric is at least +5% . Then +5% is our MDE. Detecting +5% effect as statistically significant requires much less users than detecting +1% change. This gives us also a way how to estimate MDEs in different experiments.</p>
+<blockquote>
+<p>MDE is a minimal change the experimenter wants to measure in the experiment to make it reasonable to full-scale.</p>
+</blockquote>
+<h3 id="small-baseline">Small Baseline<a class="headerlink" href="#small-baseline" title="Permanent link">&para;</a></h3>
+<p>Sales metrics like Conversions per Pageview or Conversions per User have usually baseline conversion rates below 1%. This requires to use big sample sizes to measure significant results.</p>
+<p>Following graph shows how sample size depends on various smaller baseline conversion rates and MDE. We can see
+that we need over 20,000 samples per variant to measure significant difference of 20% on a metric with 1% baseline conversion rate.</p>
+<p><img alt="" src="images/small_baseline.png" /></p>
+<h3 id="bigger-baseline">Bigger Baseline<a class="headerlink" href="#bigger-baseline" title="Permanent link">&para;</a></h3>
+<p>Engagement metrics like Click-through Rate (CTR) or <a href="sample_size.html#proxy-metrics">proxy metrics</a> usually have much higher rates than sales metrics making it easier to measure significant differences.</p>
+<p>We can see that we need only 3,000 samples per variant to detect a difference of 5% as statistically significant on a metric with 50% baseline conversion rate.</p>
+<p><img alt="" src="images/big_baseline.png" /></p>
+<h2 id="calculating-sample-size">Calculating Sample Size<a class="headerlink" href="#calculating-sample-size" title="Permanent link">&para;</a></h2>
+<p>We can calculate sample size <span class="arithmatex">\(n\)</span> per variant as:</p>
+<div class="arithmatex">\[n = \frac{(z_{\alpha/2})^2\left[\hat{p}_A(1-\hat{p}_A) + \hat{p}_B(1-\hat{p}_B)\right]}{\Delta^2}\]</div>
+<p>where <span class="arithmatex">\(z_{\alpha/2}\)</span> is a critical value of normal distribution for confidence level <span class="arithmatex">\(\alpha\)</span>, <span class="arithmatex">\(\hat{p}_A\)</span> is baseline conversion rate in variant A, <span class="arithmatex">\(\hat{p}_B\)</span> is expected or estimated conversion rate in variant B and <span class="arithmatex">\(\Delta = \hat{p}_B - \hat{p}_A\)</span> is minimal detectable effect (MDE).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For conversion rates, sample variance <span class="arithmatex">\(\hat{\sigma}^2 = \hat{p}(1-\hat{p})/n\)</span>.</p>
+</div>
+<p>As we discussed in previous chapter, we can see that:</p>
+<ol>
+<li>Sample size increases as MDE decreases (because <span class="arithmatex">\(\Delta\)</span> is in the denominator).</li>
+<li>Sample size is greatest for conversion rates equal to 0.5.</li>
+</ol>
+<h2 id="what-to-do-if-sample-size-is-too-big">What to Do If Sample Size is Too Big<a class="headerlink" href="#what-to-do-if-sample-size-is-too-big" title="Permanent link">&para;</a></h2>
+<p>We saw that required sample size is</p>
+<ol>
+<li>Proportional to <span class="arithmatex">\(\hat{\sigma}^2/\Delta^2\)</span>.</li>
+<li>Many key metrics have high-variance (eg. Conversions per User, Revenue per Mile (RPM), ...</li>
+<li>The problem:<ol>
+<li>As we optimize, we need to measure smaller and smaller differences.</li>
+<li>We need 100K users per variant to detect 2% change to RPM.</li>
+<li>We need 40M users to detect 0.1% change to RPM</li>
+</ol>
+</li>
+</ol>
+<p>What can we do when required sample size is too big to run reasonable experiment?</p>
+<h3 id="proxy-metrics">Proxy Metrics<a class="headerlink" href="#proxy-metrics" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Is there anything else in users' interactions that tells us what variant they like more?</p>
+</blockquote>
+<ol>
+<li>Do users click more?</li>
+<li>Do users return more often?</li>
+<li>Do users return quicker?</li>
+<li>How long do users spend on our website?</li>
+<li>How long do users spend on the particular page?</li>
+</ol>
+<p>We can measure proxy metrics for every exposure of every user and every session, engagement metrics have much higher baseline conversion rates thus require much smaller sample sizes. Engagement metrics usually correlate with sales metrics e.g. who clicks also buys etc.</p>
+<p>To show 10% improvement on 50% baseline we need 764 samples!</p>
+<p>There are not many engagement metrics<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> available in EP at the moment, we would like to add some from the following list. At the moment, please, take it as an inspiration of what will be possible in the future.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Metric</th>
+<th align="left">Experimentation Unit</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><strong>User metrics</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Sessions per User</td>
+<td align="left">User</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Clicks per User</td>
+<td align="left">User</td>
+<td align="left">Clicks on any element on the website, user-level CTR.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>Duration metrics</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Duration of a Session</td>
+<td align="left">Session</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Sessions Duration per User</td>
+<td align="left">User</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Duration of an Absence</td>
+<td align="left">Absence-2</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Duration of an Absence per User</td>
+<td align="left">User-2</td>
+<td align="left">If user had at least 2 sessions</td>
+</tr>
+<tr>
+<td align="left">Time on Page</td>
+<td align="left">Pageview</td>
+<td align="left">On experiment screen</td>
+</tr>
+<tr>
+<td align="left">Time to Click</td>
+<td align="left">Pageview</td>
+<td align="left">On experiment screen or experiment element only</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>Action metrics</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">CTR</td>
+<td align="left">Pageview</td>
+<td align="left">On experiment screen or experiment element only</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>Metrics with too low conversion rate</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Downloads</td>
+<td align="left">Pageview</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">RPM</td>
+<td align="left">Pageview</td>
+<td align="left">On experiment screen or experiment element only</td>
+</tr>
+<tr>
+<td align="left">CNV</td>
+<td align="left">Pageview</td>
+<td align="left">On experiment screen or experiment element only</td>
+</tr>
+<tr>
+<td align="left">Downloads per User</td>
+<td align="left">User</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Transactions per User</td>
+<td align="left">User</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://research.yandex.com/publications/99">Yandex, Practical Aspects of Sensitivity in Online Experimentation with User Engagement Metrics</a>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="basics.html" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Basics
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="sequential.html" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Sequential Evaluation
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2020 Maintained by <a href="https://github.com/avast">Avast</a>.
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../assets/javascripts/workers/search.fe42c31b.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.4ea5477f.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>
