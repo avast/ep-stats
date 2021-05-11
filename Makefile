@@ -10,7 +10,10 @@ flake:
 test:
 	pytest
 
-check: brunette-check flake test
+bandit:
+	bandit --skip "B101" --recursive src/epstats
+
+check: brunette-check flake bandit test
 
 install:
 	python -m pip install -e .

@@ -149,4 +149,4 @@ def check_docstring(doc, indent):
         if end != -1:
             code_part = doc[(start + 10) : end].replace(" " * indent, "")  # noqa: E203
             print(code_part)
-            exec(code_part)
+            exec(code_part)  # nosec
