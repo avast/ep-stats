@@ -9,7 +9,7 @@ repos:
     # -   id: check-yaml
     -   id: check-added-large-files
 -   repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.0
+    rev: 3.9.2
     hooks:
     -   id: flake8
 -   repo: https://github.com/odwyersoftware/brunette
@@ -17,3 +17,8 @@ repos:
     hooks:
         - id: brunette
           entry: brunette --config=setup.cfg
+-   repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
+    rev: v1.0.5
+    hooks:
+    -   id: python-bandit-vulnerability-check
+        args: [--skip, "B101", --recursive, src/epstats]
