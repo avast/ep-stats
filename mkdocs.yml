@@ -12,6 +12,7 @@ nav:
     - Introduction: 'index.md'
     - Principles: 'principles.md'
     - Resources: 'resources.md'
+    - Architecture: 'architecture.md'
   - User Guide:
     - Quick Start: 'user_guide/quick_start.md'
     - Experimentation Protocol: 'user_guide/protocol.md'
@@ -37,6 +38,8 @@ nav:
     - Dao: 'api/dao.md'
     - DaoFactory: 'api/dao_factory.md'
     - TestData: 'api/test_data.md'
+  - Presentations:
+    - Architecture: 'presentations/architecture/architecture.md'
 
 plugins:
   - mkdocstrings:
@@ -47,7 +50,7 @@ plugins:
       include_source: True
       execute: False
 
-copyright: Copyright &copy; 2020 Maintained by <a href="https://github.com/avast">Avast</a>.
+copyright: Copyright &copy; 2021 Maintained by <a href="https://github.com/avast">Avast</a>.
 
 theme:
   name: material

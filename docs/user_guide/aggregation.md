@@ -63,4 +63,54 @@ Different goals may allow filtering by different dimensions.
 
 ## Example
 
+Following SQL snippet shows how top-level aggregation should be made to obtain `goals` for [`Experiment.evaluate_agg`](./api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_agg).
+
+```SQL
+SELECT
+    exp_id,
+    exp_variant_id,
+    unit_type,
+    agg_type,
+    goal,
+    dimension,
+    dimension_value,
+    SUM(sum_cnt) count,
+    SUM(sum_cnt * sum_cnt) sum_sqr_count,
+    SUM(value) sum_value,
+    SUM(value * value) sum_sqr_value,
+    CAST(SUM(unique) AS Int64) count_unique
+    FROM (
+        SELECT
+            exp_id,
+            exp_variant_id,
+            unit_type,
+            agg_type,
+            goal,
+            dimension,
+            dimension_value,
+            unit_id,
+            SUM(cnt) sum_cnt,
+            SUM(value) value,
+            IF(SUM(cnt) > 0, 1, 0) unique
+            FROM events.table
+            GROUP BY
+                exp_id,
+                exp_variant_id,
+                unit_type,
+                agg_type,
+                goal,
+                dimension,
+                dimension_value,
+                unit_id
+    ) u
+    GROUP BY
+        exp_id,
+        exp_variant_id,
+        unit_type,
+        agg_type,
+        goal,
+        dimension,
+        dimension_value
+```
+
 See [Test Data](test_data.md) for examples of pre-aggregated goals that make input to statistical evaluation using [`Experiment.evaluate_agg`](../api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_agg) or per unit goals that make input to statistical evaluation using [`Experiment.evaluate_by_unit`](../api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_by_unit).
