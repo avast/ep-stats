@@ -7,7 +7,7 @@ class ApiSettings(BaseSettings):
     app_title: str = "Experimentation Platform Statistics"
     app_description: str = "API for statistical evaluation in Experimentation Platform."
 
-    host: str = "0.0.0.0"
+    host: str = "localhost"
     port: int = 8080
 
     log_level: str = "info"
