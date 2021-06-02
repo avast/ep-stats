@@ -51,7 +51,7 @@ def _enrich_metric_id(row):
 
 
 def format_results(
-    r: pd.DataFrame, experiment: Experiment, format_pct: str = "{:,.1%}", format_pval: str = "{:,.3f}"
+    r: pd.DataFrame, experiment: Experiment, format_pct: str = "{:+,.1%}", format_pval: str = "{:,.3f}"
 ) -> pd.DataFrame:
     """
     Method formatting wide dataframe with resutls. Using params `format_pct` and `format_pval` you can set number of
