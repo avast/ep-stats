@@ -1,8 +1,8 @@
 import pytest
 
-from epstats.toolkit.experiment import Experiment
-from epstats.toolkit.check import SrmCheck
-from epstats.toolkit.testing import evaluate_experiment_agg, TestDao, TestData
+from src.epstats.toolkit.experiment import Experiment
+from src.epstats.toolkit.check import SrmCheck
+from src.epstats.toolkit.testing import evaluate_experiment_agg, TestDao, TestData
 
 
 @pytest.fixture(scope="module")

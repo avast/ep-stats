@@ -1,16 +1,16 @@
 import pandas as pd
 from fastapi.testclient import TestClient
 
-from epstats.toolkit.testing import (
+from src.epstats.toolkit.testing import (
     assert_metrics,
     assert_checks,
     assert_exposures,
     TestDao,
 )
 
-from epstats.main import api
-from epstats.main import get_dao, get_statsd, get_executor_pool
-from epstats.server.res import Result
+from src.epstats.main import api
+from src.epstats.main import get_dao, get_statsd, get_executor_pool
+from src.epstats.server.res import Result
 
 from .depend import get_test_dao, get_test_executor_pool, get_test_statsd, dao_factory
 

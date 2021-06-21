@@ -365,6 +365,11 @@ class SubBinOp(BinOp):
 
 
 class TildaBinOp(BinOp):
+    """
+    Tilda treats the second operand as negative,
+    resulting in substraction of values and addition of squared values.
+    """
+
     def symbol(self):
         return "~"
 

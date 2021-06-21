@@ -1,9 +1,9 @@
 import pytest
 
-from epstats.toolkit.metric import Metric, SimpleMetric
-from epstats.toolkit.check import SrmCheck, SimpleSrmCheck
-from epstats.toolkit.experiment import Experiment, Filter, FilterScope
-from epstats.toolkit.testing import (
+from src.epstats.toolkit.metric import Metric, SimpleMetric
+from src.epstats.toolkit.check import SrmCheck, SimpleSrmCheck
+from src.epstats.toolkit.experiment import Experiment, Filter, FilterScope
+from src.epstats.toolkit.testing import (
     evaluate_experiment_agg,
     evaluate_experiment_simple_agg,
     evaluate_experiment_by_unit,
