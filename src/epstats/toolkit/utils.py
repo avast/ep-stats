@@ -27,6 +27,8 @@ def goals_wide_to_long(df: pd.DataFrame) -> pd.DataFrame:
     ```
     """
 
+    # Do not modify the input `df` via reference
+    df = df.copy()
     # Rename first two columns
     df.columns = ["exp_id", "exp_variant_id"] + df.columns.to_list()[2:]
 
