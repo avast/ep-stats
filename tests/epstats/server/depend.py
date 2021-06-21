@@ -1,7 +1,7 @@
 from statsd import StatsClient
 from concurrent.futures import ThreadPoolExecutor
 
-from epstats.toolkit.testing import TestDaoFactory, TestData
+from src.epstats.toolkit.testing import TestDaoFactory, TestData
 
 dao_factory = TestDaoFactory(TestData())
 

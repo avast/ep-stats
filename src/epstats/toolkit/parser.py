@@ -37,6 +37,7 @@ class Parser:
         divop = oneOf("/")
         plusop = oneOf("+")
         subop = oneOf("-")
+        tildaop = oneOf("~")
 
         expr = infixNotation(
             operand,
@@ -45,6 +46,7 @@ class Parser:
                 (divop, 2, opAssoc.LEFT, DivBinOp),
                 (plusop, 2, opAssoc.LEFT, PlusBinOp),
                 (subop, 2, opAssoc.LEFT, SubBinOp),
+                (tildaop, 2, opAssoc.LEFT, TildaBinOp),
             ],
         )
 
@@ -357,6 +359,25 @@ class SubBinOp(BinOp):
 
     def evaluate_sqr(self, goals):
         return self.args[0].evaluate_sqr(goals) - self.args[1].evaluate_sqr(goals)
+
+    def evaluate_by_unit(self, goals):
+        return self.args[0].evaluate_by_unit(goals) - self.args[1].evaluate_by_unit(goals)
+
+
+class TildaBinOp(BinOp):
+    """
+    Tilda treats the second operand as negative,
+    resulting in substraction of values and addition of squared values.
+    """
+
+    def symbol(self):
+        return "~"
+
+    def evaluate_agg(self, goals):
+        return self.args[0].evaluate_agg(goals) - self.args[1].evaluate_agg(goals)
+
+    def evaluate_sqr(self, goals):
+        return self.args[0].evaluate_sqr(goals) + self.args[1].evaluate_sqr(goals)
 
     def evaluate_by_unit(self, goals):
         return self.args[0].evaluate_by_unit(goals) - self.args[1].evaluate_by_unit(goals)

@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
-from epstats.main import api
-from epstats.main import get_dao, get_statsd, get_executor_pool
+from src.epstats.main import api
+from src.epstats.main import get_dao, get_statsd, get_executor_pool
 
 from .depend import get_test_dao, get_test_executor_pool, get_test_statsd
 
