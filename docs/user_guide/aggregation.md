@@ -64,7 +64,6 @@ Multiple dimensions per goal are allowed.
 value(test_unit_type.unit.conversion(product=p_1, country=A)) / count(test_unit_type.global.exposure)
 ```
 
-
 !!!note
     Dimensions are not supported yet.
 
