@@ -538,11 +538,7 @@ class Experiment:
         Does that in the best effort - fills in `count`, `sum_sqr_count`, `sum_value`, `sum_sqr_value` and `count_unique` with zeros.
         """
         # what variants and goals there should be from all the goals needed to evaluate all metrics
-        self.variants = (
-            self.variants
-            if self.variants is not None
-            else np.unique(np.append(goals["exp_variant_id"], self.control_variant))
-        )
+        self._set_variants(goals)
         g = goals[goals.exp_variant_id.isin(self.variants)]
         nvs = self.variants
         ngs = self.get_goals()
@@ -597,11 +593,7 @@ class Experiment:
         Does that in the best effort - fills in `count`, `sum_value` with zeros.
         """
         # what variants and goals there should be from all the goals needed to evaluate all metrics
-        self.variants = (
-            self.variants
-            if self.variants is not None
-            else np.unique(np.append(goals["exp_variant_id"], self.control_variant))
-        )
+        self._set_variants(goals)
         g = goals[goals.exp_variant_id.isin(self.variants)]
         nvs = self.variants
         ngs = self.get_goals()
