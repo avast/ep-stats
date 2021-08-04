@@ -21,9 +21,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        df = pd.read_csv(pkg_resources.open_text(resources, "goals_agg.csv"), sep="\t").fillna(
-            {"dimension": "", "dimension_value": ""}
-        )
+        df = pd.read_csv(pkg_resources.open_text(resources, "goals_agg.csv"), sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
     @classmethod
@@ -50,9 +48,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        df = pd.read_csv(pkg_resources.open_text(resources, "goals_by_unit.csv"), sep="\t").fillna(
-            {"dimension": "", "dimension_value": ""}
-        )
+        df = pd.read_csv(pkg_resources.open_text(resources, "goals_by_unit.csv"), sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
     @classmethod

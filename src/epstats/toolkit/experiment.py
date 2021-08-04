@@ -185,8 +185,7 @@ class Experiment:
         1. `unit_type` - randomization unit type
         1. `agg_type` - level of aggregation
         1. `goal` - goal name
-        1. `dimension` - name of the dimension, e.g. `product`
-        1. `dimension_value` - value of the dimension, e.g. `p_1`
+        1. any number of dimensional columns, e.g. column `product` containing values `p_1`
         1. `count` - number of observed goals (e.g. conversions)
         1. `sum_sqr_count` - summed squared number of observed goals per unit, it is similar
         to `sum_sqr_value`
@@ -235,11 +234,11 @@ class Experiment:
         Input data frame example:
 
         ```
-        exp_id      exp_variant_id  unit_type           agg_type    goal            dimension       dimension_value     count   sum_sqr_count   sum_value   sum_sqr_value   count_unique
-        test-srm    a               test_unit_type      global      exposure                                            100000  100000          100000      100000          100000
-        test-srm    b               test_unit_type      global      exposure                                            100100  100100          100100      100100          100100
-        test-srm    a               test_unit_type      unit        conversion                                            1200    1800            32000       66528           900
-        test-srm    a               test_unit_type_2    global      conversion      product         product_1           1000    1700            31000       55000           850
+        exp_id      exp_variant_id  unit_type           agg_type    goal            product             count   sum_sqr_count   sum_value   sum_sqr_value   count_unique
+        test-srm    a               test_unit_type      global      exposure                            100000  100000          100000      100000          100000
+        test-srm    b               test_unit_type      global      exposure                            100100  100100          100100      100100          100100
+        test-srm    a               test_unit_type      unit        conversion                          1200    1800            32000       66528           900
+        test-srm    a               test_unit_type_2    global      conversion      product_1           1000    1700            31000       55000           850
         ```
         """
         g = self._fix_missing_agg(goals)
@@ -342,8 +341,7 @@ class Experiment:
         1. `unit_id` - (randomization) unit id
         1. `agg_type` - level of aggregation
         1. `goal` - goal name
-        1. `dimension` - name of the dimension, e.g. `product`
-        1. `dimension_value` - value of the dimension, e.g. `p_1`
+        1. any number of dimensional columns, e.g. column `product` containing values `p_1`
         1. `count` - number of observed goals
         1. `sum_value` - value of observed goals
 
@@ -386,12 +384,12 @@ class Experiment:
         Input data frame example:
 
         ```
-        exp_id      exp_variant_id  unit_type       unit_id             agg_type    goal              dimension         dimension_value     count   sum_value
-        test-srm    a               test_unit_type  test_unit_type_1    unit        exposure                                                1       1
-        test-srm    a               test_unit_type  test_unit_type_1    unit        conversion        product           product_1           2       75
-        test-srm    b               test_unit_type  test_unit_type_2    unit        exposure                                                1       1
-        test-srm    b               test_unit_type  test_unit_type_3    unit        exposure                                                1       1
-        test-srm    b               test_unit_type  test_unit_type_3    unit        conversion        product           product_2           1       1
+        exp_id      exp_variant_id  unit_type       unit_id             agg_type    goal              product             count   sum_value
+        test-srm    a               test_unit_type  test_unit_type_1    unit        exposure                              1       1
+        test-srm    a               test_unit_type  test_unit_type_1    unit        conversion        product_1           2       75
+        test-srm    b               test_unit_type  test_unit_type_2    unit        exposure                              1       1
+        test-srm    b               test_unit_type  test_unit_type_3    unit        exposure                              1       1
+        test-srm    b               test_unit_type  test_unit_type_3    unit        conversion        product_2           1       1
         ```
         """
         g = self._fix_missing_by_unit(goals)
@@ -409,9 +407,8 @@ class Experiment:
                     "unit_type",
                     "agg_type",
                     "unit_id",
-                    "dimension",
-                    "dimension_value",
-                ],
+                ]
+                + self._get_dimension_columns(),
                 columns="goal",
                 aggfunc=np.sum,
                 fill_value=0,
@@ -522,6 +519,18 @@ class Experiment:
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         return c[Evaluation.check_columns()]
 
+    def _get_dimension_columns(self) -> list:
+
+        return list({d for g in self.get_goals() for d in g.dimension_to_value.keys()})
+
+    def _set_variants(self, goals):
+        # what variants and goals there should be from all the goals needed to evaluate all metrics
+        self.variants = (
+            self.variants
+            if self.variants is not None
+            else np.unique(np.append(goals["exp_variant_id"], self.control_variant))
+        )
+
     def _fix_missing_agg(self, goals: pd.DataFrame) -> pd.DataFrame:
         """
         Adds zero values for missing goals and variants that are needed for metric evaluation.
@@ -541,37 +550,40 @@ class Experiment:
         # variants * goals is the number of variant x goals combinations we expect in the data
         lnvs = len(nvs)
         lngs = len(ngs)
-        ln = lnvs * lngs
 
         # create zero data frame for all variants and goals
         empty_df = pd.DataFrame(
             {
+                "exp_id": self.id,
                 "exp_variant_id": np.tile(nvs, lngs),
                 "unit_type": np.repeat([g.unit_type for g in ngs], lnvs),
                 "agg_type": np.repeat([g.agg_type for g in ngs], lnvs),
                 "goal": np.repeat([g.goal for g in ngs], lnvs),
-                "dimension": np.repeat([g.dimension for g in ngs], lnvs),
-                "dimension_value": np.repeat([g.dimension_value for g in ngs], lnvs),
-                "count": np.zeros(ln),
-                "sum_sqr_count": np.zeros(ln),
-                "sum_value": np.zeros(ln),
-                "sum_sqr_value": np.zeros(ln),
-                "count_unique": np.zeros(ln),
+                "count": 0,
+                "sum_sqr_count": 0,
+                "sum_value": 0,
+                "sum_sqr_value": 0,
+                "count_unique": 0,
             }
         )
+
+        for dimension in self._get_dimension_columns():
+            empty_df[dimension] = np.repeat([g.dimension_to_value.get(dimension, "") for g in ngs], lnvs)
 
         # join to existing data and use zeros for only missing variants and goals
         m = (
             pd.concat([g, empty_df], axis=0)
+            .fillna({d: "" for d in self._get_dimension_columns()})
             .groupby(
                 [
+                    "exp_id",
                     "exp_variant_id",
                     "unit_type",
                     "agg_type",
-                    "dimension",
-                    "dimension_value",
                     "goal",
                 ]
+                + self._get_dimension_columns(),
+                # dropna=False,
             )
             .sum()
             .reset_index()
@@ -597,39 +609,38 @@ class Experiment:
         # variants * goals is the number of variant x goals combinations we expect in the data
         lnvs = len(nvs)
         lngs = len(ngs)
-        ln = lnvs * lngs
 
         # create zero data frame for all variants and goals
         empty_df = pd.DataFrame(
             {
-                "exp_id": np.repeat(self.id, ln),
+                "exp_id": self.id,
                 "exp_variant_id": np.tile(nvs, lngs),
                 "unit_type": np.repeat([g.unit_type for g in ngs], lnvs),
                 "agg_type": np.repeat([g.agg_type for g in ngs], lnvs),
                 "goal": np.repeat([g.goal for g in ngs], lnvs),
-                "dimension": np.repeat([g.dimension for g in ngs], lnvs),
-                "dimension_value": np.repeat([g.dimension_value for g in ngs], lnvs),
-                "unit_id": np.repeat("fillna", ln),
-                "count": np.zeros(ln),
-                "sum_value": np.zeros(ln),
+                "unit_id": np.nan,
+                "count": 0,
+                "sum_value": 0,
             }
         )
 
+        for dimension in self._get_dimension_columns():
+            empty_df[dimension] = np.repeat([g.dimension_to_value.get(dimension, "") for g in ngs], lnvs)
+
         # join to existing data and use zeros for only missing variants and goals
-        m = pd.concat([g, empty_df], axis=0)
+        m = pd.concat([g, empty_df], axis=0).fillna({d: "" for d in self._get_dimension_columns()})
         return m[
             [
                 "exp_id",
                 "exp_variant_id",
                 "unit_type",
                 "agg_type",
-                "dimension",
-                "dimension_value",
                 "goal",
                 "unit_id",
                 "count",
                 "sum_value",
             ]
+            + self._get_dimension_columns()
         ]
 
     def _evaluate_metrics(self, goals: pd.DataFrame, column_fce) -> pd.DataFrame:

@@ -10,8 +10,8 @@ class Dao:
 
     def get_unit_goals(self, experiment: Experiment) -> pd.DataFrame:
         """
-        Get goals data pre-aggregated by columns `exp_variant_id`, `unit_type`, `agg_type`, `goal`,
-        `dimension`, `dimension_value` and `unit_id`.
+        Get goals data pre-aggregated by `exp_variant_id`, `unit_type`, `agg_type`, `goal`,
+        `unit_id` and any dimension columns (in case of dimensional metrics).
 
         See [`Experiment.evaluate_by_unit`][epstats.toolkit.experiment.Experiment.evaluate_by_unit] for column
         descriptions and example result.
@@ -20,8 +20,8 @@ class Dao:
 
     def get_agg_goals(self, experiment: Experiment) -> pd.DataFrame:
         """
-        Get goals data pre-aggregated by columns `exp_variant_id`, `unit_type`, `agg_type`, `goal`,
-        `dimension`, `dimension_value`.
+        Get goals data pre-aggregated by `exp_variant_id`, `unit_type`, `agg_type`, `goal`,
+        `unit_id` and any dimension columns (in case of dimensional metrics)
 
         See [`Experiment.evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_agg] for column
         descriptions and example result.

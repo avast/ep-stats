@@ -1,4 +1,5 @@
 from typing import Set
+from collections import Counter
 from pyparsing import (
     Word,
     alphas,
@@ -8,6 +9,7 @@ from pyparsing import (
     nums,
     ParseException,
     alphanums,
+    delimitedList,
 )
 import pandas as pd
 
@@ -26,12 +28,13 @@ class Parser:
         number = Word(nums).setParseAction(Number)
         dimension = Word(alphas + "_").setParseAction(Dimension)
         dimension_value = Word(alphanums + "_" + "-" + "." + "%").setParseAction(DimensionValue)
+        dimension_list = delimitedList(dimension + "=" + dimension_value)
 
         ep_goal = (func + "(" + unit_type + "." + agg_type + "." + goal + ")").setParseAction(EpGoal)
-        ep_goal_with_dimension = (
-            func + "(" + unit_type + "." + agg_type + "." + goal + "(" + dimension + "=" + dimension_value + ")" + ")"
+        ep_goal_with_dimensions = (
+            func + "(" + unit_type + "." + agg_type + "." + goal + "(" + dimension_list + ")" + ")"
         ).setParseAction(EpGoal)
-        operand = number | ep_goal | ep_goal_with_dimension
+        operand = number | ep_goal | ep_goal_with_dimensions
 
         multop = oneOf("*")
         divop = oneOf("/")
@@ -52,6 +55,19 @@ class Parser:
 
         self._nominator_expr = expr.parseString(nominator)[0]
         self._denominator_expr = expr.parseString(denominator)[0]
+        self._update_dimension_to_value()
+
+    def _update_dimension_to_value(self):
+        """
+        To every `EpGoal`, we need to add missing dimensions that are present
+        in other `EpGoal` instances so the row masking can work properly.
+        """
+
+        all_dimensions = {d for g in self.get_goals() for d in g.dimension_to_value.keys()}
+        for goal in self.get_goals():
+            for dimension in all_dimensions:
+                if dimension not in goal.dimension_to_value:
+                    goal.dimension_to_value[dimension] = ""
 
     def evaluate_agg(self, goals: pd.DataFrame):
         """
@@ -220,12 +236,29 @@ class EpGoal:
         self.unit_type = t[2].unit_type
         self.agg_type = t[4].agg_type
         self.goal = t[6].goal
-        self.dimension = t[8].dimension if len(t) > 8 else ""
-        self.dimension_value = t[10].dimension_value if len(t) > 8 else ""
+
+        dimensions = [d.dimension for d in t if isinstance(d, Dimension)]
+        dimension_values = [v.dimension_value for v in t if isinstance(v, DimensionValue)]
+        self._raise_if_duplicate_dimensions(dimensions)
+        # empty dict if no dimensions
+        self.dimension_to_value = {d: v for d, v in zip(dimensions, dimension_values)}
+
+    @staticmethod
+    def _raise_if_duplicate_dimensions(dimensions):
+
+        duplicates = {k: v for k, v in Counter(dimensions).items() if v > 1}
+        if duplicates:
+            raise ParseException(f"Multiple values encountered for dimensions: `{list(duplicates.keys())}`.")
 
     def _to_string(self):
-        dimension = f"[{self.dimension}={self.dimension_value}]" if self.dimension != "" else ""
-        return f"{self.unit_type}.{self.agg_type}.{self.goal}{dimension}"
+
+        if self.is_dimensional():
+            dimension_list = ", ".join(f"{d}={v}" for d, v in self.dimension_to_value.items() if v != "")
+            dimensions = f"[{dimension_list}]"
+        else:
+            dimensions = ""
+
+        return f"{self.unit_type}.{self.agg_type}.{self.goal}{dimensions}"
 
     def __str__(self):
         return self._to_string()
@@ -241,12 +274,19 @@ class EpGoal:
     def evaluate_agg(self, goals):
         return self._evaluate_agg(goals, self.column)
 
+    def _get_dimension_mask(self, goals):
+
+        mask = pd.Series([True] * len(goals))
+        for dimension, dimension_value in self.dimension_to_value.items():
+            mask &= goals[dimension] == dimension_value
+
+        return mask
+
     def evaluate_by_unit(self, goals, key):
         g = goals[
             (goals["unit_type"] == self.unit_type)
             & (goals["agg_type"] == self.agg_type)
-            & (goals["dimension"] == self.dimension)
-            & (goals["dimension_value"] == self.dimension_value)
+            & self._get_dimension_mask(goals)
         ]
         return g["exp_variant_id"], g.xs(key=key, level=1, axis=1)[self.goal]
 
@@ -254,13 +294,19 @@ class EpGoal:
         return self._evaluate_agg(goals, self.column_sqr)
 
     def _evaluate_agg(self, goals, column):
-        return goals[
-            (goals["unit_type"] == self.unit_type)
-            & (goals["agg_type"] == self.agg_type)
-            & (goals["goal"] == self.goal)
-            & (goals["dimension"] == self.dimension)
-            & (goals["dimension_value"] == self.dimension_value)
-        ][column].values
+        groupby_columns = ["exp_id", "exp_variant_id", "unit_type", "agg_type", "goal"]
+        return (
+            goals[
+                (goals["unit_type"] == self.unit_type)
+                & (goals["agg_type"] == self.agg_type)
+                & (goals["goal"] == self.goal)
+                & self._get_dimension_mask(goals)
+            ]
+            .groupby(groupby_columns)
+            .agg({column: sum})[column]
+            .values
+        )
+        # group by unit_type, agg_type, goal, exp_id, variant_id (dimenze uz nas nezajimaji)
 
     def get_goals_str(self) -> Set[str]:
         return {self._to_string()}
@@ -269,7 +315,7 @@ class EpGoal:
         return {self}
 
     def is_dimensional(self):
-        return self.dimension != "" and self.dimension_value != ""
+        return bool([v for v in self.dimension_to_value.values() if v != ""])
 
     __repr__ = __str__
 
