@@ -287,7 +287,7 @@ class Experiment:
         # Define the experiment
         unit_type = 'test_unit_type'
         experiment = Experiment(
-            'my-experiment',
+            'test-simple-metric',
             'a',
             [
                 SimpleMetric(1, 'Click-through Rate (CTR)', 'clicks', 'views', unit_type),
