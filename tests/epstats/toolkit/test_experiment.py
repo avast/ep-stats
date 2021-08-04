@@ -336,6 +336,25 @@ def test_dimension(dao, metrics, checks, unit_type):
     evaluate_experiment_agg(experiment, dao)
 
 
+def test_multi_dimension(dao, metrics, checks, unit_type):
+    experiment = Experiment(
+        "test-multi-dimension",
+        "a",
+        [
+            Metric(
+                1,
+                "Views per User of Screen button-1,p-1",
+                "count(test_unit_type.unit.view(element=button-1, product=p-1))",
+                "count(test_unit_type.global.exposure)",
+            )
+        ],
+        [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
+        unit_type=unit_type,
+        variants=["a", "b"],
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
 def test_filter_scope_goal(dao, metrics, checks, unit_type):
     experiment = Experiment(
         "test-dimension",
