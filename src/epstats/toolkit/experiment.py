@@ -163,8 +163,21 @@ class Experiment:
                 ]
             )
         ]
+        self._update_dimension_to_value()
         self.statsd = statsd
         self.filters = filters if filters is not None else []
+
+    def _update_dimension_to_value(self):
+        """
+        To every `EpGoal` across all metrics, we need to add missing dimensions
+        that are present in every other `EpGoal` instances so the row masking
+        can work properly.
+        """
+
+        for goal in self.get_goals():
+            for dimension in self.get_dimension_columns():
+                if dimension not in goal.dimension_to_value:
+                    goal.dimension_to_value[dimension] = ""
 
     def evaluate_agg(self, goals: pd.DataFrame) -> Evaluation:
         """
@@ -408,7 +421,7 @@ class Experiment:
                     "agg_type",
                     "unit_id",
                 ]
-                + self._get_dimension_columns(),
+                + self.get_dimension_columns(),
                 columns="goal",
                 aggfunc=np.sum,
                 fill_value=0,
@@ -519,8 +532,10 @@ class Experiment:
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         return c[Evaluation.check_columns()]
 
-    def _get_dimension_columns(self) -> list:
-
+    def get_dimension_columns(self) -> List[str]:
+        """
+        Returns a list of all dimensions used in all metrics in the experiment.
+        """
         return list({d for g in self.get_goals() for d in g.dimension_to_value.keys()})
 
     def _set_variants(self, goals):
@@ -563,13 +578,13 @@ class Experiment:
             }
         )
 
-        for dimension in self._get_dimension_columns():
+        for dimension in self.get_dimension_columns():
             empty_df[dimension] = np.repeat([g.dimension_to_value.get(dimension, "") for g in ngs], lnvs)
 
         # join to existing data and use zeros for only missing variants and goals
         m = (
             pd.concat([g, empty_df], axis=0)
-            .fillna({d: "" for d in self._get_dimension_columns()})
+            .fillna({d: "" for d in self.get_dimension_columns()})
             .groupby(
                 [
                     "exp_id",
@@ -578,7 +593,7 @@ class Experiment:
                     "agg_type",
                     "goal",
                 ]
-                + self._get_dimension_columns(),
+                + self.get_dimension_columns(),
                 # dropna=False,
             )
             .sum()
@@ -616,11 +631,11 @@ class Experiment:
             }
         )
 
-        for dimension in self._get_dimension_columns():
+        for dimension in self.get_dimension_columns():
             empty_df[dimension] = np.repeat([g.dimension_to_value.get(dimension, "") for g in ngs], lnvs)
 
         # join to existing data and use zeros for only missing variants and goals
-        m = pd.concat([g, empty_df], axis=0).fillna({d: "" for d in self._get_dimension_columns()})
+        m = pd.concat([g, empty_df], axis=0).fillna({d: "" for d in self.get_dimension_columns()})
         return m[
             [
                 "exp_id",
@@ -632,7 +647,7 @@ class Experiment:
                 "count",
                 "sum_value",
             ]
-            + self._get_dimension_columns()
+            + self.get_dimension_columns()
         ]
 
     def _evaluate_metrics(self, goals: pd.DataFrame, column_fce) -> pd.DataFrame:
