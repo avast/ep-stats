@@ -375,7 +375,13 @@ def test_multi_dimension(dao, metrics, checks, unit_type):
                 "Views per User of Screen button-1,p-1",
                 "count(test_unit_type.unit.view(element=button-1, product=p-1))",
                 "count(test_unit_type.global.exposure)",
-            )
+            ),
+            Metric(
+                2,
+                "Views per User of Screen",
+                "count(test_unit_type.unit.view)",
+                "count(test_unit_type.global.exposure)",
+            ),
         ],
         [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
         unit_type=unit_type,
