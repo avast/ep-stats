@@ -18,8 +18,6 @@ SELECT
     unit_type,
     agg_type,
     goal,
-    dimension,
-    dimension_value,
     SUM(sum_cnt) count,
     SUM(sum_cnt * sum_cnt) sum_sqr_count,
     SUM(value) sum_value,
@@ -33,8 +31,6 @@ SELECT
             unit_type,
             agg_type,
             goal,
-            dimension,
-            dimension_value,
             unit_id,
             SUM(cnt) sum_cnt,
             SUM(value) value,
@@ -46,8 +42,6 @@ SELECT
                 unit_type,
                 agg_type,
                 goal,
-                dimension,
-                dimension_value,
                 unit_id
     ) u
     GROUP BY
@@ -55,9 +49,7 @@ SELECT
         exp_variant_id,
         unit_type,
         agg_type,
-        goal,
-        dimension,
-        dimension_value
+        goal
 ```
 
 ## Configuring REST API

@@ -58,6 +58,12 @@ value(test_unit_type.unit.conversion(product=p_1)) / count(test_unit_type.global
 
 Different goals may allow filtering by different dimensions.
 
+Multiple dimensions per goal are allowed.
+
+```
+value(test_unit_type.unit.conversion(product=p_1, country=A)) / count(test_unit_type.global.exposure)
+```
+
 !!!note
     Dimensions are not supported yet.
 
@@ -72,8 +78,6 @@ SELECT
     unit_type,
     agg_type,
     goal,
-    dimension,
-    dimension_value,
     SUM(sum_cnt) count,
     SUM(sum_cnt * sum_cnt) sum_sqr_count,
     SUM(value) sum_value,
@@ -86,8 +90,6 @@ SELECT
             unit_type,
             agg_type,
             goal,
-            dimension,
-            dimension_value,
             unit_id,
             SUM(cnt) sum_cnt,
             SUM(value) value,
@@ -99,8 +101,6 @@ SELECT
                 unit_type,
                 agg_type,
                 goal,
-                dimension,
-                dimension_value,
                 unit_id
     ) u
     GROUP BY
@@ -109,8 +109,6 @@ SELECT
         unit_type,
         agg_type,
         goal,
-        dimension,
-        dimension_value
 ```
 
 See [Test Data](test_data.md) for examples of pre-aggregated goals that make input to statistical evaluation using [`Experiment.evaluate_agg`](../api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_agg) or per unit goals that make input to statistical evaluation using [`Experiment.evaluate_by_unit`](../api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_by_unit).

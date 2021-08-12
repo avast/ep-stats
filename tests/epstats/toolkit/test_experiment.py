@@ -39,6 +39,35 @@ def unit_type():
     return "test_unit_type"
 
 
+def test_update_dimension_to_value(unit_type):
+
+    metrics = [
+        Metric(
+            2,
+            "Average Bookings",
+            "value(test_unit_type.unit.conversion(country=A))",
+            "count(test_unit_type.global.exposure)",
+        ),
+        Metric(
+            2,
+            "Average Bookings",
+            "value(test_unit_type.unit.conversion(product=p_1)) + value(test_unit_type.view)",
+            "count(test_unit_type.global.exposure)",
+        ),
+    ]
+
+    experiment = Experiment(
+        "test-real-valued",
+        "a",
+        metrics=metrics,
+        checks=[],
+        unit_type=unit_type,
+    )
+
+    for goal in experiment.get_goals():
+        assert {"country", "product"} == set(goal.dimension_to_value.keys())
+
+
 def test_binary_valued(dao, metrics, checks, unit_type):
     experiment = Experiment("test-conversion", "a", metrics, checks, unit_type=unit_type)
     evaluate_experiment_agg(experiment, dao)
@@ -328,6 +357,25 @@ def test_dimension(dao, metrics, checks, unit_type):
                 "count(test_unit_type.unit.view(element=button-%))",
                 "count(test_unit_type.global.exposure)",
             ),
+        ],
+        [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
+        unit_type=unit_type,
+        variants=["a", "b"],
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
+def test_multi_dimension(dao, metrics, checks, unit_type):
+    experiment = Experiment(
+        "test-multi-dimension",
+        "a",
+        [
+            Metric(
+                1,
+                "Views per User of Screen button-1,p-1",
+                "count(test_unit_type.unit.view(element=button-1, product=p-1))",
+                "count(test_unit_type.global.exposure)",
+            )
         ],
         [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
         unit_type=unit_type,

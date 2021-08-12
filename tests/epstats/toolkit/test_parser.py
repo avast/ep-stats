@@ -7,19 +7,18 @@ from pyparsing import ParseException
 from src.epstats.toolkit.parser import Parser
 
 
-def test_parser():
+def test_evaluate_agg():
     variants = ["a", "b", "c", "d"]
     goals = ["click", "exposure", "conversion", "refund"]
     ln = len(variants) * len(goals)
 
     goals = pd.DataFrame(
         {
+            "exp_id": "test",
             "exp_variant_id": np.repeat(variants, len(goals)),
-            "unit_type": np.repeat("test_unit_type", ln),
-            "agg_type": np.repeat("unit", ln),
-            "dimension": np.repeat("", ln),
-            "dimension_value": np.repeat("", ln),
-            "goal": np.array(goals * len(variants)),
+            "unit_type": "test_unit_type",
+            "agg_type": "unit",
+            "goal": goals * len(variants),
             "count": 1000 + np.random.randint(-100, 100, ln),
             "sum_sqr_count": 1000 + np.random.randint(-100, 100, ln),
             "sum_value": 10 + np.random.normal(0, 3, ln),
@@ -77,38 +76,39 @@ def test_parser():
     )
 
 
-@pytest.mark.parametrize(
-    "parser, expected",
-    [
-        (
-            Parser(
-                "value(test_unit_type.unit.conversion(product=p_1))",
-                "value(test_unit_type.unit.conversion(product=p_1))",
-            ),
-            1,
-        ),
-        (
-            Parser(
-                "value(test_unit_type.unit.conversion(product=p_1))",
-                "value(test_unit_type.unit.conversion)",
-            ),
-            2,
-        ),
-        (
-            Parser(
-                "value(test_unit_type.unit.conversion(product=p_1)) + "
-                "value(test_unit_type.unit.conversion(product=p_1))",
-                "value(test_unit_type.unit.conversion)",
-            ),
-            2,
-        ),
-    ],
-)
-def test_equal(parser, expected):
-    assert len(parser.get_goals()) == expected
+def test_evaluate_agg_dimensional():
+    goals = pd.DataFrame(
+        {
+            "exp_id": "testt",
+            "exp_variant_id": ["a", "a", "a", "b", "b", "b"],
+            "unit_type": "test_unit_type",
+            "agg_type": "unit",
+            "goal": ["exposure", "click", "click"] * 2,
+            "count": 1000 + np.random.randint(-100, 100, 6),
+            "sum_sqr_count": 1000 + np.random.randint(-100, 100, 6),
+            "sum_value": 10 + np.random.normal(0, 3, 6),
+            "sum_sqr_value": 100 + np.random.normal(0, 10, 6),
+            "product": ["", "", "p_1"] * 2,
+            "country": ["", "", "US"] * 2,
+        }
+    )
+
+    parser = Parser(
+        "count(test_unit_type.unit.click(country=US, product=p_1))",
+        "count(test_unit_type.unit.exposure)",
+    )
+
+    click_mask = (goals["goal"] == "click") & (goals["country"] == "US") & (goals["product"] == "p_1")
+
+    assert_count_value(
+        parser.evaluate_agg(goals),
+        goals[goals["goal"] == "exposure"]["count"].values,
+        goals[click_mask]["count"].values,
+        goals[click_mask]["sum_sqr_count"].values,
+    )
 
 
-def test_unknown_function():
+def test_fail_if_unknown_function():
     with pytest.raises(ParseException):
         parser = Parser(
             "foo(test_unit_type.unit.click) * count(test_unit_type.unit.bar)",
@@ -126,7 +126,7 @@ def test_fail_if_unknown_unit_type():
         parser.evaluate_agg(pd.DataFrame({"foo": np.ones(10)}))
 
 
-def test_parsing():
+def test_fail_if_incorrect_syntax():
     with pytest.raises(ParseException):
         parser = Parser(
             " / count(test_unit_type.global.exposure)",
@@ -170,25 +170,117 @@ def test_parsing():
                 "test_unit_type.global.exposure",
             },
         ),
+        (
+            Parser(
+                "value(test_unit_type.unit.conversion(a=b, y=x, test=test))",
+                "count(test_unit_type.global.exposure)",
+            ),
+            {
+                "test_unit_type.unit.conversion[a=b, y=x, test=test]",
+                "test_unit_type.global.exposure",
+            },
+        ),
+        (
+            Parser(
+                "value(test_unit_type.unit.conversion(a=b))",
+                "count(test_unit_type.global.exposure)",
+            ),
+            {
+                "test_unit_type.unit.conversion[a=b]",
+                "test_unit_type.global.exposure",
+            },
+        ),
+        (
+            Parser(
+                "value(test_unit_type.unit.conversion(product=p_1))",
+                "value(test_unit_type.unit.conversion(product=p_1))",
+            ),
+            {"test_unit_type.unit.conversion[product=p_1]"},
+        ),
+        (
+            Parser(
+                "value(test_unit_type.unit.conversion(product=p_1))",
+                "value(test_unit_type.unit.conversion)",
+            ),
+            {"test_unit_type.unit.conversion[product=p_1]", "test_unit_type.unit.conversion"},
+        ),
+        (
+            Parser(
+                "value(test_unit_type.unit.conversion(product=p_1)) + "
+                "value(test_unit_type.unit.conversion(product=p_1))",
+                "value(test_unit_type.unit.conversion)",
+            ),
+            {"test_unit_type.unit.conversion[product=p_1]", "test_unit_type.unit.conversion"},
+        ),
     ],
 )
 def test_get_goals(parser, expected):
     assert parser.get_goals_str() == expected
 
 
-def test_get_goals_dimensional():
-    parser = Parser(
-        "count(test_unit_type.global.conversion(product=p_1)) + count(test_unit_type.global.conversion)",
-        "count(test_unit_type.unit.conversion(product=p_1_2))",
-    )
+def test_raise_if_duplicate_dimensions():
+
+    with pytest.raises(ParseException):
+        Parser(
+            "value(test_unit_type.unit.conversion(a=b, a=c))",
+            "count(test_unit_type.global.exposure)",
+        )
+
+
+@pytest.mark.parametrize(
+    "parser, expected_goals",
+    [
+        (
+            Parser(
+                "count(test_unit_type.global.conversion(product=p_1)) + count(test_unit_type.global.conversion)",
+                "count(test_unit_type.unit.conversion(product=p_1_2))",
+            ),
+            {
+                "test_unit_type.global.conversion[product=p_1]": {"product": "p_1"},
+                "test_unit_type.global.conversion": {"product": ""},
+                "test_unit_type.unit.conversion[product=p_1_2]": {"product": "p_1_2"},
+            },
+        ),
+        (
+            Parser(
+                "count(test_unit_type.global.conversion(x=1, y=2))",
+                "count(test_unit_type.unit.conversion)",
+            ),
+            {
+                "test_unit_type.global.conversion[x=1, y=2]": {"x": "1", "y": "2"},
+                "test_unit_type.unit.conversion": {"x": "", "y": ""},
+            },
+        ),
+        (
+            Parser(
+                "count(test_unit_type.global.conversion(x=1, y=2))",
+                "count(test_unit_type.global.conversion(x=1))",
+            ),
+            {
+                "test_unit_type.global.conversion[x=1, y=2]": {"x": "1", "y": "2"},
+                "test_unit_type.global.conversion[x=1]": {"x": "1", "y": ""},
+            },
+        ),
+        (
+            Parser(
+                "count(test_unit_type.global.conversion(x=A/ A, y=A B /C))",
+                "count(test_unit_type.unit.conversion)",
+            ),
+            {
+                "test_unit_type.global.conversion[x=A/ A, y=A B /C]": {"x": "A/ A", "y": "A B /C"},
+                "test_unit_type.unit.conversion": {"x": "", "y": ""},
+            },
+        ),
+    ],
+)
+def test_get_goals_dimensional(parser, expected_goals):
+
     goals = parser.get_goals()
-    dim_goals = [g for g in goals if g.is_dimensional()]
 
-    assert len(goals) == 3
-    assert len(dim_goals) == 2
-
-    assert set([dg.dimension for dg in dim_goals]) == {"product"}
-    assert set([dg.dimension_value for dg in dim_goals]) == {"p_1", "p_1_2"}
+    for g in goals:
+        assert expected_goals[str(g)] == g.dimension_to_value
+        if not g.is_dimensional():
+            assert all(v == "" for v in g.dimension_to_value.values())
 
 
 def assert_count_value(evaluation, count, value, value_sqr, precision=5):

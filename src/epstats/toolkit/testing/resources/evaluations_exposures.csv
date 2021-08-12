@@ -53,3 +53,5 @@ test-simple-metric	a	test_unit_type	global	exposure	0
 test-simple-metric	b	test_unit_type	global	exposure	0
 test-control-variant-b	a	test_unit_type	global	exposure	3000
 test-control-variant-b	b	test_unit_type	global	exposure	3030
+test-multi-dimension	a	test_unit_type	global	exposure	1000
+test-multi-dimension	b	test_unit_type	global	exposure	1001
