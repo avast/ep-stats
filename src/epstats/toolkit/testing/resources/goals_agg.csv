@@ -157,5 +157,5 @@ test-multi-dimension		a	test_unit_type	unit	view	button-1	p-1	200	200	200	200	20
 test-multi-dimension		b	test_unit_type	unit	view	button-1	p-1	220	220	220	220	220
 test-multi-dimension		a	test_unit_type	unit	view	button-1		100	100	100	100	100
 test-multi-dimension		b	test_unit_type	unit	view	button-1		180	180	180	180	180
-test-multi-dimension		a	test_unit_type	unit	view			200	200	200	200	200
-test-multi-dimension		b	test_unit_type	unit	view			220	220	220	220	220
+test-multi-dimension		a	test_unit_type	unit	view			300	300	300	300	300
+test-multi-dimension		b	test_unit_type	unit	view			400	400	400	400	400
