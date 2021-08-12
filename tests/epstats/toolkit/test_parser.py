@@ -261,6 +261,16 @@ def test_raise_if_duplicate_dimensions():
                 "test_unit_type.global.conversion[x=1]": {"x": "1", "y": ""},
             },
         ),
+        (
+            Parser(
+                "count(test_unit_type.global.conversion(x=A/ A, y=A B /C))",
+                "count(test_unit_type.unit.conversion)",
+            ),
+            {
+                "test_unit_type.global.conversion[x=A/ A, y=A B /C]": {"x": "A/ A", "y": "A B /C"},
+                "test_unit_type.unit.conversion": {"x": "", "y": ""},
+            },
+        ),
     ],
 )
 def test_get_goals_dimensional(parser, expected_goals):
