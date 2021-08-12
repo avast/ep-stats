@@ -306,7 +306,6 @@ class EpGoal:
             .agg({column: sum})[column]
             .values
         )
-        # group by unit_type, agg_type, goal, exp_id, variant_id (dimenze uz nas nezajimaji)
 
     def get_goals_str(self) -> Set[str]:
         return {self._to_string()}
