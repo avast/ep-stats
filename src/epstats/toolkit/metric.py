@@ -10,7 +10,15 @@ class Metric:
     Definition of a metric to evaluate in an experiment.
     """
 
-    def __init__(self, id: int, name: str, nominator: str, denominator: str):
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        nominator: str,
+        denominator: str,
+        metric_format: str = "{:.2%}",
+        metric_value_multiplier: int = 1,
+    ):
         """
         Constructor of the general metric definition.
 
@@ -25,6 +33,8 @@ class Metric:
             name: metric name
             nominator: definition of nominator
             denominator: definition of denominator
+            metric_format: specify format of the metric, e.g. '${:,.1f}' for RPM
+            metric_value_multiplier: specify multiplier, e.g. 1000 for RPM
 
         Usage:
 
@@ -43,6 +53,8 @@ class Metric:
         self.denominator = denominator
         self._parser = Parser(nominator, denominator)
         self._goals = self._parser.get_goals()
+        self.metric_format = metric_format
+        self.metric_value_multiplier = metric_value_multiplier
 
     def get_goals(self) -> Set:
         """
@@ -87,7 +99,7 @@ class Metric:
 
 class SimpleMetric(Metric):
     """
-    Simplified metric definition to evaluate in an axperiment.
+    Simplified metric definition to evaluate in an experiment.
     """
 
     def __init__(
@@ -104,7 +116,7 @@ class SimpleMetric(Metric):
         Constructor of the simplified metric definition.
 
         It modifies parameters numerator and denominator in a way that it is in line with general Metric definition.
-        It adds all the niceties necessary for proper Metric format. Finaly it calls constructor of the parent Metric
+        It adds all the niceties necessary for proper Metric format. Finally it calls constructor of the parent Metric
         class.
 
         Arguments:
@@ -133,7 +145,4 @@ class SimpleMetric(Metric):
         num = "value" + "(" + unit_type + "." + agg_type + "." + numerator + ")"
         den = "value" + "(" + unit_type + "." + agg_type + "." + denominator + ")"
 
-        super().__init__(id, name, num, den)
-
-        self.metric_format = metric_format
-        self.metric_value_multiplier = metric_value_multiplier
+        super().__init__(id, name, num, den, metric_format, metric_value_multiplier)
