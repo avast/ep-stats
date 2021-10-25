@@ -7,12 +7,13 @@ def get_utc_timestamp(dt):
     return mytz.normalize(mytz.localize(dt, is_dst=False))
 
 
-def goals_wide_to_long(df: pd.DataFrame) -> pd.DataFrame:
+def goals_wide_to_long(df: pd.DataFrame, unit_type: str = "test_unit_type") -> pd.DataFrame:
     """
     Modify the input DataFrame in a way that it can be evaluatetd using Experiment.evaluate_agg().
 
     Arguments:
         df: dataframe in wide format - one row per variant and aggregated data in columns
+        unit_type: should be the same value as the `unit_type` passed to `Experiment`
 
     Returns:
         dataframe in long format - one row per variant and goal
@@ -49,7 +50,7 @@ def goals_wide_to_long(df: pd.DataFrame) -> pd.DataFrame:
 
     # Merge together and add other necessary columns for evaluation
     goals = pd.merge(left=df_long, right=df_long_sqr, how="outer", on=["exp_id", "exp_variant_id", "goal"])
-    goals.insert(2, "unit_type", "test_unit_type")
+    goals.insert(2, "unit_type", unit_type)
     goals.insert(3, "agg_type", "global")
     goals.insert(5, "dimension", "")
     goals.insert(6, "dimension_value", "")
