@@ -331,7 +331,7 @@ class Experiment:
         my-exp          d           474934  49090   289             11995       566700
         ```
         """
-        g = goals_wide_to_long(goals)
+        g = goals_wide_to_long(goals, self.unit_type)
         return self.evaluate_agg(g)
 
     def evaluate_by_unit(self, goals: pd.DataFrame) -> Evaluation:
