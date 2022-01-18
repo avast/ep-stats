@@ -232,4 +232,4 @@ class Statistics:
         t = actual_day / total_length  # t in (0, 1]
         q = st.norm.ppf(1 - alpha / 2)  # quantile of normal distribution
         alpha_adj = 2 - 2 * st.norm.cdf(q / np.sqrt(t))
-        return 1 - alpha_adj
+        return np.round(1 - alpha_adj, decimals=4)
