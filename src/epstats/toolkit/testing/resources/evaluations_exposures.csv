@@ -55,3 +55,6 @@ test-control-variant-b	a	test_unit_type	global	exposure	3000
 test-control-variant-b	b	test_unit_type	global	exposure	3030
 test-multi-dimension	a	test_unit_type	global	exposure	1000
 test-multi-dimension	b	test_unit_type	global	exposure	1001
+test-max-ratio	a	test_unit_type	global	exposure	5000
+test-max-ratio	b	test_unit_type	global	exposure	5100
+test-max-ratio	c	test_unit_type	global	exposure	5200

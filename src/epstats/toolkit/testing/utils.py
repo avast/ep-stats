@@ -99,21 +99,13 @@ def assert_checks(
     expected = expected[expected.check_id == check_id]
 
     assert_array_equal(target.check_id, expected.check_id)
-    assert_array_almost_equal(
-        target[target["variable_id"] == "p_value"]["value"],
-        expected[expected["variable_id"] == "p_value"]["value"],
-        precision,
-    )
-    assert_array_almost_equal(
-        target[target["variable_id"] == "test_stat"]["value"],
-        expected[expected["variable_id"] == "test_stat"]["value"],
-        precision,
-    )
-    assert_array_almost_equal(
-        target[target["variable_id"] == "confidence_level"]["value"],
-        expected[expected["variable_id"] == "confidence_level"]["value"],
-        precision,
-    )
+    for variable_id in expected["variable_id"].tolist():
+
+        assert_array_almost_equal(
+            target[target["variable_id"] == variable_id]["value"],
+            expected[expected["variable_id"] == variable_id]["value"],
+            precision,
+        )
 
 
 def assert_exposures(

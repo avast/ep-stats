@@ -159,3 +159,9 @@ test-multi-dimension		a	test_unit_type	unit	view	button-1		100	100	100	100	100
 test-multi-dimension		b	test_unit_type	unit	view	button-1		180	180	180	180	180
 test-multi-dimension		a	test_unit_type	unit	view			300	300	300	300	300
 test-multi-dimension		b	test_unit_type	unit	view			400	400	400	400	400
+test-max-ratio		a	test_unit_type	global	exposure			5000	5000	5000	5000	5000
+test-max-ratio		b	test_unit_type	global	exposure			5100	5100	5100	5100	5100
+test-max-ratio		c	test_unit_type	global	exposure			5200	5200	5200	5200	5200
+test-max-ratio		a	test_unit_type	global	inconsistent_exposure			1000	1000	1000	1000	1000
+test-max-ratio		b	test_unit_type	global	inconsistent_exposure			1100	1100	1100	1100	1100
+test-max-ratio		c	test_unit_type	global	inconsistent_exposure			900	900	900	900	900
