@@ -528,7 +528,7 @@ class Experiment:
                 self._logger.warning(f"Cannot evaluate check [{c.id} in experiment [{self.id}] because of {e}")
                 self.statsd.incr("errors.check")
 
-        c = pd.concat(res, axis=1) if res != [] else pd.DataFrame([], columns=Evaluation.check_columns())
+        c = pd.concat(res, axis=0) if res != [] else pd.DataFrame([], columns=Evaluation.check_columns())
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         return c[Evaluation.check_columns()]
 

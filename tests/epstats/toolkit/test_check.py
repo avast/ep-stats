@@ -32,6 +32,19 @@ def max_ratio_check():
     ]
 
 
+@pytest.fixture(scope="module")
+def checks():
+    return [
+        MaxRatioCheck(
+            1,
+            "MaxRatio",
+            "count(test_unit_type.global.inconsistent_exposure)",
+            "count(test_unit_type.global.exposure)",
+        ),
+        SrmCheck(2, "SRM", "count(test_unit_type.global.exposure)"),
+    ]
+
+
 # Testing standard input - no SRM detected
 def test_srm(dao, metrics, srm_check):
     experiment = Experiment("test-srm", "a", metrics, srm_check, unit_type="test_unit_type")
@@ -50,7 +63,11 @@ def test_srm_one_variant(dao, metrics, srm_check):
     evaluate_experiment_agg(experiment, dao)
 
 
-# Testing standard input - no SRM detected
 def test_max_ratio(dao, metrics, max_ratio_check):
     experiment = Experiment("test-max-ratio", "a", metrics, max_ratio_check, unit_type="test_unit_type")
+    evaluate_experiment_agg(experiment, dao)
+
+
+def test_multi_check(dao, metrics, checks):
+    experiment = Experiment("test-multi-check", "a", metrics, checks, unit_type="test_unit_type")
     evaluate_experiment_agg(experiment, dao)

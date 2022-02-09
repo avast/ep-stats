@@ -243,6 +243,33 @@ def test_max_ratio_check():
     assert_experiment(resp.json(), dao_factory.get_dao(), 0)
 
 
+def test_multi_check():
+    json_blob = {
+        "id": "test-multi-check",
+        "control_variant": "a",
+        "variants": ["a", "b", "c"],
+        "unit_type": "test_unit_type",
+        "filters": [],
+        "metrics": [],
+        "checks": [
+            {
+                "id": 1,
+                "name": "MaxRatio",
+                "nominator": "count(test_unit_type.global.inconsistent_exposure)",
+                "denominator": "count(test_unit_type.global.exposure)",
+            },
+            {
+                "id": 2,
+                "name": "SRM",
+                "denominator": "count(test_unit_type.global.exposure)",
+            },
+        ],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert_experiment(resp.json(), dao_factory.get_dao(), 0, 2)
+
+
 def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected_checks: int = 1) -> None:
     result = Result(**target)
     assert len(result.metrics) == expected_metrics

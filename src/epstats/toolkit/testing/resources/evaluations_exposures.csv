@@ -58,3 +58,6 @@ test-multi-dimension	b	test_unit_type	global	exposure	1001
 test-max-ratio	a	test_unit_type	global	exposure	5000
 test-max-ratio	b	test_unit_type	global	exposure	5100
 test-max-ratio	c	test_unit_type	global	exposure	5200
+test-multi-check	a	test_unit_type	global	exposure	5000
+test-multi-check	b	test_unit_type	global	exposure	5100
+test-multi-check	c	test_unit_type	global	exposure	5200

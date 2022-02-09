@@ -165,3 +165,9 @@ test-max-ratio		c	test_unit_type	global	exposure			5200	5200	5200	5200	5200
 test-max-ratio		a	test_unit_type	global	inconsistent_exposure			1000	1000	1000	1000	1000
 test-max-ratio		b	test_unit_type	global	inconsistent_exposure			1100	1100	1100	1100	1100
 test-max-ratio		c	test_unit_type	global	inconsistent_exposure			900	900	900	900	900
+test-multi-check		a	test_unit_type	global	exposure			5000	5000	5000	5000	5000
+test-multi-check		b	test_unit_type	global	exposure			5100	5100	5100	5100	5100
+test-multi-check		c	test_unit_type	global	exposure			5200	5200	5200	5200	5200
+test-multi-check		a	test_unit_type	global	inconsistent_exposure			1000	1000	1000	1000	1000
+test-multi-check		b	test_unit_type	global	inconsistent_exposure			1100	1100	1100	1100	1100
+test-multi-check		c	test_unit_type	global	inconsistent_exposure			900	900	900	900	900
