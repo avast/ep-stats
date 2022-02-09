@@ -84,7 +84,7 @@ def test_validate_metric_denominator():
     assert json["detail"][1]["type"] == "value_error"
 
 
-def test_validate_max_ratio_nominator():
+def test_validate_sum_ratio_nominator():
     json_blob = {
         "id": "test-converions",
         "control_variant": "a",
@@ -93,7 +93,7 @@ def test_validate_max_ratio_nominator():
         "checks": [
             {
                 "id": 1,
-                "name": "MaxRatio",
+                "name": "SumRatio",
                 "denominator": "count(test_unit_type.global.exposure)",
             },
         ],

@@ -201,11 +201,11 @@ class SimpleSrmCheck(SrmCheck):
         super().__init__(id, name, den, confidence_level)
 
 
-class MaxRatioCheck(Check):
+class SumRatioCheck(Check):
     """
-    Computes the maximum ratio of `nominator`, `denominator` goal counts across all variants.
+    Computes the ratio of `nominator`, `denominator` goal counts summed across all variants.
 
-    [Max ratio check](../stats/basics.md#max-ratio-check).
+    [Max ratio check](../stats/basics.md#sum-ratio-check).
     """
 
     def __init__(
@@ -227,9 +227,9 @@ class MaxRatioCheck(Check):
 
         Usage:
         ```python
-        MaxRatioCheck(
+        SumRatioCheck(
             1,
-            "MaxRatio",
+            "SumRatio",
             "count(test_unit_type.global.inconsistent_exposure)",
             "count(test_unit_type.global.exposure)"
         )
@@ -250,14 +250,14 @@ class MaxRatioCheck(Check):
 
         # chi-square test
         with np.errstate(divide="ignore", invalid="ignore"):
-            ratios = nominator_counts / denominator_counts
+            sum_ratio = nominator_counts.sum() / denominator_counts.sum()
 
         r = pd.DataFrame(
             {
                 "check_id": [self.id],
                 "check_name": [self.name],
-                "variable_id": ["max_ratio"],
-                "value": [ratios.max()],
+                "variable_id": ["sum_ratio"],
+                "value": [sum_ratio],
             }
         )
         return r

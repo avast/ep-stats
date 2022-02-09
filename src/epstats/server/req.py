@@ -3,11 +3,12 @@ from pydantic import BaseModel, validator, root_validator, Field
 from pyparsing import ParseException
 from datetime import datetime
 from statsd import StatsClient
+from inspect import signature
 
 from ..toolkit import Experiment as EvExperiment, Filter as EvFilter, FilterScope
 from ..toolkit import Metric as EvMetric
 from ..toolkit import SrmCheck as EvSrmCheck
-from ..toolkit import MaxRatioCheck as EvMaxRatioCheck
+from ..toolkit import SumRatioCheck as EvSumRatioCheck
 from ..toolkit import Parser
 
 
@@ -87,8 +88,8 @@ class Check(BaseModel):
     """
 
     _SRM_NAME = "SRM"
-    _MAX_RATIO_NAME = "MaxRatio"
-    _ALLOWED_CHECKS = {_SRM_NAME: EvSrmCheck, _MAX_RATIO_NAME: EvMaxRatioCheck}
+    _SUM_RATIO_NAME = "SumRatio"
+    _ALLOWED_CHECKS = {_SRM_NAME: EvSrmCheck, _SUM_RATIO_NAME: EvSumRatioCheck}
 
     id: int = Field(
         title="Check Id",
@@ -97,16 +98,16 @@ class Check(BaseModel):
     )
     name: str = Field(
         title="Check Name",
-        description="""Defines which check to run. Currently supported names are `"SRM", "MaxRatio"`.""",
+        description="""Defines which check to run. Currently supported names are `"SRM", "SumRatio"`.""",
     )
     nominator: Optional[str] = Field(
         title="Check Nominator",
-        description="""Nominator is only required by `MaxRatio` check.
+        description="""Nominator is only required by `SumRatio` check.
         Example: `count(my_unit_type.global.inconsistent_exposure)`.""",
     )
     denominator: str = Field(
         title="Check Denominator",
-        description="""Denominator is required by both `SRM` and `MaxRatio` checks.
+        description="""Denominator is required by both `SRM` and `SumRatio` checks.
         Example: `count(my_unit_type.global.exposure)`.""",
     )
 
@@ -149,7 +150,9 @@ class Check(BaseModel):
 
     @root_validator
     def check_nominator(cls, values):
-        if values.get("name") == cls._MAX_RATIO_NAME:
+
+        class_ = cls._ALLOWED_CHECKS[values.get("name")]
+        if "nominator" in signature(class_).parameters:
             _ = cls._validate_nominator_or_denominator(values.get("nominator"), "nominator")
 
         return values

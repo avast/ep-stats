@@ -221,9 +221,9 @@ def test_filter_scope_goal():
     assert_experiment(resp.json(), dao_factory.get_dao(), 1)
 
 
-def test_max_ratio_check():
+def test_sum_ratio_check():
     json_blob = {
-        "id": "test-max-ratio",
+        "id": "test-sum-ratio",
         "control_variant": "a",
         "variants": ["a", "b", "c"],
         "unit_type": "test_unit_type",
@@ -232,7 +232,7 @@ def test_max_ratio_check():
         "checks": [
             {
                 "id": 1,
-                "name": "MaxRatio",
+                "name": "SumRatio",
                 "nominator": "count(test_unit_type.global.inconsistent_exposure)",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
@@ -254,7 +254,7 @@ def test_multi_check():
         "checks": [
             {
                 "id": 1,
-                "name": "MaxRatio",
+                "name": "SumRatio",
                 "nominator": "count(test_unit_type.global.inconsistent_exposure)",
                 "denominator": "count(test_unit_type.global.exposure)",
             },

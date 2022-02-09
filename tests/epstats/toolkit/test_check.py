@@ -1,7 +1,7 @@
 import pytest
 
 from src.epstats.toolkit.experiment import Experiment
-from src.epstats.toolkit.check import SrmCheck, MaxRatioCheck
+from src.epstats.toolkit.check import SrmCheck, SumRatioCheck
 from src.epstats.toolkit.testing import evaluate_experiment_agg, TestDao, TestData
 
 
@@ -21,11 +21,11 @@ def srm_check():
 
 
 @pytest.fixture(scope="module")
-def max_ratio_check():
+def sum_ratio_check():
     return [
-        MaxRatioCheck(
+        SumRatioCheck(
             1,
-            "MaxRatio",
+            "SumRatio",
             "count(test_unit_type.global.inconsistent_exposure)",
             "count(test_unit_type.global.exposure)",
         )
@@ -35,9 +35,9 @@ def max_ratio_check():
 @pytest.fixture(scope="module")
 def checks():
     return [
-        MaxRatioCheck(
+        SumRatioCheck(
             1,
-            "MaxRatio",
+            "SumRatio",
             "count(test_unit_type.global.inconsistent_exposure)",
             "count(test_unit_type.global.exposure)",
         ),
@@ -63,8 +63,8 @@ def test_srm_one_variant(dao, metrics, srm_check):
     evaluate_experiment_agg(experiment, dao)
 
 
-def test_max_ratio(dao, metrics, max_ratio_check):
-    experiment = Experiment("test-max-ratio", "a", metrics, max_ratio_check, unit_type="test_unit_type")
+def test_sum_ratio(dao, metrics, sum_ratio_check):
+    experiment = Experiment("test-sum-ratio", "a", metrics, sum_ratio_check, unit_type="test_unit_type")
     evaluate_experiment_agg(experiment, dao)
 
 

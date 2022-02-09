@@ -59,8 +59,8 @@ test-simple-metric	1	SRM	confidence_level	0.999
 test-multi-dimension	1	SRM	p_value	0.98216470
 test-multi-dimension	1	SRM	test_stat	0.00049975
 test-multi-dimension	1	SRM	confidence_level	0.999
-test-max-ratio	1	MaxRatio	max_ratio	0.21568627450980393
-test-multi-check	1	MaxRatio	max_ratio	0.21568627450980393
+test-sum-ratio	1	SumRatio	sum_ratio	0.19607843137254902
+test-multi-check	1	SumRatio	sum_ratio	0.19607843137254902
 test-multi-check	2	SRM	p_value	0.140747987
 test-multi-check	2	SRM	test_stat	3.9215686
 test-multi-check	2	SRM	confidence_level	0.999
