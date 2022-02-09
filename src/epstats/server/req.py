@@ -7,6 +7,7 @@ from statsd import StatsClient
 from ..toolkit import Experiment as EvExperiment, Filter as EvFilter, FilterScope
 from ..toolkit import Metric as EvMetric
 from ..toolkit import SrmCheck as EvSrmCheck
+from ..toolkit import MaxRatioCheck as EvMaxRatioCheck
 from ..toolkit import Parser
 
 
@@ -83,9 +84,11 @@ class Metric(BaseModel):
 class Check(BaseModel):
     """
     Defines metric to evaluate.
-
-    Only `SRM` check is available at the moment.
     """
+
+    _SRM_NAME = "SRM"
+    _MAX_RATIO_NAME = "MaxRatio"
+    _ALLOWED_CHECKS = {_SRM_NAME: EvSrmCheck, _MAX_RATIO_NAME: EvMaxRatioCheck}
 
     id: int = Field(
         title="Check Id",
@@ -94,16 +97,17 @@ class Check(BaseModel):
     )
     name: str = Field(
         title="Check Name",
-        description="""Official check name as it appears in EP. The name is only for debugging
-        and has no meaning for ep-stats. We only repeat the name in the response for caller's convenience.""",
+        description="""Defines which check to run. Currently supported names are `"SRM", "MaxRatio"`.""",
+    )
+    nominator: Optional[str] = Field(
+        title="Check Nominator",
+        description="""Nominator is only required by `MaxRatio` check.
+        Example: `count(my_unit_type.global.inconsistent_exposure)`.""",
     )
     denominator: str = Field(
         title="Check Denominator",
-        description="""EP metric is defined in the form of `nominator / denominator`.
-        Both parts are entered as expressions.
-
-        The only supported check is SRM check and it should be called with denominator
-        of `count(my_unit_type.global.exposure)`.""",
+        description="""Denominator is required by both `SRM` and `MaxRatio` checks.
+        Example: `count(my_unit_type.global.exposure)`.""",
     )
 
     @validator("id")
@@ -118,24 +122,42 @@ class Check(BaseModel):
             raise ValueError("we expect name to be non-empty")
         return value
 
-    @validator("denominator")
-    def denominator_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect denominator to be non-empty")
+    @validator("name")
+    def name_must_be_allowed(cls, value):
+        if value not in cls._ALLOWED_CHECKS.keys():
+            raise ValueError(f"we expect name to be one of: {cls._ALLOWED_CHECKS.keys()}")
+
         return value
 
-    @validator("denominator")
-    def check_denominator(cls, value):
+    @staticmethod
+    def _validate_nominator_or_denominator(value, which):
+
+        if not value:
+            raise ValueError(f"we expect {which} to be non-empty")
+
         try:
             parser = Parser(value, value)
             if not parser.get_goals():
-                raise ValueError("We expect the check to have at least one goal in denominator")
+                raise ValueError(f"We expect the check to have at least one goal in {which}")
             return value
         except ParseException as e:
             raise ValueError(f"Cannot parse '{value}' because of '{e}'")
 
+    @validator("denominator")
+    def check_denominator(cls, value):
+        return cls._validate_nominator_or_denominator(value, "denominator")
+
+    @root_validator
+    def check_nominator(cls, values):
+        if values.get("name") == cls._MAX_RATIO_NAME:
+            _ = cls._validate_nominator_or_denominator(values.get("nominator"), "nominator")
+
+        return values
+
     def to_check(self):
-        return EvSrmCheck(self.id, self.name, self.denominator)
+
+        class_ = self._ALLOWED_CHECKS[self.name]
+        return class_(**self.dict())
 
 
 class Filter(BaseModel):

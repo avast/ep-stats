@@ -24,7 +24,10 @@ def srm_check():
 def max_ratio_check():
     return [
         MaxRatioCheck(
-            1, "MaxRatio", "count(test_unit_type.global.inconsistent_exposure)", "count(test_unit_type.global.exposure)"
+            1,
+            "MaxRatio",
+            "count(test_unit_type.global.inconsistent_exposure)",
+            "count(test_unit_type.global.exposure)",
         )
     ]
 
@@ -48,6 +51,6 @@ def test_srm_one_variant(dao, metrics, srm_check):
 
 
 # Testing standard input - no SRM detected
-def test_ratio(dao, metrics, max_ratio_check):
+def test_max_ratio(dao, metrics, max_ratio_check):
     experiment = Experiment("test-max-ratio", "a", metrics, max_ratio_check, unit_type="test_unit_type")
     evaluate_experiment_agg(experiment, dao)

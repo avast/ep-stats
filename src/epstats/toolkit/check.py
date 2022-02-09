@@ -14,7 +14,7 @@ class Check:
     data quality checks and [`Evaluation`][epstats.toolkit.experiment.Evaluation] for description of output.
     """
 
-    def __init__(self, id: int, name: str, denominator: str):
+    def __init__(self, id: int, name: str, denominator: str, **unused_kwargs):
         self.id = id
         self.name = name
         self.denominator = denominator
@@ -93,6 +93,7 @@ class SrmCheck(Check):
         name: str,
         denominator: str,
         confidence_level: float = 0.999,
+        **unused_kwargs,
     ):
         """
         Constructor of the SRM check.
@@ -213,6 +214,7 @@ class MaxRatioCheck(Check):
         name: str,
         nominator: str,
         denominator: str,
+        **unused_kwargs,
     ):
         """
         Constructor of the check.
@@ -251,6 +253,11 @@ class MaxRatioCheck(Check):
             ratios = nominator_counts / denominator_counts
 
         r = pd.DataFrame(
-            {"check_id": [self.id], "check_name": [self.name], "variable_id": ["max_ratio"], "value": [ratios.max()]}
+            {
+                "check_id": [self.id],
+                "check_name": [self.name],
+                "variable_id": ["max_ratio"],
+                "value": [ratios.max()],
+            }
         )
         return r
