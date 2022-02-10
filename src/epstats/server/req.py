@@ -87,9 +87,9 @@ class Check(BaseModel):
     Defines metric to evaluate.
     """
 
-    _SRM_NAME = "SRM"
-    _SUM_RATIO_NAME = "SumRatio"
-    _ALLOWED_CHECKS = {_SRM_NAME: EvSrmCheck, _SUM_RATIO_NAME: EvSumRatioCheck}
+    _SRM_TYPE = "SRM"
+    _SUM_RATIO_TYPE = "SumRatio"
+    _ALLOWED_CHECKS = {_SRM_TYPE: EvSrmCheck, _SUM_RATIO_TYPE: EvSumRatioCheck}
 
     id: int = Field(
         title="Check Id",
@@ -98,7 +98,11 @@ class Check(BaseModel):
     )
     name: str = Field(
         title="Check Name",
-        description="""Defines which check to run. Currently supported names are `"SRM", "SumRatio"`.""",
+        description="""Name to identify each check.""",
+    )
+    type: str = Field(
+        title="Check Type",
+        description="""Defines which check to run. Currently supported types are `"SRM", "SumRatio"`.""",
     )
     nominator: Optional[str] = Field(
         title="Check Nominator",
@@ -123,10 +127,10 @@ class Check(BaseModel):
             raise ValueError("we expect name to be non-empty")
         return value
 
-    @validator("name")
-    def name_must_be_allowed(cls, value):
-        if value not in cls._ALLOWED_CHECKS.keys():
-            raise ValueError(f"we expect name to be one of: {cls._ALLOWED_CHECKS.keys()}")
+    @validator("type")
+    def type_must_be_allowed(cls, value):
+        if not value or value not in cls._ALLOWED_CHECKS.keys():
+            raise ValueError(f"we expect type to be one of: {cls._ALLOWED_CHECKS.keys()}")
 
         return value
 
@@ -151,15 +155,15 @@ class Check(BaseModel):
     @root_validator
     def check_nominator(cls, values):
 
-        class_ = cls._ALLOWED_CHECKS[values.get("name")]
+        type = cls.type_must_be_allowed(values.get("type"))
+        class_ = cls._ALLOWED_CHECKS[type]
         if "nominator" in signature(class_).parameters:
             _ = cls._validate_nominator_or_denominator(values.get("nominator"), "nominator")
 
         return values
 
     def to_check(self):
-
-        class_ = self._ALLOWED_CHECKS[self.name]
+        class_ = self._ALLOWED_CHECKS[self.type]
         return class_(**self.dict())
 
 

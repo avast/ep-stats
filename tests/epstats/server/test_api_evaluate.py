@@ -38,6 +38,7 @@ def test_conversion_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
+                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -65,6 +66,7 @@ def test_real_valued_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
+                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -98,6 +100,7 @@ def test_multiple_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
+                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -176,6 +179,7 @@ def test_dimension_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
+                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -211,6 +215,7 @@ def test_filter_scope_goal():
             {
                 "id": 1,
                 "name": "SRM",
+                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -232,7 +237,8 @@ def test_sum_ratio_check():
         "checks": [
             {
                 "id": 1,
-                "name": "SumRatio",
+                "name": "EVA",
+                "type": "SumRatio",
                 "nominator": "count(test_unit_type.global.inconsistent_exposure)",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
@@ -254,13 +260,15 @@ def test_multi_check():
         "checks": [
             {
                 "id": 1,
-                "name": "SumRatio",
+                "name": "EVA",
+                "type": "SumRatio",
                 "nominator": "count(test_unit_type.global.inconsistent_exposure)",
                 "denominator": "count(test_unit_type.global.exposure)",
             },
             {
                 "id": 2,
                 "name": "SRM",
+                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             },
         ],

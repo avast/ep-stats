@@ -25,7 +25,7 @@ def sum_ratio_check():
     return [
         SumRatioCheck(
             1,
-            "SumRatio",
+            "EVA",
             "count(test_unit_type.global.inconsistent_exposure)",
             "count(test_unit_type.global.exposure)",
         )

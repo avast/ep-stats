@@ -84,6 +84,29 @@ def test_validate_metric_denominator():
     assert json["detail"][1]["type"] == "value_error"
 
 
+def test_validate_check_type():
+    json_blob = {
+        "id": "test-converions",
+        "control_variant": "a",
+        "unit_type": "test_unit_type",
+        "metrics": [],
+        "checks": [
+            {
+                "id": 1,
+                "name": "SumRatio",
+                "denominator": "count(test_unit_type.global.exposure)",
+                "nominator": "count(test_unit_type.global.inconsistent_exposure)",
+            },
+        ],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 422
+    json = resp.json()
+    assert json["detail"][0]["loc"][3] == "type"
+    assert json["detail"][0]["type"] == "value_error.missing"
+
+
 def test_validate_sum_ratio_nominator():
     json_blob = {
         "id": "test-converions",
@@ -94,6 +117,7 @@ def test_validate_sum_ratio_nominator():
             {
                 "id": 1,
                 "name": "SumRatio",
+                "type": "SumRatio",
                 "denominator": "count(test_unit_type.global.exposure)",
             },
         ],
