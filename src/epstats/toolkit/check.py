@@ -14,12 +14,12 @@ class Check:
     data quality checks and [`Evaluation`][epstats.toolkit.experiment.Evaluation] for description of output.
     """
 
-    def __init__(self, id: int, name: str, denominator: str):
+    def __init__(self, id: int, name: str, denominator: str, **unused_kwargs):
         self.id = id
         self.name = name
         self.denominator = denominator
-        self._parser = Parser(denominator, denominator)
-        self._goals = self._parser.get_goals()
+        self._denominator_parser = Parser(denominator, denominator)
+        self._goals = self._denominator_parser.get_goals()
 
     def get_goals(self) -> List:
         """
@@ -93,6 +93,7 @@ class SrmCheck(Check):
         name: str,
         denominator: str,
         confidence_level: float = 0.999,
+        **unused_kwargs,
     ):
         """
         Constructor of the SRM check.
@@ -126,7 +127,7 @@ class SrmCheck(Check):
         # test - srm, 1, SRM, confidence_level, 0.999
 
         # prepare data - we only need exposures
-        exposures, _, _ = self._parser.evaluate_agg(goals)
+        exposures, _, _ = self._denominator_parser.evaluate_agg(goals)
 
         # chi-square test
         with np.errstate(divide="ignore", invalid="ignore"):
@@ -150,7 +151,7 @@ class SrmCheck(Check):
         See [`Check.evaluate_by_unit`][epstats.toolkit.check.Check.evaluate_by_unit].
         """
 
-        exposures, _, _ = self._parser.evaluate_by_unit(goals)
+        exposures, _, _ = self._denominator_parser.evaluate_by_unit(goals)
 
         # chi-square test
         stat, pval = chisquare(exposures)
@@ -198,3 +199,65 @@ class SimpleSrmCheck(SrmCheck):
         agg_type = "global"
         den = "value" + "(" + unit_type + "." + agg_type + "." + denominator + ")"
         super().__init__(id, name, den, confidence_level)
+
+
+class SumRatioCheck(Check):
+    """
+    Computes the ratio of `nominator`, `denominator` goal counts summed across all variants.
+
+    [Max ratio check](../stats/basics.md#sum-ratio-check).
+    """
+
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        nominator: str,
+        denominator: str,
+        **unused_kwargs,
+    ):
+        """
+        Constructor of the check.
+
+        Arguments:
+            id: check (order) id
+            name: check name
+            nominator:  goal in the ratio numerator
+            denominator: goal in the ratio denominitaor
+
+        Usage:
+        ```python
+        SumRatioCheck(
+            1,
+            "SumRatio",
+            "count(test_unit_type.global.inconsistent_exposure)",
+            "count(test_unit_type.global.exposure)"
+        )
+        ```
+        """
+        super().__init__(id, name, denominator)
+        self._nominator = nominator
+        self._nominator_parser = Parser(nominator, nominator)
+        self._goals = self._goals.union(self._nominator_parser.get_goals())
+
+    def evaluate_agg(self, goals: pd.DataFrame, default_exp_variant_id: str) -> pd.DataFrame:
+        """
+        See [`Check.evaluate_agg`][epstats.toolkit.check.Check.evaluate_agg].
+        """
+
+        denominator_counts, _, _ = self._denominator_parser.evaluate_agg(goals)
+        nominator_counts, _, _ = self._nominator_parser.evaluate_agg(goals)
+
+        # chi-square test
+        with np.errstate(divide="ignore", invalid="ignore"):
+            sum_ratio = nominator_counts.sum() / denominator_counts.sum()
+
+        r = pd.DataFrame(
+            {
+                "check_id": [self.id],
+                "check_name": [self.name],
+                "variable_id": ["sum_ratio"],
+                "value": [sum_ratio],
+            }
+        )
+        return r

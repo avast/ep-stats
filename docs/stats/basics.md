@@ -48,6 +48,10 @@ Sample Ratio Mismatch check[^3] (SRM Check) checks the quality of randomization.
 
 In this check we require high reliability. Therefore the confidence level is set to 99.9%. If SRM check fails, presented results should not be taken into account and any decisions based on this experiment should not be done!
 
+### Sum Ratio Check
+
+Computes ratios of two goal counts summed across all variants.
+
 ### Data Quality
 We have not implemented any automatic data quality checks yet. The plan is to check all parts of data pipelines.
 
