@@ -89,7 +89,10 @@ class Check(BaseModel):
 
     _SRM_TYPE = "SRM"
     _SUM_RATIO_TYPE = "SumRatio"
-    _ALLOWED_CHECKS = {_SRM_TYPE: EvSrmCheck, _SUM_RATIO_TYPE: EvSumRatioCheck}
+    _ALLOWED_CHECKS = {
+        _SRM_TYPE: EvSrmCheck,
+        _SUM_RATIO_TYPE: EvSumRatioCheck,
+    }
 
     id: int = Field(
         title="Check Id",
@@ -102,7 +105,9 @@ class Check(BaseModel):
     )
     type: str = Field(
         title="Check Type",
-        description="""Defines which check to run. Currently supported types are `"SRM", "SumRatio"`.""",
+        description="""Defines which check to run. Currently supported types are `"SRM", "SumRatio"`.
+        Default is `SRM`""",
+        default_factory=lambda: Check._SRM_TYPE,
     )
     nominator: Optional[str] = Field(
         title="Check Nominator",
@@ -155,8 +160,7 @@ class Check(BaseModel):
     @root_validator
     def check_nominator(cls, values):
 
-        type = cls.type_must_be_allowed(values.get("type"))
-        class_ = cls._ALLOWED_CHECKS[type]
+        class_ = cls._ALLOWED_CHECKS[values.get("type")]
         if "nominator" in signature(class_).parameters:
             _ = cls._validate_nominator_or_denominator(values.get("nominator"), "nominator")
 

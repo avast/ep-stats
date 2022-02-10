@@ -38,7 +38,6 @@ def test_conversion_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
-                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -66,7 +65,6 @@ def test_real_valued_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
-                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -100,7 +98,6 @@ def test_multiple_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
-                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -179,7 +176,6 @@ def test_dimension_evaluate():
             {
                 "id": 1,
                 "name": "SRM",
-                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -215,7 +211,6 @@ def test_filter_scope_goal():
             {
                 "id": 1,
                 "name": "SRM",
-                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             }
         ],
@@ -268,7 +263,6 @@ def test_multi_check():
             {
                 "id": 2,
                 "name": "SRM",
-                "type": "SRM",
                 "denominator": "count(test_unit_type.global.exposure)",
             },
         ],
