@@ -214,6 +214,8 @@ class SumRatioCheck(Check):
         name: str,
         nominator: str,
         denominator: str,
+        max_sum_ratio: float = 0.01,
+        confidence_level: float = 0.999,
         **unused_kwargs,
     ):
         """
@@ -224,6 +226,8 @@ class SumRatioCheck(Check):
             name: check name
             nominator:  goal in the ratio numerator
             denominator: goal in the ratio denominitaor
+            max_sum_ratio: maximum allowed sum_ratio value
+            confidence_level: confidence level of the statistical test
 
         Usage:
         ```python
@@ -236,6 +240,8 @@ class SumRatioCheck(Check):
         ```
         """
         super().__init__(id, name, denominator)
+        self.max_sum_ratio = max_sum_ratio
+        self.confidence_level = confidence_level
         self._nominator = nominator
         self._nominator_parser = Parser(nominator, nominator)
         self._goals = self._goals.union(self._nominator_parser.get_goals())
@@ -252,12 +258,26 @@ class SumRatioCheck(Check):
         with np.errstate(divide="ignore", invalid="ignore"):
             sum_ratio = nominator_counts.sum() / denominator_counts.sum()
 
+            stat, pval = chisquare([denominator_counts.sum(), denominator_counts.sum() - nominator_counts.sum()])
+
         r = pd.DataFrame(
             {
-                "check_id": [self.id],
-                "check_name": [self.name],
-                "variable_id": ["sum_ratio"],
-                "value": [sum_ratio],
+                "check_id": self.id,
+                "check_name": self.name,
+                "variable_id": [
+                    "sum_ratio",
+                    "max_sum_ratio",
+                    "p_value",
+                    "test_stat",
+                    "confidence_level",
+                ],
+                "value": [
+                    sum_ratio,
+                    self.max_sum_ratio,
+                    pval,
+                    stat,
+                    self.confidence_level,
+                ],
             }
         )
         return r
