@@ -1,3 +1,0 @@
-# SrmCheck
-
-::: epstats.toolkit.SrmCheck

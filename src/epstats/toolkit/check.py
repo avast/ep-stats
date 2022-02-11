@@ -226,7 +226,7 @@ class SumRatioCheck(Check):
             name: check name
             nominator:  goal in the ratio numerator
             denominator: goal in the ratio denominitaor
-            max_sum_ratio: maximum allowed `sum_ratio value
+            max_sum_ratio: maximum allowed sum_ratio value
             confidence_level: confidence level of the statistical test
 
         Usage:
