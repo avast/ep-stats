@@ -214,6 +214,7 @@ class SumRatioCheck(Check):
         name: str,
         nominator: str,
         denominator: str,
+        threshold: float = 0.01,
         **unused_kwargs,
     ):
         """
@@ -224,6 +225,7 @@ class SumRatioCheck(Check):
             name: check name
             nominator:  goal in the ratio numerator
             denominator: goal in the ratio denominitaor
+            threshold: maximum allowed `sum_ratio value
 
         Usage:
         ```python
@@ -236,6 +238,7 @@ class SumRatioCheck(Check):
         ```
         """
         super().__init__(id, name, denominator)
+        self.threshold = threshold
         self._nominator = nominator
         self._nominator_parser = Parser(nominator, nominator)
         self._goals = self._goals.union(self._nominator_parser.get_goals())
@@ -254,10 +257,10 @@ class SumRatioCheck(Check):
 
         r = pd.DataFrame(
             {
-                "check_id": [self.id],
-                "check_name": [self.name],
-                "variable_id": ["sum_ratio"],
-                "value": [sum_ratio],
+                "check_id": [self.id, self.id],
+                "check_name": [self.name, self.name],
+                "variable_id": ["sum_ratio", "threshold"],
+                "value": [sum_ratio, self.threshold],
             }
         )
         return r
