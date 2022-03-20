@@ -159,3 +159,15 @@ test-multi-dimension		a	test_unit_type	unit	view	button-1		100	100	100	100	100
 test-multi-dimension		b	test_unit_type	unit	view	button-1		180	180	180	180	180
 test-multi-dimension		a	test_unit_type	unit	view			300	300	300	300	300
 test-multi-dimension		b	test_unit_type	unit	view			400	400	400	400	400
+test-sum-ratio		a	test_unit_type	global	exposure			5000	5000	5000	5000	5000
+test-sum-ratio		b	test_unit_type	global	exposure			5100	5100	5100	5100	5100
+test-sum-ratio		c	test_unit_type	global	exposure			5200	5200	5200	5200	5200
+test-sum-ratio		a	test_unit_type	global	inconsistent_exposure			1000	1000	1000	1000	1000
+test-sum-ratio		b	test_unit_type	global	inconsistent_exposure			1100	1100	1100	1100	1100
+test-sum-ratio		c	test_unit_type	global	inconsistent_exposure			900	900	900	900	900
+test-multi-check		a	test_unit_type	global	exposure			5000	5000	5000	5000	5000
+test-multi-check		b	test_unit_type	global	exposure			5100	5100	5100	5100	5100
+test-multi-check		c	test_unit_type	global	exposure			5200	5200	5200	5200	5200
+test-multi-check		a	test_unit_type	global	inconsistent_exposure			1000	1000	1000	1000	1000
+test-multi-check		b	test_unit_type	global	inconsistent_exposure			1100	1100	1100	1100	1100
+test-multi-check		c	test_unit_type	global	inconsistent_exposure			900	900	900	900	900

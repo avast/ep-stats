@@ -221,12 +221,61 @@ def test_filter_scope_goal():
     assert_experiment(resp.json(), dao_factory.get_dao(), 1)
 
 
+def test_sum_ratio_check():
+    json_blob = {
+        "id": "test-sum-ratio",
+        "control_variant": "a",
+        "variants": ["a", "b", "c"],
+        "unit_type": "test_unit_type",
+        "filters": [],
+        "metrics": [],
+        "checks": [
+            {
+                "id": 1,
+                "name": "EVA",
+                "type": "SumRatio",
+                "nominator": "count(test_unit_type.global.inconsistent_exposure)",
+                "denominator": "count(test_unit_type.global.exposure)",
+            }
+        ],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert_experiment(resp.json(), dao_factory.get_dao(), 0)
+
+
+def test_multi_check():
+    json_blob = {
+        "id": "test-multi-check",
+        "control_variant": "a",
+        "variants": ["a", "b", "c"],
+        "unit_type": "test_unit_type",
+        "filters": [],
+        "metrics": [],
+        "checks": [
+            {
+                "id": 1,
+                "name": "EVA",
+                "type": "SumRatio",
+                "nominator": "count(test_unit_type.global.inconsistent_exposure)",
+                "denominator": "count(test_unit_type.global.exposure)",
+            },
+            {
+                "id": 2,
+                "name": "SRM",
+                "denominator": "count(test_unit_type.global.exposure)",
+            },
+        ],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert_experiment(resp.json(), dao_factory.get_dao(), 0, 2)
+
+
 def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected_checks: int = 1) -> None:
     result = Result(**target)
     assert len(result.metrics) == expected_metrics
     assert len(result.checks) == expected_checks
-    if expected_checks > 0:
-        assert len(result.checks[0].stats) == 3
 
     for m in target["metrics"]:
         assert len(m["stats"]) >= 2

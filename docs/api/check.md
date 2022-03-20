@@ -9,3 +9,7 @@
 # Simple SRM Check
 
 ::: epstats.toolkit.SimpleSrmCheck
+
+# SumRatio Check
+
+::: epstats.toolkit.SumRatioCheck

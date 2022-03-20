@@ -34,7 +34,6 @@ nav:
     - Evaluation: 'api/evaluation.md'
     - Statistics: 'api/statistics.md'
     - Check: 'api/check.md'
-    - SrmCheck: 'api/srm_check.md'
     - Dao: 'api/dao.md'
     - DaoFactory: 'api/dao_factory.md'
     - TestData: 'api/test_data.md'

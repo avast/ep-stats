@@ -30,7 +30,8 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
                     (
                         f"Evaluation of experiment [{experiment.id}] finished with evaluation"
                         f" of {evaluation.metrics.metric_id.nunique()} "
-                        f"metrics and {evaluation.checks.check_id.nunique()} checks"
+                        f"metrics and {evaluation.checks.check_id.nunique()} checks."
+                        f"Metrics: {evaluation.metrics.to_dict('records')}"
                     )
                 )
             return Result.from_evaluation(experiment, evaluation)
