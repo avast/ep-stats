@@ -10,7 +10,7 @@ def results_long_to_wide(metrics: pd.DataFrame) -> pd.DataFrame:
     metrics["conf_int_upper"] = metrics["diff"] + metrics["confidence_interval"]
 
     # Change experiment variants to upper case
-    metrics = metrics.assign(exp_variant_id=lambda r: r.exp_variant_id.str.upper())
+    metrics = metrics.assign(exp_variant_id=lambda r: r.exp_variant_id.str.title())
 
     # Reshape metrics DataFrame - from long to wide
     r = metrics.pivot(
