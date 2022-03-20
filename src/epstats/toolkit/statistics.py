@@ -215,7 +215,7 @@ class Statistics:
     @classmethod
     def obf_alpha_spending_function(cls, confidence_level: int, total_length: int, actual_day: int) -> int:
         """
-        [O'Brien-Fleming alpha spending function](https://online.stat.psu.edu/stat509/node/80/).
+        [O'Brien-Fleming alpha spending function](https://online.stat.psu.edu/stat509/lesson/9/9.6/).
         We adjust confidence level in time in experiment. Confidence level in this setting is
         a decreasing function of experiment time. See [Sequential Analysis](../stats/sequential.md) for details.
 
