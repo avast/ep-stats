@@ -283,6 +283,7 @@ def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected
             "exp_variant_id": [],
             "diff": [],
             "mean": [],
+            "std": [],
             "sum_value": [],
             "p_value": [],
             "confidence_interval": [],
