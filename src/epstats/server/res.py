@@ -22,6 +22,9 @@ class MetricStat(BaseModel):
         description="""Nominator and denominator to calculate the mean
         are given in metric definition. `mean = nominator / denominator`.""",
     )
+    std: float = Field(
+        title="Metric Standard Deviation",
+    )
     sum_value: float = Field(
         title="Metric Value",
         description="""Value of the metric, it is given by the
@@ -54,6 +57,7 @@ class MetricStat(BaseModel):
                 exp_variant_id=r["exp_variant_id"],
                 diff=r["diff"],
                 mean=r["mean"],
+                std=r["std"],
                 sum_value=r["sum_value"],
                 p_value=r["p_value"],
                 confidence_interval=r["confidence_interval"],
@@ -209,6 +213,7 @@ class Result(BaseModel):
                                 "exp_variant_id": "a",
                                 "diff": 0,
                                 "mean": 0.23809523809523808,
+                                "std": 2.1,
                                 "sum_value": 5,
                                 "p_value": 1,
                                 "confidence_interval": 1.1432928868841614,
@@ -218,6 +223,7 @@ class Result(BaseModel):
                                 "exp_variant_id": "b",
                                 "diff": 0.13076923076923078,
                                 "mean": 0.2692307692307692,
+                                "std": 1.422,
                                 "sum_value": 7,
                                 "p_value": 1,
                                 "confidence_interval": 1.2327467657322932,
@@ -227,6 +233,7 @@ class Result(BaseModel):
                                 "exp_variant_id": "c",
                                 "diff": 0.26,
                                 "mean": 0.3,
+                                "std": 0.232,
                                 "sum_value": 9,
                                 "p_value": 1,
                                 "confidence_interval": 1.352808784877644,
