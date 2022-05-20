@@ -27,7 +27,7 @@ class Parser:
         goal = Word(alphas + "_" + nums).setParseAction(Goal)
         number = Word(nums).setParseAction(Number)
         dimension = Word(alphas + "_").setParseAction(Dimension)
-        dimension_value = Word(alphanums + "_" + "-" + "." + "%" + " " + "/").setParseAction(DimensionValue)
+        dimension_value = Word(alphanums + "_" + "-" + "." + "%" + " " + "/" + "|").setParseAction(DimensionValue)
         dimension_list = delimitedList(dimension + "=" + dimension_value)
 
         ep_goal = (func + "(" + unit_type + "." + agg_type + "." + goal + ")").setParseAction(EpGoal)
