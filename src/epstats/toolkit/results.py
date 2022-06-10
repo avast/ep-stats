@@ -97,20 +97,33 @@ def format_results(
     columns_pvalue_format = {col: format_pval for col in columns_pvalue}
     columns_mean_format = {columns_mean[i]: format_mean[i] for i in range(len(columns_mean))}
 
+    columns_format = _merge_dictionaries(columns_pct_format, columns_pvalue_format, columns_mean_format)
+
     # Apply metric_value_multiplier, e.g. 1000 for RPM
     for i in range(len(columns_mean)):
         r[columns_mean[i]] = r[columns_mean[i]] * metric_mean_multipliers[i]
 
     # Apply columns formatting including colour p-value format
-    return (
-        r.style.format(columns_pct_format)
-        .format(columns_pvalue_format)
-        .format(columns_mean_format)
-        .applymap(_p_value_color_format, subset=columns_pvalue)
-    )
+    return r.style.format(columns_format).applymap(_p_value_color_format, subset=columns_pvalue)
 
 
 def _p_value_color_format(pval):
     """Auxiliary function to set p-value color -- green or red."""
     color = "green" if pval < 0.05 else "red"
     return "color: %s" % color
+
+
+def _merge_dictionaries(*dictionaries):
+    """
+    Merge arbitrary number of dictionaries into one.
+
+    Arguments:
+        *dictionaries: arbitrary number of dictionaries
+
+    Returns:
+        one big dictionary consisting from *dictionaries
+    """
+    merged_dictionary = {}
+    for d in dictionaries:
+        merged_dictionary.update(d)
+    return merged_dictionary
