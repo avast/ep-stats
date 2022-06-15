@@ -339,6 +339,7 @@ class Experiment(BaseModel):
             variants=self.variants,
             statsd=statsd,
             filters=[f.to_filter() for f in self.filters] if self.filters else [],
+            outlier_detection_algorithm=self.outlier_detection_algorithm,
         )
 
     class Config:
