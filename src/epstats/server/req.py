@@ -261,6 +261,8 @@ class Experiment(BaseModel):
         title="Filtering conditions", description="""List of filtering conditions to apply on exposure and goals."""
     )
 
+    outlier_detection_algorithm: Optional[str] = Field(title="Outlier detection algorithm")
+
     @validator("id")
     def id_must_be_not_empty(cls, value):
         if not value:
