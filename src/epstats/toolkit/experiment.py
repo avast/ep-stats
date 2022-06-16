@@ -135,6 +135,7 @@ class Experiment:
         variants: List[str] = None,
         statsd: StatsClient = StatsClient(),
         filters: List[Filter] = None,
+        outlier_detection_algorithm: str = None,
     ):
         self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.id = id
@@ -166,6 +167,7 @@ class Experiment:
         self._update_dimension_to_value()
         self.statsd = statsd
         self.filters = filters if filters is not None else []
+        self.outlier_detection_algorithm = outlier_detection_algorithm
 
     def _update_dimension_to_value(self):
         """
