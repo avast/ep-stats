@@ -111,7 +111,7 @@ class Statistics:
                 # We fill in zeros, when goal data are missing for some variant.
                 # There could be division by zero here which is expected as we return
                 # nan or inf values to the caller.
-                rel_diff = (mean_treat - mean_cont) / mean_cont
+                rel_diff = (mean_treat - mean_cont) / np.abs(mean_cont)
                 # standard error for relative difference
                 rel_se = (
                     np.sqrt(
