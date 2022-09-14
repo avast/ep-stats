@@ -263,3 +263,20 @@ class Result(BaseModel):
                 },
             }
         }
+
+
+class SampleSizeCalculationResult(BaseModel):
+    """
+    Result of the sample size calculation.
+    """
+
+    sample_size_per_variant: int = Field(
+        title="Sample size per variant",
+    )
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "sample_size_per_variant": 100_000,
+            }
+        }

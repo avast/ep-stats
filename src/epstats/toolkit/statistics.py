@@ -1,8 +1,12 @@
 import pandas as pd
 import numpy as np
 import scipy.stats as st
+from typing import Optional
 from statsmodels.stats.multitest import multipletests
 import warnings
+
+DEFAULT_CONFIDENCE_LEVEL = 0.95
+DEFAULT_POWER = 0.8
 
 
 class Statistics:
@@ -233,3 +237,120 @@ class Statistics:
         q = st.norm.ppf(1 - alpha / 2)  # quantile of normal distribution
         alpha_adj = 2 - 2 * st.norm.cdf(q / np.sqrt(t))
         return np.round(1 - alpha_adj, decimals=4)
+
+    @staticmethod
+    def _required_sample_size_per_variant(
+        delta: float,
+        two_vars: float,
+        confidence_level: float,
+        power: float,
+    ) -> int:
+
+        alpha = 1 - confidence_level
+        # 7.84 for 80% power and 95% confidence, alpha / 2 for two-sided hypothesis
+        confidence_and_power = (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(power)) ** 2
+        samples_size_per_variant = confidence_and_power * (two_vars / delta ** 2)
+        return round(samples_size_per_variant)
+
+    @classmethod
+    def required_sample_size_per_variant_bernoulli(
+        cls,
+        minimum_effect: float,
+        mean: float,
+        confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
+        power: float = DEFAULT_POWER,
+        **unused_kwargs,
+    ) -> int:
+        """
+        Computes the sample size required to reach the defined `confidence_level`
+        and `power` when the data follow Bernoulli distribution
+
+        Uses the following formula:
+
+        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (s_1^2 + s_2^2) / delta^2
+        s_1^2 = p_1 * (1 - p_1)
+        p_2 = p_1 * (1 + mei)
+        s_2^2 = (p_2 * (1 - p_2)
+
+        Arguments:
+            minimum_effect: minimum (relative) effect that we find meaningful to detect
+            mean: estimate of the current population mean,
+                  also known as rate in case of Bernoulli distribution
+            confidence_level: confidence level of the test
+            power: power of the test
+
+        Returns:
+            required sample size
+        """
+
+        if minimum_effect < 0:
+            raise ValueError("minimum_effect must be greater than zero.")
+
+        if mean > 1 or mean < 0:
+            raise ValueError(f"mean must be between zero and one, received {mean}.")
+
+        # if we know minimum effect, we know treatment mean and treatment variance
+        # see https://github.com/bookingcom/powercalculator/blob/master/src/js/math.js#L113
+
+        mean_2 = mean * (1 + minimum_effect)
+        two_vars = mean * (1 - mean) + mean_2 * (1 - mean_2)
+
+        delta = mean * minimum_effect
+
+        return cls._required_sample_size_per_variant(
+            delta=delta,
+            two_vars=two_vars,
+            confidence_level=confidence_level,
+            power=power,
+        )
+
+    @classmethod
+    def required_sample_size_per_variant(
+        cls,
+        minimum_effect: float,
+        mean: float,
+        std: float,
+        std_2: Optional[float] = None,
+        confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
+        power: float = DEFAULT_POWER,
+    ) -> int:
+        """
+        Computes the sample size required to reach the defined `confidence_level` and `power`.
+
+        Uses the following formula:
+
+        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (s_1^2 + s_2^2) / delta^2
+
+        When `std_2` is unknown, we assume equal variance:
+
+        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (2 * s^2) / delta^2
+
+        For `confidence_level = 0.95` and `power = 0.8`:
+        N = 7.84 * 2 * s^2 / delta^2
+        N = 15.7 * s^2 / delta^2
+
+        Arguments:
+            minimum_effect: minimum (relative) effect that we find meaningful to detect
+            mean: estimate of the current population mean,
+                  also known as rate in case of Bernoulli distribution
+            std: estimate of the current population standard deviation
+            std_2: estimate of the treatment population standard deviation
+            confidence_level: confidence level of the test
+            power: power of the test
+
+        Returns:
+            required sample size
+        """
+
+        if minimum_effect < 0:
+            raise ValueError("minimum_effect must be greater than zero.")
+
+        two_vars = 2 * (std ** 2) if std_2 is None else (std ** 2 + std_2 ** 2)
+        delta = mean * minimum_effect
+
+        return cls._required_sample_size_per_variant(
+            delta=delta,
+            two_vars=two_vars,
+            confidence_level=confidence_level,
+            power=power,
+        )

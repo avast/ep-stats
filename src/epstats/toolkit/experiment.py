@@ -12,7 +12,7 @@ from .check import Check
 from .utils import get_utc_timestamp, goals_wide_to_long
 from .parser import EpGoal, UnitType, AggType, Goal
 
-from .statistics import Statistics
+from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL
 
 
 class Evaluation:
@@ -131,7 +131,7 @@ class Experiment:
         date_from: str = None,
         date_to: str = None,
         date_for: str = None,
-        confidence_level: float = 0.95,
+        confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
         variants: List[str] = None,
         statsd: StatsClient = StatsClient(),
         filters: List[Filter] = None,
