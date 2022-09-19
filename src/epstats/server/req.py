@@ -10,6 +10,7 @@ from ..toolkit import Metric as EvMetric
 from ..toolkit import SrmCheck as EvSrmCheck
 from ..toolkit import SumRatioCheck as EvSumRatioCheck
 from ..toolkit import Parser
+from ..toolkit import DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
 
 
 class Metric(BaseModel):
@@ -368,5 +369,51 @@ class Experiment(BaseModel):
                         "denominator": "count(test_unit_type.global.exposure)",
                     }
                 ],
+            }
+        }
+
+
+class SampleSizeCalculationData(BaseModel):
+    """
+    Data needed for the sample size calculation.
+    """
+
+    n_variants: int = Field(title="Number of variants", description="Number of variants in the experiment.")
+
+    minimum_effect: float = Field(
+        title="Minimum effect of interest", description="Relative effect, must be greater than zero."
+    )
+
+    mean: float = Field(
+        title="Current mean",
+        description="""Estimate of the current population mean. If `std` is empty,
+        it is assumed that the data comes from Bernoulli distribution. In such case,
+        `mean` must be between zero and one.""",
+    )
+
+    std: Optional[float] = Field(
+        title="Current standard deviation",
+        description="""Estimate of the current population standard deviation. If empty,
+        it is assumed that the data comes from Bernoulli distribution. In such case,
+        `mean` must be between zero and one.""",
+    )
+
+    confidence_level: float = Field(
+        title="Confidence level",
+        default=DEFAULT_CONFIDENCE_LEVEL,
+    )
+
+    power: float = Field(
+        title="Power",
+        default=DEFAULT_POWER,
+    )
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "minimum_effect": 0.1,
+                "mean": 0.2,
+                "std": 1.2,
+                "n_variants": 2,
             }
         }

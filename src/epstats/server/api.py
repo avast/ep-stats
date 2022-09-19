@@ -11,6 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from .api_evaluate import get_evaluate_router
+from .api_sample_size_calculation import get_sample_size_calculation_router
 from .json_response import DataScienceJsonResponse
 from .api_settings import ApiSettings
 
@@ -47,6 +48,7 @@ def get_api(settings: ApiSettings, get_dao, get_executor_pool, get_statsd) -> Fa
         return {"message": "ep-stats-api is ready"}
 
     api.include_router(get_evaluate_router(get_dao, get_executor_pool, get_statsd))
+    api.include_router(get_sample_size_calculation_router(get_executor_pool, get_statsd))
 
     return api
 
