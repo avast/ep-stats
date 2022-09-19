@@ -378,6 +378,8 @@ class SampleSizeCalculationData(BaseModel):
     Data needed for the sample size calculation.
     """
 
+    n_variants: int = Field(title="Number of variants", description="Number of variants in the experiment.")
+
     minimum_effect: float = Field(
         title="Minimum effect of interest", description="Relative effect, must be greater than zero."
     )
@@ -412,5 +414,6 @@ class SampleSizeCalculationData(BaseModel):
                 "minimum_effect": 0.1,
                 "mean": 0.2,
                 "std": 1.2,
+                "n_variants": 2,
             }
         }

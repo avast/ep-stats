@@ -240,6 +240,7 @@ class Statistics:
 
     @staticmethod
     def required_sample_size_per_variant(
+        n_variants: int,
         minimum_effect: float,
         mean: float,
         std: float,
@@ -263,6 +264,7 @@ class Statistics:
         N = 15.7 * s^2 / delta^2
 
         Arguments:
+            n_variants: number of variants in the experiment
             minimum_effect: minimum (relative) effect that we find meaningful to detect
             mean: estimate of the current population mean,
                   also known as rate in case of Bernoulli distribution
@@ -278,10 +280,15 @@ class Statistics:
         if minimum_effect < 0:
             raise ValueError("minimum_effect must be greater than zero.")
 
+        if n_variants < 2:
+            raise ValueError("There must be at least two variants.")
+
         two_vars = 2 * (std ** 2) if std_2 is None else (std ** 2 + std_2 ** 2)
         delta = mean * minimum_effect
 
         alpha = 1 - confidence_level
+        m = n_variants - 1
+        alpha = alpha / m  # Bonferroni correction
         # 7.84 for 80% power and 95% confidence, alpha / 2 for two-sided hypothesis
         confidence_and_power = (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(power)) ** 2
         samples_size_per_variant = confidence_and_power * (two_vars / delta ** 2)
@@ -290,6 +297,7 @@ class Statistics:
     @classmethod
     def required_sample_size_per_variant_bernoulli(
         cls,
+        n_variants: int,
         minimum_effect: float,
         mean: float,
         confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
@@ -308,6 +316,7 @@ class Statistics:
         s_2^2 = (p_2 * (1 - p_2)
 
         Arguments:
+            n_variants: number of variants in the experiment
             minimum_effect: minimum (relative) effect that we find meaningful to detect
             mean: estimate of the current population mean,
                   also known as rate in case of Bernoulli distribution
@@ -330,6 +339,7 @@ class Statistics:
         mean_2 = mean * (1 + minimum_effect)
 
         return cls.required_sample_size_per_variant(
+            n_variants=n_variants,
             minimum_effect=minimum_effect,
             mean=mean,
             std=get_std(mean),

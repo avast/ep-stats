@@ -22,13 +22,7 @@ def get_sample_size_calculation_router(get_executor_pool, get_statsd) -> APIRout
             else:
                 f = Statistics.required_sample_size_per_variant
 
-            sample_size_per_variant = f(
-                minimum_effect=data.minimum_effect,
-                mean=data.mean,
-                std=data.std,  # not used when `f` is bernoulli
-                confidence_level=data.confidence_level,
-                power=data.power,
-            )
+            sample_size_per_variant = f(**data.dict())
 
             _logger.info((f"Calculation finished, sample_size_per_variant = {sample_size_per_variant}."))
             return SampleSizeCalculationResult(sample_size_per_variant=sample_size_per_variant)

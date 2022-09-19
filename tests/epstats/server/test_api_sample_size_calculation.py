@@ -13,17 +13,15 @@ api.dependency_overrides[get_executor_pool] = get_test_executor_pool
 
 
 @pytest.mark.parametrize(
-    "minimum_effect, mean, std, expected",
-    [
-        (0.10, 0.2, 1.2, 56512),
-        (0.05, 0.4, None, 9489),
-    ],
+    "n_variants, minimum_effect, mean, std, expected",
+    [(2, 0.10, 0.2, 1.2, 56512), (2, 0.05, 0.4, None, 9489), (3, 0.05, 0.4, None, 11492)],
 )
-def test_sample_size_calculation(minimum_effect, mean, std, expected):
+def test_sample_size_calculation(n_variants, minimum_effect, mean, std, expected):
     json_blob = {
         "minimum_effect": minimum_effect,
         "mean": mean,
         "std": std,
+        "n_variants": n_variants,
     }
 
     resp = client.post("/sample-size-calculation", json=json_blob)
@@ -32,16 +30,18 @@ def test_sample_size_calculation(minimum_effect, mean, std, expected):
 
 
 @pytest.mark.parametrize(
-    "minimum_effect, mean, expected_message",
+    "n_variants, minimum_effect, mean, expected_message",
     [
-        (-0.4, 0.2, "minimum_effect must be greater than zero"),
-        (0.05, 1.4, "mean must be between zero and one"),
+        (2, -0.4, 0.2, "minimum_effect must be greater than zero"),
+        (2, 0.05, 1.4, "mean must be between zero and one"),
+        (1, 0.05, 0.2, "must be at least two variants"),
     ],
 )
-def test_sample_size_calculation_error(minimum_effect, mean, expected_message):
+def test_sample_size_calculation_error(n_variants, minimum_effect, mean, expected_message):
     json_blob = {
         "minimum_effect": minimum_effect,
         "mean": mean,
+        "n_variants": n_variants,
     }
 
     resp = client.post("/sample-size-calculation", json=json_blob)
