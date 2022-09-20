@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, Optional
 import pandas as pd
 import numpy as np
 
@@ -18,6 +18,7 @@ class Metric:
         denominator: str,
         metric_format: str = "{:.2%}",
         metric_value_multiplier: int = 1,
+        minimum_effect: Optional[float] = None,
     ):
         """
         Constructor of the general metric definition.
@@ -55,6 +56,7 @@ class Metric:
         self._goals = self._parser.get_goals()
         self.metric_format = metric_format
         self.metric_value_multiplier = metric_value_multiplier
+        self.minimum_effect = minimum_effect
 
     def get_goals(self) -> Set:
         """
@@ -111,6 +113,7 @@ class SimpleMetric(Metric):
         unit_type: str = "test_unit_type",
         metric_format: str = "{:.2%}",
         metric_value_multiplier: int = 1,
+        minimum_effect: Optional[float] = None,
     ):
         """
         Constructor of the simplified metric definition.
@@ -145,4 +148,4 @@ class SimpleMetric(Metric):
         num = "value" + "(" + unit_type + "." + agg_type + "." + numerator + ")"
         den = "value" + "(" + unit_type + "." + agg_type + "." + denominator + ")"
 
-        super().__init__(id, name, num, den, metric_format, metric_value_multiplier)
+        super().__init__(id, name, num, den, metric_format, metric_value_multiplier, minimum_effect)

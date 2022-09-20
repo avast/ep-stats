@@ -3,16 +3,18 @@ from typing import List, Any
 from enum import Enum
 import pandas as pd
 import numpy as np
+from collections import Counter
+from typing import Optional
 from datetime import datetime
 from statsd import StatsClient
 from dataclasses import dataclass
 
-from .metric import Metric
+from .metric import Metric, SimpleMetric
 from .check import Check
 from .utils import get_utc_timestamp, goals_wide_to_long
 from .parser import EpGoal, UnitType, AggType, Goal
 
-from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL
+from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
 
 
 class Evaluation:
@@ -64,6 +66,9 @@ class Evaluation:
             "confidence_interval",
             "standard_error",
             "degrees_of_freedom",
+            "minimum_effect",
+            "sample_size",
+            "required_sample_size",
         ]
 
     @classmethod
@@ -128,20 +133,21 @@ class Experiment:
         metrics: List[Metric],
         checks: List[Check],
         unit_type: str,
-        date_from: str = None,
-        date_to: str = None,
-        date_for: str = None,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+        date_for: Optional[str] = None,
         confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
-        variants: List[str] = None,
+        variants: Optional[List[str]] = None,
         statsd: StatsClient = StatsClient(),
-        filters: List[Filter] = None,
-        outlier_detection_algorithm: str = None,
+        filters: Optional[List[Filter]] = None,
+        outlier_detection_algorithm: Optional[str] = None,
     ):
         self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.id = id
         self.control_variant = control_variant
         self.unit_type = unit_type
         self.metrics = metrics
+        self._check_metric_ids_unique()
         self.checks = checks
         self.date_from = datetime.strptime(date_from, "%Y-%m-%d").date() if date_from is not None else None
         self.date_to = datetime.strptime(date_to, "%Y-%m-%d").date() if date_to is not None else None
@@ -168,6 +174,15 @@ class Experiment:
         self.statsd = statsd
         self.filters = filters if filters is not None else []
         self.outlier_detection_algorithm = outlier_detection_algorithm
+
+    def _check_metric_ids_unique(self):
+        """
+        Raises an exception if `metrics` contain duplicated ids.
+        """
+        id_counts = Counter(metric.id for metric in self.metrics)
+        for id_, count in id_counts.items():
+            if count > 1:
+                raise ValueError(f"Metric ids must be unique. Id={id_} found more than once.")
 
     def _update_dimension_to_value(self):
         """
@@ -652,6 +667,70 @@ class Experiment:
             + self.get_dimension_columns()
         ]
 
+    def _get_required_sample_size(
+        self,
+        metric_row: pd.Series,
+        controls: dict,
+        minimum_effects: dict,
+        metrics_with_value_denominator: set,
+        n_variants: int,
+    ) -> pd.Series:
+
+        metric_id = metric_row["metric_id"]
+        minimum_effect = minimum_effects[metric_id]
+        index = ["minimum_effect", "sample_size", "required_sample_size"]
+
+        # Right now, metric with value() denominator would return count that is not equal
+        # to the sample size. In such case we do not evaluate the required sample size.
+        # TODO: add suport for value() denominator metrics,
+        # parser will return an additional column equal to count or count_unique.
+        sample_size = metric_row["count"] if metric_id not in metrics_with_value_denominator else np.nan
+
+        if metric_row["exp_variant_id"] == self.control_variant or pd.isnull(minimum_effect):
+            return pd.Series([np.nan, sample_size, np.nan], index)
+
+        metric_id = metric_row["metric_id"]
+        return pd.Series(
+            [
+                minimum_effect,
+                sample_size,
+                Statistics.required_sample_size_per_variant(
+                    n_variants=n_variants,
+                    minimum_effect=minimum_effect,
+                    mean=controls[metric_id]["mean"],
+                    std=controls[metric_id]["std"],
+                    std_2=metric_row["std"],
+                    confidence_level=metric_row["confidence_level"],
+                    power=DEFAULT_POWER,
+                ),
+            ],
+            index,
+        )
+
+    def _get_required_sample_sizes(self, metrics: pd.DataFrame, n_variants: int) -> pd.DataFrame:
+
+        controls = {
+            r["metric_id"]: {"mean": r["mean"], "std": r["std"]}
+            for _, r in metrics.iterrows()
+            if r["exp_variant_id"] == self.control_variant
+        }
+
+        minimum_effects = {m.id: m.minimum_effect for m in self.metrics}
+        metrics_with_value_denominator = {
+            m.id for m in self.metrics if m.denominator.startswith("value(") and not isinstance(m, SimpleMetric)
+        }
+
+        return metrics.apply(
+            lambda metric_row: self._get_required_sample_size(
+                metric_row=metric_row,
+                controls=controls,
+                minimum_effects=minimum_effects,
+                metrics_with_value_denominator=metrics_with_value_denominator,
+                n_variants=n_variants,
+            ),
+            axis=1,
+        )
+
     def _evaluate_metrics(self, goals: pd.DataFrame, column_fce) -> pd.DataFrame:
         if not self.metrics:
             return pd.DataFrame([], columns=Evaluation.metric_columns())
@@ -662,7 +741,7 @@ class Experiment:
             sts.append([count, sum_value, sum_sqr_value])
         stats = np.array(sts).transpose(0, 2, 1)
         metrics = stats.shape[0]
-        variants = stats.shape[1]
+        n_variants = stats.shape[1]
 
         count = stats[:, :, 0]
         sum_value = stats[:, :, 1]
@@ -689,9 +768,9 @@ class Experiment:
         stats = np.dstack((count, mean, std, sum_value, np.ones(count.shape) * confidence_level))
         stats = np.dstack(
             (
-                np.repeat([m.id for m in self.metrics], variants).reshape(metrics, variants, -1),
-                np.repeat([m.name for m in self.metrics], variants).reshape(metrics, variants, -1),
-                np.tile(goals["exp_variant_id"].unique(), metrics).reshape(metrics, variants, -1),
+                np.repeat([m.id for m in self.metrics], n_variants).reshape(metrics, n_variants, -1),
+                np.repeat([m.name for m in self.metrics], n_variants).reshape(metrics, n_variants, -1),
+                np.tile(goals["exp_variant_id"].unique(), metrics).reshape(metrics, n_variants, -1),
                 stats,
             )
         )
@@ -702,9 +781,10 @@ class Experiment:
         c = Statistics.ttest_evaluation(stats, self.control_variant)
 
         # multiple variants (comparisons) correction - applied when we have multiple treatment variants
-        if variants > 2:
-            c = Statistics.multiple_comparisons_correction(c, variants, metrics, confidence_level)
+        if n_variants > 2:
+            c = Statistics.multiple_comparisons_correction(c, n_variants, metrics, confidence_level)
 
         c["exp_id"] = self.id
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
+        c[["minimum_effect", "sample_size", "required_sample_size"]] = self._get_required_sample_sizes(c, n_variants)
         return c[Evaluation.metric_columns()]

@@ -1,8 +1,8 @@
 import pandas as pd
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
-from ..toolkit import Evaluation
+from ..toolkit import Evaluation, DEFAULT_POWER
 from .req import Experiment, Metric, Check
 
 
@@ -49,6 +49,14 @@ class MetricStat(BaseModel):
         description="""Confidence level used
         to compute (obtain) `confidence_interval`.""",
     )
+    sample_size: Optional[float] = Field(
+        title="Sample size",
+        description="Current sample size.",
+    )
+    required_sample_size: Optional[float] = Field(
+        title="Required sample size",
+        description=f"Size of the sample required to reach {DEFAULT_POWER:.0%} power.",
+    )
 
     @staticmethod
     def from_df(df: pd.DataFrame):
@@ -62,6 +70,8 @@ class MetricStat(BaseModel):
                 p_value=r["p_value"],
                 confidence_interval=r["confidence_interval"],
                 confidence_level=r["confidence_level"],
+                sample_size=r["sample_size"],
+                required_sample_size=r["required_sample_size"],
             )
             for i, r in df.iterrows()
         ]

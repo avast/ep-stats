@@ -43,7 +43,7 @@ def test_update_dimension_to_value(unit_type):
 
     metrics = [
         Metric(
-            2,
+            1,
             "Average Bookings",
             "value(test_unit_type.unit.conversion(country=A))",
             "count(test_unit_type.global.exposure)",
@@ -525,3 +525,48 @@ def test_missing_all(dao, metrics, checks, unit_type):
         unit_type=unit_type,
     )
     evaluate_experiment_agg(experiment, dao)
+
+
+def test_metric_with_minimum_effect(dao, unit_type):
+    experiment = Experiment(
+        "test-conversion-with-minimum-effect",
+        "a",
+        [
+            Metric(
+                id=1,
+                name="Click-through Rate",
+                nominator="count(test_unit_type.unit.click)",
+                denominator="count(test_unit_type.global.exposure)",
+                minimum_effect=0.1,
+            )
+        ],
+        checks=[],
+        unit_type=unit_type,
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
+def test_duplicate_metric_ids_raise_exception():
+    with pytest.raises(ValueError):
+        Experiment(
+            "test",
+            "a",
+            [
+                Metric(
+                    id=1,
+                    name="Click-through Rate",
+                    nominator="count(test_unit_type.unit.click)",
+                    denominator="count(test_unit_type.global.exposure)",
+                    minimum_effect=0.1,
+                ),
+                Metric(
+                    id=1,
+                    name="Click-through Rate",
+                    nominator="count(test_unit_type.unit.click)",
+                    denominator="count(test_unit_type.global.exposure)",
+                    minimum_effect=0.1,
+                ),
+            ],
+            checks=[],
+            unit_type="test",
+        )

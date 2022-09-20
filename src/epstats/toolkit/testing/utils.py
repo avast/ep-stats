@@ -75,6 +75,8 @@ def assert_metrics(
             "p_value",
             "confidence_interval",
             "confidence_level",
+            "sample_size",
+            "required_sample_size",
         ]
     ].astype(float)
     atol = 10 ** -precision
@@ -84,6 +86,11 @@ def assert_metrics(
     assert allclose(t["p_value"], expected["p_value"], atol=atol * 10, equal_nan=True)
     assert allclose(t["confidence_interval"], expected["confidence_interval"], atol=atol * 10, equal_nan=True)
     assert allclose(t["confidence_level"], expected["confidence_level"], atol=atol, equal_nan=True)
+    assert allclose(t["sample_size"], expected["sample_size"], atol=0, equal_nan=True)
+    assert allclose(t["required_sample_size"], expected["required_sample_size"], atol=0, equal_nan=True)
+
+    if "minimum_effect" in target.columns:
+        assert allclose(target["minimum_effect"], expected["minimum_effect"], atol=0, equal_nan=True)
 
 
 def assert_checks(
