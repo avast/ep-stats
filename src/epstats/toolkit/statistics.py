@@ -253,15 +253,32 @@ class Statistics:
 
         Uses the following formula:
 
-        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (s_1^2 + s_2^2) / delta^2
+        $$
+        N = \\frac{(Z_{1-\\alpha/2} + Z_{1-\\beta})^2(s_1^2 + s_2^2)}{\\Delta^2}
+        $$
 
-        When `std_2` is unknown, we assume equal variance:
+        where $\\Delta = \\mathrm{MEI}\\mu_1$. When `std_2` is unknown,
+        we assume equal variance $s_1^2 = s_2^2$:
 
-        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (2 * s^2) / delta^2
+        $$
+        N = \\frac{(Z_{1-\\alpha/2} + Z_{1-\\beta})^2 2s_1^2}{\\Delta^2}
+        $$
 
         For `confidence_level = 0.95` and `power = 0.8`:
-        N = 7.84 * 2 * s^2 / delta^2
-        N = 15.7 * s^2 / delta^2
+        $$
+        N = \\frac{7.84 * 2s_1^2}{\\Delta^2} = \\frac{15.7s_1^2}{\\Delta^2}
+        $$
+
+        The calculation is using Bonferroni correction when `n_variants > 2`. The initial
+        $\\alpha$ defined by the `confidence_level` parameter is adjusted to
+
+        $$
+        \\alpha^{*} = \\alpha / m
+        $$
+
+        where $m$ is the number of treatment variants. This correction produces
+        greater total sample size than Holm-Bonferroni correction because it assigns
+        the most conservative $\\alpha^{*}$ to all variants.
 
         Arguments:
             n_variants: number of variants in the experiment
@@ -308,12 +325,12 @@ class Statistics:
         Computes the sample size required to reach the defined `confidence_level`
         and `power` when the data follow Bernoulli distribution
 
-        Uses the following formula:
+        Uses `Statistics.required_sample_size_per_variant` with `std_2` defined as
 
-        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (s_1^2 + s_2^2) / delta^2
-        s_1^2 = p_1 * (1 - p_1)
-        p_2 = p_1 * (1 + mei)
-        s_2^2 = (p_2 * (1 - p_2)
+        $$
+        p_2 = p_1(1 + \\mathrm{MEI}) \\\\
+        s_2^2 = p_2(1 - p_2) \\\\
+        $$
 
         Arguments:
             n_variants: number of variants in the experiment

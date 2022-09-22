@@ -19,6 +19,7 @@ in an AB test experiment.
 * Sequential evaluations allow experiments to be stopped early.
 * Connect it to any data source to get either pre-aggregated or per randomization unit data.
 * Simple expression language to define arbitrary metrics.
+* Sample size estimation.
 * REST API to integrate it as a service in experimentation portal with score cards.
 
 ## Documentation
