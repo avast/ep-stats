@@ -171,3 +171,9 @@ test-multi-check		c	test_unit_type	global	exposure			5200	5200	5200	5200	5200
 test-multi-check		a	test_unit_type	global	inconsistent_exposure			1000	1000	1000	1000	1000
 test-multi-check		b	test_unit_type	global	inconsistent_exposure			1100	1100	1100	1100	1100
 test-multi-check		c	test_unit_type	global	inconsistent_exposure			900	900	900	900	900
+test-conversion-with-minimum-effect		a	test_unit_type	unit	click			5	5	5	5	5
+test-conversion-with-minimum-effect		b	test_unit_type	unit	click			7	7	7	7	7
+test-conversion-with-minimum-effect		c	test_unit_type	unit	click			9	9	9	9	9
+test-conversion-with-minimum-effect		a	test_unit_type	global	exposure			21	21	21	21	21
+test-conversion-with-minimum-effect		b	test_unit_type	global	exposure			26	26	26	26	26
+test-conversion-with-minimum-effect		c	test_unit_type	global	exposure			30	30	30	30	30

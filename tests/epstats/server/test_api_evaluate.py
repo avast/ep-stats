@@ -272,6 +272,28 @@ def test_multi_check():
     assert_experiment(resp.json(), dao_factory.get_dao(), 0, 2)
 
 
+def test_metric_with_minimum_effect():
+    json_blob = {
+        "id": "test-conversion-with-minimum-effect",
+        "control_variant": "a",
+        "unit_type": "test_unit_type",
+        "metrics": [
+            {
+                "id": 1,
+                "name": "Click-through Rate",
+                "nominator": "count(test_unit_type.unit.click)",
+                "denominator": "count(test_unit_type.global.exposure)",
+                "minimum_effect": 0.1,
+            }
+        ],
+        "checks": [],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 200
+    assert_experiment(resp.json(), dao_factory.get_dao(), 1, 0)
+
+
 def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected_checks: int = 1) -> None:
     result = Result(**target)
     assert len(result.metrics) == expected_metrics
@@ -288,10 +310,13 @@ def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected
             "p_value": [],
             "confidence_interval": [],
             "confidence_level": [],
+            "sample_size": [],
+            "required_sample_size": [],
         }
         for s in m["stats"]:
             for i in s.items():
                 d[i[0]].append(i[1])
+
         df = pd.DataFrame(d)
         df["exp_id"] = target["id"]
         df["metric_id"] = m["id"]

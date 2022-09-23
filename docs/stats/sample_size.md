@@ -50,6 +50,10 @@ As we discussed in previous chapter, we can see that:
 1. Sample size increases as MDE decreases (because $\Delta$ is in the denominator).
 1. Sample size is greatest for conversion rates equal to 0.5.
 
+Sample size calculation is available in the statistics toolkit of this package.
+See the [API documentation](../api/statistics.md#epstats.toolkit.statistics.Statistics.required_sample_size_per_variant)
+for more details.
+
 ## What to Do If Sample Size is Too Big
 
 We saw that required sample size is

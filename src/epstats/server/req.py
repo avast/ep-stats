@@ -39,6 +39,12 @@ class Metric(BaseModel):
         description="""EP metric is defined in the form of `nominator / denominator`.
         Both parts are entered as expressions. Example: `count(my_unit_type.unit.conversion)`.""",
     )
+    minimum_effect: Optional[float] = Field(
+        title="Minimum effect of interest",
+        description=f"""The minimum effect of interest is the smallest relative difference that is meaningful to detect,
+        defining it allows us to estimate the size of the sample data required to reach {DEFAULT_POWER:.0%} power.""",
+        default=None,
+    )
 
     @validator("id")
     def id_must_be_not_empty(cls, value):
@@ -80,7 +86,13 @@ class Metric(BaseModel):
             raise ValueError(f"Cannot parse nominator '{nominator}' or '{denominator}' because of '{e}'")
 
     def to_metric(self):
-        return EvMetric(self.id, self.name, self.nominator, self.denominator)
+        return EvMetric(
+            id=self.id,
+            name=self.name,
+            nominator=self.nominator,
+            denominator=self.denominator,
+            minimum_effect=self.minimum_effect,
+        )
 
 
 class Check(BaseModel):
@@ -378,10 +390,14 @@ class SampleSizeCalculationData(BaseModel):
     Data needed for the sample size calculation.
     """
 
-    n_variants: int = Field(title="Number of variants", description="Number of variants in the experiment.")
+    n_variants: int = Field(
+        title="Number of variants",
+        description="Number of variants in the experiment.",
+    )
 
     minimum_effect: float = Field(
-        title="Minimum effect of interest", description="Relative effect, must be greater than zero."
+        title="Minimum effect of interest",
+        description="Relative effect, must be greater than zero.",
     )
 
     mean: float = Field(

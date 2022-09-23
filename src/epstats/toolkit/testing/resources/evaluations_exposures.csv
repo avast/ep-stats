@@ -61,3 +61,6 @@ test-sum-ratio	c	test_unit_type	global	exposure	5200
 test-multi-check	a	test_unit_type	global	exposure	5000
 test-multi-check	b	test_unit_type	global	exposure	5100
 test-multi-check	c	test_unit_type	global	exposure	5200
+test-conversion-with-minimum-effect	a	test_unit_type	global	exposure	21
+test-conversion-with-minimum-effect	b	test_unit_type	global	exposure	26
+test-conversion-with-minimum-effect	c	test_unit_type	global	exposure	30

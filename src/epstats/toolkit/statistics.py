@@ -164,7 +164,7 @@ class Statistics:
 
     @classmethod
     def multiple_comparisons_correction(
-        cls, df: pd.DataFrame, variants: int, metrics: int, confidence_level: float
+        cls, df: pd.DataFrame, n_variants: int, metrics: int, confidence_level: float
     ) -> pd.DataFrame:
         """
         [Holm-Bonferroni correction](https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method)
@@ -182,7 +182,7 @@ class Statistics:
 
         Arguments:
             df: dataframe as output of [`ttest_evaluation`][epstats.toolkit.statistics.Statistics.ttest_evaluation]
-            variants: number of variants in the experiment
+            n_variants: number of variants in the experiment
             metrics: number of metrics of experiment
             confidence_level: desired confidence level at the end of the experiment, e.g. 0.95
 
@@ -193,8 +193,8 @@ class Statistics:
 
         for m in range(metrics):
             # indices of rows with metric m data
-            index_from = m * variants + 1
-            index_to = (m + 1) * variants - 1
+            index_from = m * n_variants + 1
+            index_to = (m + 1) * n_variants - 1
 
             # p-value adjustment
             pvals = df.loc[index_from:index_to, "p_value"].to_list()  # select old p-values
@@ -208,7 +208,7 @@ class Statistics:
             f = df.loc[index_from:index_to, "degrees_of_freedom"].to_list()  # degrees of freedom
             se = df.loc[index_from:index_to, "standard_error"].to_list()  # standard error
 
-            t_quantile = st.t.ppf(np.ones(variants - 1) - adj_alpha + adj_alpha / 2, f)  # right t-quantile
+            t_quantile = st.t.ppf(np.ones(n_variants - 1) - adj_alpha + adj_alpha / 2, f)  # right t-quantile
             adj_conf_int = se * t_quantile  # adjusted confidence interval
 
             # replace (unadjusted) p-values and confidence intervals with new adjusted ones
@@ -253,21 +253,38 @@ class Statistics:
 
         Uses the following formula:
 
-        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (s_1^2 + s_2^2) / delta^2
+        $$
+        N = \\frac{(Z_{1-\\alpha/2} + Z_{1-\\beta})^2(s_1^2 + s_2^2)}{\\Delta^2}
+        $$
 
-        When `std_2` is unknown, we assume equal variance:
+        where $\\Delta = \\mathrm{MEI}\\mu_1$. When `std_2` is unknown,
+        we assume equal variance $s_1^2 = s_2^2$:
 
-        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (2 * s^2) / delta^2
+        $$
+        N = \\frac{(Z_{1-\\alpha/2} + Z_{1-\\beta})^2 2s_1^2}{\\Delta^2}
+        $$
 
         For `confidence_level = 0.95` and `power = 0.8`:
-        N = 7.84 * 2 * s^2 / delta^2
-        N = 15.7 * s^2 / delta^2
+        $$
+        N = \\frac{7.84 * 2s_1^2}{\\Delta^2} = \\frac{15.7s_1^2}{\\Delta^2}
+        $$
+
+        The calculation is using Bonferroni correction when `n_variants > 2`. The initial
+        $\\alpha$ defined by the `confidence_level` parameter is adjusted to
+
+        $$
+        \\alpha^{*} = \\alpha / m
+        $$
+
+        where $m$ is the number of treatment variants. This correction produces
+        greater total sample size than Holm-Bonferroni correction because it assigns
+        the most conservative $\\alpha^{*}$ to all variants.
 
         Arguments:
             n_variants: number of variants in the experiment
             minimum_effect: minimum (relative) effect that we find meaningful to detect
             mean: estimate of the current population mean,
-                  also known as rate in case of Bernoulli distribution
+            also known as rate in case of Bernoulli distribution
             std: estimate of the current population standard deviation
             std_2: estimate of the treatment population standard deviation
             confidence_level: confidence level of the test
@@ -308,12 +325,12 @@ class Statistics:
         Computes the sample size required to reach the defined `confidence_level`
         and `power` when the data follow Bernoulli distribution
 
-        Uses the following formula:
+        Uses `Statistics.required_sample_size_per_variant` with `std_2` defined as
 
-        N = (Z_{1-alpha/2} + Z_{1-beta})^2 * (s_1^2 + s_2^2) / delta^2
-        s_1^2 = p_1 * (1 - p_1)
-        p_2 = p_1 * (1 + mei)
-        s_2^2 = (p_2 * (1 - p_2)
+        $$
+        p_2 = p_1(1 + \\mathrm{MEI}) \\\\
+        s_2^2 = p_2(1 - p_2) \\\\
+        $$
 
         Arguments:
             n_variants: number of variants in the experiment
