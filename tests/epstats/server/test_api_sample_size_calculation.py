@@ -35,10 +35,8 @@ def test_sample_size_calculation(n_variants, minimum_effect, mean, std, expected
     assert resp.status_code == 200
 
     sample_size = resp.json()["sample_size_per_variant"]
-    if isnan(expected):
-        assert isnan(sample_size)
-    else:
-        assert sample_size == expected
+
+    assert sample_size == expected or (isnan(expected) and isnan(sample_size))
 
 
 @pytest.mark.parametrize(
