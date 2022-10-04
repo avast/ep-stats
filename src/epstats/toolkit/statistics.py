@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import scipy.stats as st
-from typing import Optional
+from typing import Optional, Union
 from statsmodels.stats.multitest import multipletests
 import warnings
 
@@ -247,7 +247,7 @@ class Statistics:
         std_2: Optional[float] = None,
         confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
         power: float = DEFAULT_POWER,
-    ) -> int:
+    ) -> Union[int, float]:
         """
         Computes the sample size required to reach the defined `confidence_level` and `power`.
 
@@ -301,15 +301,16 @@ class Statistics:
             raise ValueError("There must be at least two variants.")
 
         two_vars = 2 * (std ** 2) if std_2 is None else (std ** 2 + std_2 ** 2)
-        delta = mean * minimum_effect
+        delta = np.float64(mean * minimum_effect)
 
         alpha = 1 - confidence_level
         m = n_variants - 1
         alpha = alpha / m  # Bonferroni correction
         # 7.84 for 80% power and 95% confidence, alpha / 2 for two-sided hypothesis
         confidence_and_power = (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(power)) ** 2
-        samples_size_per_variant = confidence_and_power * (two_vars / delta ** 2)
-        return round(samples_size_per_variant)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            samples_size_per_variant = confidence_and_power * (two_vars / delta ** 2)
+        return np.round(samples_size_per_variant)
 
     @classmethod
     def required_sample_size_per_variant_bernoulli(
@@ -320,7 +321,7 @@ class Statistics:
         confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
         power: float = DEFAULT_POWER,
         **unused_kwargs,
-    ) -> int:
+    ) -> Union[int, float]:
         """
         Computes the sample size required to reach the defined `confidence_level`
         and `power` when the data follow Bernoulli distribution

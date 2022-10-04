@@ -168,3 +168,24 @@ def test_required_sample_size_per_variant_raises_exception(n_variants, minimum_e
 
     with pytest.raises(ValueError):
         f(**args)
+
+
+@pytest.mark.parametrize(
+    "minimum_effect, mean, std, expected",
+    [
+        (0.1, 0, 0, np.isnan),
+        (0.1, np.nan, np.nan, np.isnan),
+        (0.1, 0, np.nan, np.isnan),
+        (0.1, 0, 1, np.isinf),
+        (np.nan, np.nan, np.nan, np.isnan),
+    ],
+)
+def test_required_sample_size_per_variant_not_valid(minimum_effect, mean, std, expected):
+    assert expected(
+        Statistics.required_sample_size_per_variant(
+            minimum_effect=minimum_effect,
+            mean=mean,
+            std=std,
+            n_variants=2,
+        )
+    )

@@ -280,7 +280,7 @@ class SampleSizeCalculationResult(BaseModel):
     Result of the sample size calculation.
     """
 
-    sample_size_per_variant: int = Field(
+    sample_size_per_variant: float = Field(
         title="Sample size per variant",
     )
 
