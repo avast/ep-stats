@@ -1,111 +1,101 @@
 # Sample Size
 
-Setting a correct sample size is a key step in launching successful experiments. We discuss what has an effect
-on required experiment sample size, how to calculate it and how to proceed if required sample size is too big.
+Setting a correct sample size is a key step when launching successful experiments.
+This page discuss how to calculate it and how to proceed if the required sample is too large.
 
-There is no free lunch in experimenting, everyone doing experiments navigates between trade-offs of significance, baseline metric conversion rate, measured differences and sample size.
+There is no free lunch in experimenting. Every experiment owner needs to navigate the trade-off between
+the selected metric, sample size, and ability to detect an impact of certain size.
 
-## What Impacts Sample Size
+## Why You Should Know the Correct Sample Size
 
-Sample size depends on selected primary metric, on its baseline conversion rate and on a size of *minimal detectable effect (MDE)*. MDE is a minimal relative difference in primary metric between treatment and control variant, which we are willing to detect, i.e. which will be statistically significant.
+When your sample size is too small, your metrics will be noisy and you will not be able to replicate
+the experiment. You will be at increased risk of encountering two types of errors:
 
-One way how to look at MDE is as experimenters estimate size of the impact the change in the experiment will have. But there's more practical view of MDE.
+- Failure to detect an existing effect
+- Measured effect is greater than in reality
 
-While it is always good to run an experiment that detects +1% change as statistically significant, it does not make always sense to full-scale such experiment. The change of +1% is simply too small so it does not have business impact offsetting the cost of full-scaled solution. Moreover to detect small change such as +1%, you need to have a great amount of users in the experiment.
+## What Impacts the Sample Size
 
-Let assume we full-scale the experiment if the effect on primary metric is at least +5% . Then +5% is our MDE. Detecting +5% effect as statistically significant requires much less users than detecting +1% change. This gives us also a way how to estimate MDEs in different experiments.
+Sample size depends on the mean and variance of the selected metric and on the *minimum effect of interest* (MEI).
+MEI is the smallest relative difference between the control and treatment that is meaningful for the experiment
+owner to detect.
 
-> MDE is a minimal change the experimenter wants to measure in the experiment to make it reasonable to full-scale.
+While it can be insightful to run an experiment that is able to detect +1% difference as statistically significant,
+it does not always make sense to full-scale such an experiment. In many bussiness cases, the effect of +1% is just too
+small to offset the cost of a full-scale rollout.
 
-### Small Baseline
+Compromising on the size of the effect we can measure by using higher MEI helps us limit the number of users we need
+to expose to an experiment. Smaller sample of users means smaller negative impact in case of an experiment going wrong.
 
-Sales metrics like Conversions per Pageview or Conversions per User have usually baseline conversion rates below 1%. This requires to use big sample sizes to measure significant results.
+> MEI is the smallest relative difference between the control and treatment that is meaningful for the experiment
+owner to detect.
 
-Following graph shows how sample size depends on various smaller baseline conversion rates and MDE. We can see
-that we need over 20,000 samples per variant to measure significant difference of 20% on a metric with 1% baseline conversion rate.
+## Calculating the Sample Size
 
-![](images/small_baseline.png)
+Sample size per variant $n$ can be computed as
 
-### Bigger Baseline
+$$
+n = \frac{(Z_{1-\alpha/2} + Z_{1-\beta})^2(\sigma_1^2 + \sigma_2^2)}{\Delta^2}
+$$
 
-Engagement metrics like Click-through Rate (CTR) or [proxy metrics](sample_size.md#proxy-metrics) usually have much higher rates than sales metrics making it easier to measure significant differences.
+- $\sigma_1$, $\sigma_2$ are the standard deviations of the control and treatment respectively.
+- $\Delta = |\mu_2 - \mu_1| = \mu_1\mathrm{MEI}$ is the difference between the control and treatment mean.
+- $Z_{x} = \Phi^{-1}(x)$ where $\Phi^{-1}$ is the inverse CDF of the standard normal distribution $\mathcal{N}(0, 1)$.
+- $\alpha$ is the false positive rate, $1-\frac{\alpha}{2}$ is the confidence level of a two-sided test.
+- $\beta$ is the false negative rate, $1 - \beta$ is the power.
 
-We can see that we need only 3,000 samples per variant to detect a difference of 5% as statistically significant on a metric with 50% baseline conversion rate.
+When the treatment standard deviation is unknown, we assume $\sigma_1 = \sigma_2$. This gives us a simplified
+formula for power $1 - \beta = 0.8$ and $\alpha = 0.05$.
 
-![](images/big_baseline.png)
+$$
+n \approx \frac{(Z_{0.975} + Z_{0.8})^2 2\sigma_1^2}{\Delta^2} \approx \frac{15.7\sigma_1^2}{\Delta^2}
+$$
 
-## Calculating Sample Size
+In case of conversion metrics such as CTR (click-through rate) that follow Bernoulli distribution,
+the treatment standard deviation is known because $\sigma^2 = p(1-p)$ where $p=\mu$ is the conversion rate.
 
-We can calculate sample size $n$ per variant as:
+$$
+\mu_2 = \mu_1(1 + \mathrm{MEI}) \\
+\sigma^2_2 = p_2(1-p_2) = \mu_2(1-\mu_2)
+$$
 
-$$n = \frac{(z_{\alpha/2})^2\left[\hat{p}_A(1-\hat{p}_A) + \hat{p}_B(1-\hat{p}_B)\right]}{\Delta^2}$$
+We can see that:
 
-where $z_{\alpha/2}$ is a critical value of normal distribution for confidence level $\alpha$, $\hat{p}_A$ is baseline conversion rate in variant A, $\hat{p}_B$ is expected or estimated conversion rate in variant B and $\Delta = \hat{p}_B - \hat{p}_A$ is minimal detectable effect (MDE).
+1. Sample size increases as MEI decreases (because $\Delta$ is in the denominator).
+1. Conversion rates $p = 0.5$ result in the largest required sample size (because of large $\sigma^2$).
 
-!!! note
-    For conversion rates, sample variance $\hat{\sigma}^2 = \hat{p}(1-\hat{p})/n$.
+### Low Conversion Rate
 
-As we discussed in previous chapter, we can see that:
+The baseline rate of sales metrics such as conversions per view is usually below 1%. Low baseline metrics require
+large sample sizes to measure an experiment impact.
 
-1. Sample size increases as MDE decreases (because $\Delta$ is in the denominator).
-1. Sample size is greatest for conversion rates equal to 0.5.
+The following figure shows how the required experiment size varies depending on the metric baseline.
+For example, we would need over 20,000 samples per variant to measure an impact of 20% when using a metric
+with 1% baseline conversion.
 
-Sample size calculation is available in the statistics toolkit of this package.
-See the [API documentation](../api/statistics.md#epstats.toolkit.statistics.Statistics.required_sample_size_per_variant)
-for more details.
+![](images/low_baseline.svg)
 
-## What to Do If Sample Size is Too Big
+### High Conversion Rate
 
-We saw that required sample size is
+CTR and other engagement metrics with higher baseline rates usually requires smaller experiment sizes.
 
-1. Proportional to $\hat{\sigma}^2/\Delta^2$.
-1. Many key metrics have high-variance (eg. Conversions per User, Revenue per Mile (RPM), ...
-1. The problem:
-    1. As we optimize, we need to measure smaller and smaller differences.
-    1. We need 100K users per variant to detect 2% change to RPM.
-    1. We need 40M users to detect 0.1% change to RPM
+A metric with a baseline of 50%, needs less than 1000 samples to measure 20% impact. Why?
+Because when the MEI stays constant, high baseline $\mu_1$ translates to a large absolute difference
+$\Delta = \mu_1\mathrm{MEI}$.
 
-What can we do when required sample size is too big to run reasonable experiment?
+![](images/high_baseline.svg)
 
-### Proxy Metrics
+### Sample Size Calculator
 
-> Is there anything else in users' interactions that tells us what variant they like more?
+There is an calculator in EP to help you with estimating the right experiment size. See our
+[step-by-step guide](user_guide/sample_size_calculator.md) how to use it.
 
-1. Do users click more?
-1. Do users return more often?
-1. Do users return quicker?
-1. How long do users spend on our website?
-1. How long do users spend on the particular page?
+## Required Sample Size Is Too Large
 
-We can measure proxy metrics for every exposure of every user and every session, engagement metrics have much higher baseline conversion rates thus require much smaller sample sizes. Engagement metrics usually correlate with sales metrics e.g. who clicks also buys etc.
+Let's say we want to run an experiment that introduces a new feature to our product. While the ultimate goal
+is to increase subscription sales, metrics such as bookings per user might not be the right choice because
+of their low baseline requiring unreasonable large experiment sizes.
 
-To show 10% improvement on 50% baseline we need 764 samples!
-
-There are not many engagement metrics[^1] available in EP at the moment, we would like to add some from the following list. At the moment, please, take it as an inspiration of what will be possible in the future.
-
-
-|Metric                         |Experimentation Unit |Description      |
-|:------------------------------|:--------------------|:----------------|
-|**User metrics**|||
-|Sessions per User | User ||
-|Clicks per User| User | Clicks on any element on the website, user-level CTR. |
-||||
-|**Duration metrics**|||
-|Duration of a Session| Session ||
-|Sessions Duration per User| User ||
-|Duration of an Absence   | Absence-2 | |
-|Duration of an Absence per User| User-2 | If user had at least 2 sessions |
-|Time on Page   | Pageview | On experiment screen |
-|Time to Click   | Pageview  | On experiment screen or experiment element only  |
-||||
-|**Action metrics**|||
-|CTR   | Pageview | On experiment screen or experiment element only  |
-||||
-|**Metrics with too low conversion rate**|||
-|Downloads | Pageview| |
-|RPM   | Pageview | On experiment screen or experiment element only  |
-|CNV   | Pageview | On experiment screen or experiment element only  |
-|Downloads per User| User ||
-|Transactions per User| User ||
-
-[^1]: [Yandex, Practical Aspects of Sensitivity in Online Experimentation with User Engagement Metrics](https://research.yandex.com/publications/99)
+One of the ways around this problem is to use a high baseline **proxy metric** (for example number
+of feature enagements) that is able to reflect the business impact of the new feature while needing
+significantly smaller samples.
