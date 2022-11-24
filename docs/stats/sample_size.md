@@ -85,11 +85,6 @@ $\Delta = \mu_1\mathrm{MEI}$.
 
 ![](images/high_baseline.svg)
 
-### Sample Size Calculator
-
-There is an calculator in EP to help you with estimating the right experiment size. See our
-[step-by-step guide](user_guide/sample_size_calculator.md) how to use it.
-
 ## Required Sample Size Is Too Large
 
 Let's say we want to run an experiment that introduces a new feature to our product. While the ultimate goal
