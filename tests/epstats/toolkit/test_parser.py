@@ -218,7 +218,7 @@ def test_get_goals(parser, expected):
     assert parser.get_goals_str() == expected
 
 
-def test_raise_if_duplicate_dimensions():
+def test_fail_if_duplicate_dimensions():
 
     with pytest.raises(ParseException):
         Parser(
@@ -281,6 +281,16 @@ def test_raise_if_duplicate_dimensions():
                 "test_unit_type.unit.conversion": {"x": "", "y": ""},
             },
         ),
+        (
+            Parser(
+                "count(test_unit_type.global.conversion(x=^test|test, y=^test))",
+                "count(test_unit_type.unit.conversion)",
+            ),
+            {
+                "test_unit_type.global.conversion[x=^test|test, y=^test]": {"x": "^test|test", "y": "^test"},
+                "test_unit_type.unit.conversion": {"x": "", "y": ""},
+            },
+        ),
     ],
 )
 def test_get_goals_dimensional(parser, expected_goals):
@@ -291,6 +301,14 @@ def test_get_goals_dimensional(parser, expected_goals):
         assert expected_goals[str(g)] == g.dimension_to_value
         if not g.is_dimensional():
             assert all(v == "" for v in g.dimension_to_value.values())
+
+
+def test_hat_operator_position_not_correct():
+    with pytest.raises(ParseException):
+        Parser(
+            "count(test_unit_type.global.conversion(x=test^test)",
+            "count(test_unit_type.unit.conversion)",
+        )
 
 
 def assert_count_value(evaluation, count, value, value_sqr, precision=5):
