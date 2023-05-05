@@ -27,7 +27,12 @@ class Parser:
         goal = Word(alphas + "_" + nums).setParseAction(Goal)
         number = Word(nums).setParseAction(Number)
         dimension = Word(alphas + "_").setParseAction(Dimension)
-        dimension_value = Word(alphanums + "_" + "-" + "." + "%" + " " + "/" + "|").setParseAction(DimensionValue)
+        dimension_value_chars = alphanums + "_" + "-" + "." + "%" + " " + "/" + "|"
+        # we allow either `dimension=dimension_value` or `dimension=^dimension_value`
+        dimension_value = (Word(dimension_value_chars) | ("^" + Word(dimension_value_chars))).setParseAction(
+            DimensionValue
+        )
+
         dimension_list = delimitedList(dimension + "=" + dimension_value)
 
         ep_goal = (func + "(" + unit_type + "." + agg_type + "." + goal + ")").setParseAction(EpGoal)
@@ -180,7 +185,8 @@ class Dimension:
 
 class DimensionValue:
     def __init__(self, t):
-        self.dimension_value = t[0]
+        # if the hat operator is present, we need to join it with the value
+        self.dimension_value = "".join(t)
 
     def __str__(self):
         return self.dimension_value
