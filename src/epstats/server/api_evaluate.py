@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from fastapi import APIRouter, Depends, HTTPException
 from statsd import StatsClient
 import asyncio
@@ -30,7 +31,7 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
                     f"Evaluation response: [{experiment.id}]",
                     {
                         "exp_id": experiment.id,
-                        "metrics": evaluation.metrics.to_dict("records"),
+                        "metrics": evaluation.metrics.replace(np.inf, "inf").replace(np.nan, None).to_dict("records"),
                     },
                 )
             return Result.from_evaluation(experiment, evaluation)
