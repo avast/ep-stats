@@ -19,7 +19,6 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
     def _evaluate(experiment: EvExperiment, dao: Dao, statsd: StatsClient):
         try:
             with statsd.timer("timing.evaluation"):
-                _logger.info(f"Evaluating experiment [{experiment.id}]")
                 _logger.debug(f"Loading goals for experiment [{experiment.id}]")
                 with statsd.timer("timing.query"):
                     goals = dao.get_agg_goals(experiment).sort_values(["exp_variant_id", "goal"])
@@ -30,8 +29,11 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
                 _logger.info(
                     f"Evaluation response: [{experiment.id}]",
                     {
-                        "exp_id": experiment.id,
-                        "metrics": evaluation.metrics.replace(np.inf, "inf").replace(np.nan, None).to_dict("records"),
+                        "metrics": (
+                            evaluation.metrics.replace([np.inf, -np.inf], "inf")
+                            .replace(np.nan, None)
+                            .to_dict("records"),
+                        )
                     },
                 )
             return Result.from_evaluation(experiment, evaluation)
