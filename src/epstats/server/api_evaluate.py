@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from fastapi import APIRouter, Depends, HTTPException
 from statsd import StatsClient
 import asyncio
@@ -18,7 +19,6 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
     def _evaluate(experiment: EvExperiment, dao: Dao, statsd: StatsClient):
         try:
             with statsd.timer("timing.evaluation"):
-                _logger.info(f"Evaluating experiment [{experiment.id}]")
                 _logger.debug(f"Loading goals for experiment [{experiment.id}]")
                 with statsd.timer("timing.query"):
                     goals = dao.get_agg_goals(experiment).sort_values(["exp_variant_id", "goal"])
@@ -27,11 +27,14 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
                     evaluation = experiment.evaluate_agg(goals)
                     statsd.incr("evaluations")
                 _logger.info(
+                    f"Evaluation response: [{experiment.id}]",
                     {
-                        "evaluation": "response",
-                        "exp_id": experiment.id,
-                        "metrics": evaluation.metrics.to_dict("records"),
-                    }
+                        "metrics": (
+                            evaluation.metrics.replace([np.inf, -np.inf], "inf")
+                            .replace(np.nan, None)
+                            .to_dict("records"),
+                        )
+                    },
                 )
             return Result.from_evaluation(experiment, evaluation)
         except Exception as e:
@@ -55,7 +58,7 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
         """
         Evaluates single `Experiment`.
         """
-        _logger.info({"evaluation": "request", "experiment": experiment.dict()})
+        _logger.info(f"Evaluation request: [{experiment.id}]", experiment.dict())
         statsd.incr("requests.evaluate")
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(evaluation_pool, _evaluate, experiment.to_experiment(statsd), dao, statsd)
