@@ -4,31 +4,33 @@
 #
 #    pip-compile
 #
-asgiref==3.6.0
+anyio==3.7.1
+    # via starlette
+asgiref==3.7.2
     # via uvicorn
-click==8.1.3
+click==8.1.7
     # via uvicorn
-fastapi==0.65.2
+fastapi==0.95.2
     # via ep-stats (setup.py)
 h11==0.14.0
     # via uvicorn
-importlib-resources==5.12.0
-    # via ep-stats (setup.py)
-numpy==1.24.2
+idna==3.4
+    # via anyio
+numpy==1.25.2
     # via
     #   pandas
     #   patsy
     #   scipy
     #   statsmodels
-packaging==23.0
+packaging==23.1
     # via statsmodels
-pandas==1.5.3
+pandas==2.0.3
     # via
     #   ep-stats (setup.py)
     #   statsmodels
 patsy==0.5.3
     # via statsmodels
-pydantic==1.10.6
+pydantic==1.10.12
     # via
     #   ep-stats (setup.py)
     #   fastapi
@@ -36,9 +38,9 @@ pyparsing==2.4.6
     # via ep-stats (setup.py)
 python-dateutil==2.8.2
     # via pandas
-pytz==2022.7.1
+pytz==2023.3
     # via pandas
-scipy==1.10.1
+scipy==1.11.2
     # via
     #   ep-stats (setup.py)
     #   statsmodels
@@ -46,13 +48,17 @@ six==1.16.0
     # via
     #   patsy
     #   python-dateutil
-starlette==0.14.2
+sniffio==1.3.0
+    # via anyio
+starlette==0.27.0
     # via fastapi
 statsd==3.3.0
     # via ep-stats (setup.py)
 statsmodels==0.13.5
     # via ep-stats (setup.py)
-typing-extensions==4.5.0
+typing-extensions==4.7.1
     # via pydantic
-uvicorn==0.17.0
+tzdata==2023.3
+    # via pandas
+uvicorn==0.17.6
     # via ep-stats (setup.py)

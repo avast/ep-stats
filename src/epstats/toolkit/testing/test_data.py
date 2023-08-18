@@ -1,6 +1,6 @@
 import pandas as pd
 
-import importlib_resources as pkg_resources
+from importlib.resources import files
 from . import resources  # relative-import the *package* containing the templates
 
 
@@ -21,7 +21,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with pkg_resources.files(resources) / "goals_agg.csv" as df_file:
+        with files(resources) / "goals_agg.csv" as df_file:
             df = pd.read_csv(df_file, sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
@@ -35,7 +35,7 @@ class TestData:
 
         See `load_evaluations` set of functions to load corresponding evaluation results.
         """
-        with pkg_resources.files(resources) / "goals_simple_agg.csv" as df_file:
+        with files(resources) / "goals_simple_agg.csv" as df_file:
             df = pd.read_csv(df_file, sep="\t")
         return df
 
@@ -50,7 +50,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with pkg_resources.files(resources) / "goals_by_unit.csv" as df_file:
+        with files(resources) / "goals_by_unit.csv" as df_file:
             df = pd.read_csv(df_file, sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
@@ -64,7 +64,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with pkg_resources.files(resources) / "evaluations_checks.csv" as df_file:
+        with files(resources) / "evaluations_checks.csv" as df_file:
             df = pd.read_csv(df_file, sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
@@ -78,7 +78,7 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with pkg_resources.files(resources) / "evaluations_exposures.csv" as df_file:
+        with files(resources) / "evaluations_exposures.csv" as df_file:
             df = pd.read_csv(df_file, sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
 
@@ -92,6 +92,6 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with pkg_resources.files(resources) / "evaluations_metrics.csv" as df_file:
+        with files(resources) / "evaluations_metrics.csv" as df_file:
             df = pd.read_csv(df_file, sep="\t")
         return df[df.exp_id == exp_id] if exp_id is not None else df
