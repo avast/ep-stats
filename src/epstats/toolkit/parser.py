@@ -191,8 +191,6 @@ class DimensionValue:
         else:
             self.dimension_value = "".join(t)
 
-        self.repr_dimension_value = "".join(t)
-
     def __str__(self):
         return self.dimension_value
 
