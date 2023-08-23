@@ -312,17 +312,17 @@ def test_get_goals_dimensional(parser, expected_goals):
 
 
 @pytest.mark.parametrize(
-    "dimension",
+    "dimension_value",
     [
-        "x=232>44",
-        "x=abc^def",
-        "x<=2",
+        "232>44",
+        "abc^def",
+        "<=2",
     ],
 )
-def test_operator_position_not_correct(dimension):
+def test_operator_position_not_correct(dimension_value):
     with pytest.raises(ParseException):
         Parser(
-            f"count(test_unit_type.global.conversion({dimension})",
+            f"count(test_unit_type.global.conversion(x={dimension_value})",
             "count(test_unit_type.unit.conversion)",
         )
 
