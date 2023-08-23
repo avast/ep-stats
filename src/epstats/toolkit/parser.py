@@ -182,7 +182,6 @@ class Dimension:
 
 class DimensionValue:
     def __init__(self, t):
-        # if the hat operator is present, we need to join it with the value
         if t[0] == "=":
             self.dimension_value = t[1]
 

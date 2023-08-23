@@ -23,3 +23,5 @@ htmlcov/
 site/
 !src/epstats/toolkit/testing/resources/*.csv
 *-checkpoint.ipynb
+.ipynb_checkpoints
+.ruff_cache
