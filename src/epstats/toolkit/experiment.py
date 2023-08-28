@@ -140,7 +140,7 @@ class Experiment:
         variants: Optional[List[str]] = None,
         statsd: StatsClient = StatsClient(),
         filters: Optional[List[Filter]] = None,
-        query_parameters: Optional[dict] = None,
+        query_parameters: dict = {},
     ):
         self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.id = id
