@@ -28,12 +28,9 @@ class Parser:
         number = Word(nums).setParseAction(Number)
         dimension = Word(alphas + "_").setParseAction(Dimension)
         dimension_value_chars = alphanums + "_" + "-" + "." + "%" + " " + "/" + "|"
-        # we allow either `dimension=dimension_value` or `dimension=^dimension_value`
-        dimension_value = (Word(dimension_value_chars) | ("^" + Word(dimension_value_chars))).setParseAction(
-            DimensionValue
-        )
-
-        dimension_list = delimitedList(dimension + "=" + dimension_value)
+        dimension_operator = oneOf("< = > <= >= =^ !=")
+        dimension_value = (dimension_operator + Word(dimension_value_chars)).setParseAction(DimensionValue)
+        dimension_list = delimitedList(dimension + dimension_value)
 
         ep_goal = (func + "(" + unit_type + "." + agg_type + "." + goal + ")").setParseAction(EpGoal)
         ep_goal_with_dimensions = (
@@ -185,8 +182,14 @@ class Dimension:
 
 class DimensionValue:
     def __init__(self, t):
-        # if the hat operator is present, we need to join it with the value
-        self.dimension_value = "".join(t)
+        if t[0] == "=":
+            self.dimension_value = t[1]
+
+        elif t[0] == "=^":
+            self.dimension_value = "^" + t[1]
+
+        else:
+            self.dimension_value = "".join(t)
 
     def __str__(self):
         return self.dimension_value
@@ -251,15 +254,16 @@ class EpGoal:
 
     @staticmethod
     def _raise_if_duplicate_dimensions(dimensions):
-
         duplicates = {k: v for k, v in Counter(dimensions).items() if v > 1}
         if duplicates:
             raise ParseException(f"Multiple values encountered for dimensions: `{list(duplicates.keys())}`.")
 
     def _to_string(self):
-
         if self.is_dimensional():
-            dimension_list = ", ".join(f"{d}={v}" for d, v in self.dimension_to_value.items() if v != "")
+            # we want to avoid stuff like `name=>=value` when formatting the dimensions
+            dimension_list = ", ".join(
+                f"{d}{v}" if v[0] in "><=!" else f"{d}={v}" for d, v in self.dimension_to_value.items() if v != ""
+            )
             dimensions = f"[{dimension_list}]"
         else:
             dimensions = ""
@@ -281,7 +285,6 @@ class EpGoal:
         return self._evaluate_agg(goals, self.column)
 
     def _get_dimension_mask(self, goals):
-
         mask = pd.Series([True] * len(goals))
         for dimension, dimension_value in self.dimension_to_value.items():
             mask &= goals[dimension] == dimension_value

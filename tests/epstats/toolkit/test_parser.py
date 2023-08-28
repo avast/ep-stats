@@ -219,7 +219,6 @@ def test_get_goals(parser, expected):
 
 
 def test_fail_if_duplicate_dimensions():
-
     with pytest.raises(ParseException):
         Parser(
             "value(test_unit_type.unit.conversion(a=b, a=c))",
@@ -291,10 +290,29 @@ def test_fail_if_duplicate_dimensions():
                 "test_unit_type.unit.conversion": {"x": "", "y": ""},
             },
         ),
+        (
+            Parser(
+                "count(test.global.conversion(x=test, y>=123))",
+                "count(test.unit.conversion(a<=4, b>42))",
+            ),
+            {
+                "test.global.conversion[x=test, y>=123]": {"x": "test", "y": ">=123", "a": "", "b": ""},
+                "test.unit.conversion[a<=4, b>42]": {"a": "<=4", "b": ">42", "x": "", "y": ""},
+            },
+        ),
+        (
+            Parser(
+                "count(test.global.conversion(x=test, y!=123))",
+                "count(test.global.conversion)",
+            ),
+            {
+                "test.global.conversion[x=test, y!=123]": {"x": "test", "y": "!=123"},
+                "test.global.conversion": {"x": "", "y": ""},
+            },
+        ),
     ],
 )
 def test_get_goals_dimensional(parser, expected_goals):
-
     goals = parser.get_goals()
 
     for g in goals:
@@ -303,10 +321,18 @@ def test_get_goals_dimensional(parser, expected_goals):
             assert all(v == "" for v in g.dimension_to_value.values())
 
 
-def test_hat_operator_position_not_correct():
+@pytest.mark.parametrize(
+    "dimension_value",
+    [
+        "232>44",
+        "abc^def",
+        "<=2",
+    ],
+)
+def test_operator_position_not_correct(dimension_value):
     with pytest.raises(ParseException):
         Parser(
-            "count(test_unit_type.global.conversion(x=test^test)",
+            f"count(test_unit_type.global.conversion(x={dimension_value})",
             "count(test_unit_type.unit.conversion)",
         )
 

@@ -274,7 +274,10 @@ class Experiment(BaseModel):
         title="Filtering conditions", description="""List of filtering conditions to apply on exposure and goals."""
     )
 
-    query_parameters: Optional[dict] = Field(title="Custom query parameters used in the data access.")
+    query_parameters: dict = Field(
+        title="Custom query parameters used in the data access.",
+        default={},
+    )
 
     @validator("id")
     def id_must_be_not_empty(cls, value):
