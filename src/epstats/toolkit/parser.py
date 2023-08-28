@@ -260,8 +260,9 @@ class EpGoal:
 
     def _to_string(self):
         if self.is_dimensional():
+            # we want to avoid stuff like `name=>=value` when formatting the dimensions
             dimension_list = ", ".join(
-                f"{d}{v}" if v[0] in "><=" else f"{d}={v}" for d, v in self.dimension_to_value.items() if v != ""
+                f"{d}{v}" if v[0] in "><=!" else f"{d}={v}" for d, v in self.dimension_to_value.items() if v != ""
             )
             dimensions = f"[{dimension_list}]"
         else:

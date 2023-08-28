@@ -303,11 +303,11 @@ def test_fail_if_duplicate_dimensions():
         (
             Parser(
                 "count(test.global.conversion(x=test, y!=123))",
-                "count(test.unit.conversion)",
+                "count(test.global.conversion)",
             ),
             {
                 "test.global.conversion[x=test, y!=123]": {"x": "test", "y": "!=123"},
-                "test.unit.conversion": {"x": "", "y": ""},
+                "test.global.conversion": {"x": "", "y": ""},
             },
         ),
     ],
