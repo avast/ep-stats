@@ -570,3 +570,28 @@ def test_duplicate_metric_ids_raise_exception():
             checks=[],
             unit_type="test",
         )
+
+
+def test_dimension_operators(dao, metrics, checks, unit_type):
+    experiment = Experiment(
+        "test-dim-operators",
+        "a",
+        [
+            Metric(
+                1,
+                "Views per User of Screen ^button-1, product>1",
+                "count(test_unit_type.unit.view(element=^button-1, product>1))",
+                "count(test_unit_type.global.exposure)",
+            ),
+            Metric(
+                2,
+                "Views per User of Screen ^button-1, product!=1",
+                "count(test_unit_type.unit.view(element=^button-1, product!=1))",
+                "count(test_unit_type.global.exposure)",
+            ),
+        ],
+        [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
+        unit_type=unit_type,
+        variants=["a", "b"],
+    )
+    evaluate_experiment_agg(experiment, dao)

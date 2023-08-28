@@ -72,3 +72,6 @@ test-multi-check	1	EVA	confidence_level	0.999
 test-multi-check	2	SRM	p_value	0.140747987
 test-multi-check	2	SRM	test_stat	3.9215686
 test-multi-check	2	SRM	confidence_level	0.999
+test-dim-operators	1	SRM	p_value	0.98216470
+test-dim-operators	1	SRM	test_stat	0.00049975
+test-dim-operators	1	SRM	confidence_level	0.999
