@@ -140,7 +140,7 @@ class Experiment:
         variants: Optional[List[str]] = None,
         statsd: StatsClient = StatsClient(),
         filters: Optional[List[Filter]] = None,
-        outlier_detection_algorithm: Optional[str] = None,
+        query_parameters: Optional[dict] = None,
     ):
         self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.id = id
@@ -173,7 +173,7 @@ class Experiment:
         self._update_dimension_to_value()
         self.statsd = statsd
         self.filters = filters if filters is not None else []
-        self.outlier_detection_algorithm = outlier_detection_algorithm
+        self.query_parameters = query_parameters
 
     def _check_metric_ids_unique(self):
         """

@@ -274,7 +274,7 @@ class Experiment(BaseModel):
         title="Filtering conditions", description="""List of filtering conditions to apply on exposure and goals."""
     )
 
-    outlier_detection_algorithm: Optional[str] = Field(title="Outlier detection algorithm")
+    query_parameters: Optional[dict] = Field(title="Custom query parameters used in data access")
 
     @validator("id")
     def id_must_be_not_empty(cls, value):
@@ -352,7 +352,7 @@ class Experiment(BaseModel):
             variants=self.variants,
             statsd=statsd,
             filters=[f.to_filter() for f in self.filters] if self.filters else [],
-            outlier_detection_algorithm=self.outlier_detection_algorithm,
+            query_parameters = self.query_parameters,
         )
 
     class Config:
