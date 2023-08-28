@@ -300,6 +300,16 @@ def test_fail_if_duplicate_dimensions():
                 "test.unit.conversion[a<=4, b>42]": {"a": "<=4", "b": ">42", "x": "", "y": ""},
             },
         ),
+        (
+            Parser(
+                "count(test.global.conversion(x=test, y!=123))",
+                "count(test.unit.conversion)",
+            ),
+            {
+                "test.global.conversion[x=test, y!=123]": {"x": "test", "y": "!=123"},
+                "test.unit.conversion": {"x": "", "y": ""},
+            },
+        ),
     ],
 )
 def test_get_goals_dimensional(parser, expected_goals):
