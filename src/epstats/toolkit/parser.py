@@ -28,7 +28,7 @@ class Parser:
         number = Word(nums).setParseAction(Number)
         dimension = Word(alphas + "_").setParseAction(Dimension)
         dimension_value_chars = alphanums + "_" + "-" + "." + "%" + " " + "/" + "|"
-        dimension_operator = oneOf("< = > <= >= =^")
+        dimension_operator = oneOf("< = > <= >= =^ !=")
         dimension_value = (dimension_operator + Word(dimension_value_chars)).setParseAction(DimensionValue)
         dimension_list = delimitedList(dimension + dimension_value)
 
