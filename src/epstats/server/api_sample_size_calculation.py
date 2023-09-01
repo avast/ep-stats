@@ -1,6 +1,5 @@
 import logging
 from fastapi import APIRouter, Depends, HTTPException
-from statsd import StatsClient
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
@@ -14,7 +13,7 @@ _logger = logging.getLogger("epstats")
 
 
 def get_sample_size_calculation_router(get_executor_pool) -> APIRouter:
-    def _sample_size_calculation(data: SampleSizeCalculationData, statsd: StatsClient):
+    def _sample_size_calculation(data: SampleSizeCalculationData):
         try:
 
             if data.std is None:
@@ -29,7 +28,6 @@ def get_sample_size_calculation_router(get_executor_pool) -> APIRouter:
         except Exception as e:
             _logger.error(f"Cannot calculate the sample size because of: '{e}'")
             _logger.exception(e)
-            statsd.incr("errors.sample_size_calculation")
             raise HTTPException(
                 status_code=500,
                 detail=f"Cannot calculate the sample size because of: '{e}'",
