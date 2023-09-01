@@ -14,10 +14,10 @@ from .utils import get_utc_timestamp, goals_wide_to_long
 from .parser import EpGoal, UnitType, AggType, Goal
 
 from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
-import prometheus_client
+from ..prometheus import get_prometheus_metric, Counter as PrometheusCounter
 
 
-check_evaluation_errors_metric = prometheus_client.Counter("check_evaluation_errors_total", "")
+check_evaluation_errors_metric = get_prometheus_metric("check_evaluation_errors_total", PrometheusCounter)
 
 
 class Evaluation:
