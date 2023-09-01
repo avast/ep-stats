@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 from fastapi import APIRouter, Depends, HTTPException
-from statsd import StatsClient
+from prometheus_client import Summary, Counter
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
@@ -13,19 +13,25 @@ from .res import Result
 
 
 _logger = logging.getLogger("epstats")
+evaluation_duration_metric = Summary("evaluation_duration_seconds", "")
+query_duration_metric = Summary("query_duration_seconds", "")
+stats_computation_duration_metric = Summary("stats_computation_duration_seconds", "")
+evaluation_errors_metric = Counter("evaluation_errors_total", "")
+evaluation_successes_metric = Counter("evaluation_successes_total", "")
+evaluation_requests_metric = Counter("evaluation_requests_total", "")
 
 
-def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
-    def _evaluate(experiment: EvExperiment, dao: Dao, statsd: StatsClient):
+def get_evaluate_router(get_dao, get_executor_pool) -> APIRouter:
+    def _evaluate(experiment: EvExperiment, dao: Dao):
         try:
-            with statsd.timer("timing.evaluation"):
+            with evaluation_duration_metric.time():
                 _logger.debug(f"Loading goals for experiment [{experiment.id}]")
-                with statsd.timer("timing.query"):
+                with query_duration_metric.time():
                     goals = dao.get_agg_goals(experiment).sort_values(["exp_variant_id", "goal"])
                     _logger.info(f"Retrieved {len(goals)} goals in experiment [{experiment.id}]")
-                with statsd.timer("timing.stats"):
+                with stats_computation_duration_metric.time():
                     evaluation = experiment.evaluate_agg(goals)
-                    statsd.incr("evaluations")
+                    evaluation_successes_metric.inc()
                 _logger.info(
                     f"Evaluation response: [{experiment.id}]",
                     {
@@ -40,7 +46,7 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
         except Exception as e:
             _logger.error(f"Cannot evaluate experiment [{experiment.id}] because of {e}")
             _logger.exception(e)
-            statsd.incr("errors.experiment")
+            evaluation_errors_metric.inc()
             raise HTTPException(
                 status_code=500,
                 detail=f"Cannot evaluate experiment [{experiment.id}] because of {e}",
@@ -53,14 +59,13 @@ def get_evaluate_router(get_dao, get_executor_pool, get_statsd) -> APIRouter:
         experiment: Experiment,
         evaluation_pool: ThreadPoolExecutor = Depends(get_executor_pool),
         dao: Dao = Depends(get_dao),
-        statsd: StatsClient = Depends(get_statsd),
     ):
         """
         Evaluates single `Experiment`.
         """
         _logger.info(f"Evaluation request: [{experiment.id}]", experiment.dict())
-        statsd.incr("requests.evaluate")
+        evaluation_requests_metric.inc("requests_evaluate")
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(evaluation_pool, _evaluate, experiment.to_experiment(statsd), dao, statsd)
+        return await loop.run_in_executor(evaluation_pool, _evaluate, experiment.to_experiment(), dao)
 
     return router

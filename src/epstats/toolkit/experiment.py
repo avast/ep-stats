@@ -6,7 +6,6 @@ import numpy as np
 from collections import Counter
 from typing import Optional
 from datetime import datetime
-from statsd import StatsClient
 from dataclasses import dataclass
 
 from .metric import Metric, SimpleMetric
@@ -15,6 +14,10 @@ from .utils import get_utc_timestamp, goals_wide_to_long
 from .parser import EpGoal, UnitType, AggType, Goal
 
 from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
+import prometheus_client
+
+
+check_evaluation_errors_metric = prometheus_client.Counter("check_evaluation_errors_total", "")
 
 
 class Evaluation:
@@ -138,7 +141,6 @@ class Experiment:
         date_for: Optional[str] = None,
         confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
         variants: Optional[List[str]] = None,
-        statsd: StatsClient = StatsClient(),
         filters: Optional[List[Filter]] = None,
         query_parameters: dict = {},
     ):
@@ -171,7 +173,6 @@ class Experiment:
             )
         ]
         self._update_dimension_to_value()
-        self.statsd = statsd
         self.filters = filters if filters is not None else []
         self.query_parameters = query_parameters
 
@@ -543,7 +544,7 @@ class Experiment:
                 res.append(r)
             except Exception as e:
                 self._logger.warning(f"Cannot evaluate check [{c.id} in experiment [{self.id}] because of {e}")
-                self.statsd.incr("errors.check")
+                check_evaluation_errors_metric.inc()
 
         c = pd.concat(res, axis=0) if res != [] else pd.DataFrame([], columns=Evaluation.check_columns())
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())

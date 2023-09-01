@@ -1,17 +1,14 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from statsd import StatsClient
 from pydantic import BaseSettings
 
 from .toolkit.testing import TestDaoFactory, TestData
 from .server import get_api, serve, ApiSettings
+from prometheus_client import make_asgi_app
 
 
 class Settings(BaseSettings):
     api: ApiSettings = ApiSettings()
-
-    statsd_host: str = "localhost"
-    statsd_port: int = 8888
 
     evaluation_pool_size: int = 5
 
@@ -40,16 +37,9 @@ def get_executor_pool():
         pass
 
 
-def get_statsd():
-    try:
-        prefix = f"{settings.api.app_name}.{settings.api.app_env}"
-        statsd = StatsClient(settings.statsd_host, settings.statsd_port, prefix=prefix)
-        yield statsd
-    finally:
-        pass
-
-
-api = get_api(settings.api, get_dao, get_executor_pool, get_statsd)
+api = get_api(settings.api, get_dao, get_executor_pool)
+metrics_app = make_asgi_app()
+api.mount("/metrics", metrics_app)
 
 
 def main():
