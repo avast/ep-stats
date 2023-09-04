@@ -1,10 +1,10 @@
 import logging
 import numpy as np
 from fastapi import APIRouter, Depends, HTTPException
-from prometheus_client import Summary, Counter
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
+from ..prometheus import get_prometheus_metric, Summary, Counter
 from ..toolkit import Experiment as EvExperiment
 from ..toolkit import Dao
 
@@ -13,12 +13,12 @@ from .res import Result
 
 
 _logger = logging.getLogger("epstats")
-evaluation_duration_metric = Summary("evaluation_duration_seconds", "")
-query_duration_metric = Summary("query_duration_seconds", "")
-stats_computation_duration_metric = Summary("stats_computation_duration_seconds", "")
-evaluation_errors_metric = Counter("evaluation_errors_total", "")
-evaluation_successes_metric = Counter("evaluation_successes_total", "")
-evaluation_requests_metric = Counter("evaluation_requests_total", "")
+evaluation_duration_metric = get_prometheus_metric("evaluation_duration_seconds", Summary)
+query_duration_metric = get_prometheus_metric("query_duration_seconds", Summary)
+stats_computation_duration_metric = get_prometheus_metric("stats_computation_duration_seconds", Summary)
+evaluation_errors_metric = get_prometheus_metric("evaluation_errors_total", Counter)
+evaluation_successes_metric = get_prometheus_metric("evaluation_successes_total", Counter)
+evaluation_requests_metric = get_prometheus_metric("evaluation_requests_total", Counter)
 
 
 def get_evaluate_router(get_dao, get_executor_pool) -> APIRouter:
