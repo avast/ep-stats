@@ -1,4 +1,3 @@
-from statsd import StatsClient
 from concurrent.futures import ThreadPoolExecutor
 
 from src.epstats.toolkit.testing import TestDaoFactory, TestData
@@ -12,14 +11,6 @@ def get_test_dao():
         yield dao
     finally:
         dao.close()
-
-
-def get_test_statsd():
-    statsd = StatsClient("localhost", port="8888", prefix="epstats")
-    try:
-        yield statsd
-    finally:
-        pass
 
 
 def get_test_executor_pool():

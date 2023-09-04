@@ -1,8 +1,7 @@
 import logging
 from typing import Dict
 import uvicorn
-from statsd import StatsClient
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.exception_handlers import (
     http_exception_handler,
     request_validation_exception_handler,
@@ -16,7 +15,7 @@ from .json_response import DataScienceJsonResponse
 from .api_settings import ApiSettings
 
 
-def get_api(settings: ApiSettings, get_dao, get_executor_pool, get_statsd) -> FastAPI:
+def get_api(settings: ApiSettings, get_dao, get_executor_pool) -> FastAPI:
     api = FastAPI(
         title=settings.app_title,
         description=settings.app_description,
@@ -43,12 +42,11 @@ def get_api(settings: ApiSettings, get_dao, get_executor_pool, get_statsd) -> Fa
         return await request_validation_exception_handler(request, exc)
 
     @api.get("/health", tags=["Health"])
-    async def readiness_liveness_probe(statsd: StatsClient = Depends(get_statsd)):
-        statsd.incr("requests.health")
+    async def readiness_liveness_probe():
         return {"message": "ep-stats-api is ready"}
 
-    api.include_router(get_evaluate_router(get_dao, get_executor_pool, get_statsd))
-    api.include_router(get_sample_size_calculation_router(get_executor_pool, get_statsd))
+    api.include_router(get_evaluate_router(get_dao, get_executor_pool))
+    api.include_router(get_sample_size_calculation_router(get_executor_pool))
 
     return api
 

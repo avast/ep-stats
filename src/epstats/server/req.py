@@ -2,7 +2,6 @@ from typing import List, Optional, Any
 from pydantic import BaseModel, validator, root_validator, Field
 from pyparsing import ParseException
 from datetime import datetime
-from statsd import StatsClient
 from inspect import signature
 
 from ..toolkit import Experiment as EvExperiment, Filter as EvFilter, FilterScope
@@ -340,7 +339,7 @@ class Experiment(BaseModel):
 
         return values
 
-    def to_experiment(self, statsd: StatsClient):
+    def to_experiment(self):
         metrics = [m.to_metric() for m in self.metrics]
         checks = [c.to_check() for c in self.checks]
         return EvExperiment(
@@ -353,7 +352,6 @@ class Experiment(BaseModel):
             date_for=self.date_for,
             unit_type=self.unit_type,
             variants=self.variants,
-            statsd=statsd,
             filters=[f.to_filter() for f in self.filters] if self.filters else [],
             query_parameters=self.query_parameters,
         )

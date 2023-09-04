@@ -4,6 +4,7 @@
 #
 #    pip-compile
 #
+
 anyio==3.7.1
     # via starlette
 asgiref==3.7.2
@@ -30,6 +31,8 @@ pandas==2.0.3
     #   statsmodels
 patsy==0.5.3
     # via statsmodels
+prometheus-client==0.17.1
+    # via ep-stats (setup.py)
 pydantic==1.10.12
     # via
     #   ep-stats (setup.py)
@@ -52,8 +55,6 @@ sniffio==1.3.0
     # via anyio
 starlette==0.27.0
     # via fastapi
-statsd==3.3.0
-    # via ep-stats (setup.py)
 statsmodels==0.13.5
     # via ep-stats (setup.py)
 typing-extensions==4.7.1

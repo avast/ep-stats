@@ -9,15 +9,14 @@ from src.epstats.toolkit.testing import (
 )
 
 from src.epstats.main import api
-from src.epstats.main import get_dao, get_statsd, get_executor_pool
+from src.epstats.main import get_dao, get_executor_pool
 from src.epstats.server.res import Result
 
-from .depend import get_test_dao, get_test_executor_pool, get_test_statsd, dao_factory
+from .depend import get_test_dao, get_test_executor_pool, dao_factory
 
 
 client = TestClient(api)
 api.dependency_overrides[get_dao] = get_test_dao
-api.dependency_overrides[get_statsd] = get_test_statsd
 api.dependency_overrides[get_executor_pool] = get_test_executor_pool
 
 
@@ -292,6 +291,12 @@ def test_metric_with_minimum_effect():
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 200
     assert_experiment(resp.json(), dao_factory.get_dao(), 1, 0)
+
+
+def test_prometheus_metrics():
+    prometheus_resp = client.get("/metrics")
+    assert prometheus_resp.status_code == 200
+    assert "evaluation_duration_seconds" in prometheus_resp.text
 
 
 def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected_checks: int = 1) -> None:
