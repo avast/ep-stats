@@ -293,12 +293,6 @@ def test_metric_with_minimum_effect():
     assert_experiment(resp.json(), dao_factory.get_dao(), 1, 0)
 
 
-def test_prometheus_metrics():
-    prometheus_resp = client.get("/metrics")
-    assert prometheus_resp.status_code == 200
-    assert "evaluation_duration_seconds" in prometheus_resp.text
-
-
 def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected_checks: int = 1) -> None:
     result = Result(**target)
     assert len(result.metrics) == expected_metrics

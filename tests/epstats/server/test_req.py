@@ -263,3 +263,9 @@ def test_validate_date_for_between_date_to_and_date_for():
     json = resp.json()
     assert json["detail"][0]["loc"][1] == "__root__"
     assert json["detail"][0]["type"] == "value_error"
+
+
+def test_prometheus_metrics():
+    prometheus_resp = client.get("/metrics")
+    assert prometheus_resp.status_code == 200
+    assert "evaluation_duration_seconds" in prometheus_resp.text
