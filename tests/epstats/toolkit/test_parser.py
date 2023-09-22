@@ -310,6 +310,16 @@ def test_fail_if_duplicate_dimensions():
                 "test.global.conversion": {"x": "", "y": ""},
             },
         ),
+        (
+            Parser(
+                "count(test.global.conversion(x_1=test, x_234=234))",
+                "count(test.global.conversion)",
+            ),
+            {
+                "test.global.conversion[x_1=test, x_234=234]": {"x_1": "test", "x_234": "234"},
+                "test.global.conversion": {"x_1": "", "x_234": ""},
+            },
+        ),
     ],
 )
 def test_get_goals_dimensional(parser, expected_goals):
