@@ -29,16 +29,12 @@ def get_evaluate_router(get_dao, get_executor_pool) -> APIRouter:
     def _evaluate(experiment: EvExperiment, dao: Dao):
         try:
             is_performance_test = experiment.query_parameters.get("is_performance_test") is True
-            with evaluation_duration_metric.labels(
-                exp_id=experiment.id, is_performance_test=is_performance_test
-            ).time():
+            with evaluation_duration_metric.labels(experiment.id, is_performance_test).time():
                 _logger.debug(f"Loading goals for experiment [{experiment.id}]")
-                with query_duration_metric.labels(exp_id=experiment.id, is_performace_test=is_performance_test).time():
+                with query_duration_metric.labels(experiment.id, is_performance_test).time():
                     goals = dao.get_agg_goals(experiment).sort_values(["exp_variant_id", "goal"])
                     _logger.info(f"Retrieved {len(goals)} goals in experiment [{experiment.id}]")
-                with stats_computation_duration_metric.labels(
-                    exp_id=experiment.id, is_performace_test=is_performance_test
-                ).time():
+                with stats_computation_duration_metric.labels(experiment.id, is_performance_test).time():
                     evaluation = experiment.evaluate_agg(goals)
                     evaluation_successes_metric.inc()
                 _logger.info(
