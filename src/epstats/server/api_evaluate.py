@@ -13,9 +13,13 @@ from .res import Result
 
 
 _logger = logging.getLogger("epstats")
-evaluation_duration_metric = get_prometheus_metric("evaluation_duration_seconds", Summary)
-query_duration_metric = get_prometheus_metric("query_duration_seconds", Summary)
-stats_computation_duration_metric = get_prometheus_metric("stats_computation_duration_seconds", Summary)
+evaluation_duration_metric = get_prometheus_metric(
+    "evaluation_duration_seconds", Summary, ["exp_id", "is_performance_test"]
+)
+query_duration_metric = get_prometheus_metric("query_duration_seconds", Summary, ["exp_id", "is_performance_test"])
+stats_computation_duration_metric = get_prometheus_metric(
+    "stats_computation_duration_seconds", Summary, ["exp_id", "is_performance_test"]
+)
 evaluation_errors_metric = get_prometheus_metric("evaluation_errors_total", Counter)
 evaluation_successes_metric = get_prometheus_metric("evaluation_successes_total", Counter)
 evaluation_requests_metric = get_prometheus_metric("evaluation_requests_total", Counter)
@@ -24,12 +28,13 @@ evaluation_requests_metric = get_prometheus_metric("evaluation_requests_total", 
 def get_evaluate_router(get_dao, get_executor_pool) -> APIRouter:
     def _evaluate(experiment: EvExperiment, dao: Dao):
         try:
-            with evaluation_duration_metric.time():
+            is_performance_test = experiment.query_parameters.get("is_performance_test") is True
+            with evaluation_duration_metric.labels(experiment.id, is_performance_test).time():
                 _logger.debug(f"Loading goals for experiment [{experiment.id}]")
-                with query_duration_metric.time():
+                with query_duration_metric.labels(experiment.id, is_performance_test).time():
                     goals = dao.get_agg_goals(experiment).sort_values(["exp_variant_id", "goal"])
                     _logger.info(f"Retrieved {len(goals)} goals in experiment [{experiment.id}]")
-                with stats_computation_duration_metric.time():
+                with stats_computation_duration_metric.labels(experiment.id, is_performance_test).time():
                     evaluation = experiment.evaluate_agg(goals)
                     evaluation_successes_metric.inc()
                 _logger.info(
