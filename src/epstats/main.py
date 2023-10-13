@@ -4,7 +4,7 @@ from pydantic import BaseSettings
 
 from .toolkit.testing import TestDaoFactory, TestData
 from .server import get_api, serve, ApiSettings
-from prometheus_client import make_asgi_app
+from prometheus_client import make_asgi_app, multiprocess, CollectorRegistry
 
 
 class Settings(BaseSettings):
@@ -37,8 +37,16 @@ def get_executor_pool():
         pass
 
 
+def make_metrics_app():
+    if settings.api.web_workers == 1:
+        return make_asgi_app()
+    registry = CollectorRegistry()
+    multiprocess.MultiProcessCollector(registry)
+    return make_asgi_app(registry=registry)
+
+
 api = get_api(settings.api, get_dao, get_executor_pool)
-metrics_app = make_asgi_app()
+metrics_app = make_metrics_app()
 api.mount("/metrics", metrics_app)
 
 
