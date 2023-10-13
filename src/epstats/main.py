@@ -38,9 +38,10 @@ def get_executor_pool():
 
 
 def make_metrics_app():
-    registry = CollectorRegistry(auto_describe=True)
-    if settings.api.web_workers > 1:
-        multiprocess.MultiProcessCollector(registry)
+    if settings.api.web_workers == 1:
+        return make_asgi_app()
+    registry = CollectorRegistry()
+    multiprocess.MultiProcessCollector(registry)
     return make_asgi_app(registry=registry)
 
 
