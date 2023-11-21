@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 from pyparsing import ParseException
 
-from src.epstats.toolkit.parser import Parser
+from src.epstats.toolkit.parser import Parser, MultBinOp
 
 
 def test_evaluate_agg():
@@ -345,6 +345,21 @@ def test_operator_position_not_correct(dimension_value):
             f"count(test_unit_type.global.conversion(x={dimension_value})",
             "count(test_unit_type.unit.conversion)",
         )
+
+
+@pytest.mark.parametrize(
+    "nominator",
+    [
+        "2 * count(test_unit_type.global.conversion)",
+        "-1 * count(test_unit_type.global.conversion)",
+    ],
+)
+def test_numbers(nominator):
+
+    assert isinstance(
+        Parser(nominator, "count(test_unit_type.unit.conversion)")._nominator_expr,
+        MultBinOp,
+    )
 
 
 def assert_count_value(evaluation, count, value, value_sqr, precision=5):
