@@ -10,6 +10,7 @@ from pyparsing import (
     ParseException,
     alphanums,
     delimitedList,
+    Optional,
 )
 import pandas as pd
 
@@ -25,7 +26,7 @@ class Parser:
         unit_type = Word(alphas + "_").setParseAction(UnitType)
         agg_type = Word(alphas).setParseAction(AggType)
         goal = Word(alphas + "_" + nums).setParseAction(Goal)
-        number = Word(nums).setParseAction(Number)
+        number = (Optional("-") + Word(nums)).setParseAction(Number)
         dimension = Word(alphanums + "_").setParseAction(Dimension)
         dimension_value_chars = alphanums + "_" + "-" + "." + "%" + " " + "/" + "|"
         dimension_operator = oneOf("< = > <= >= =^ !=")
@@ -199,7 +200,7 @@ class DimensionValue:
 
 class Number:
     def __init__(self, t):
-        self.value = float(t[0])
+        self.value = float("".join(t))
 
     def __str__(self):
         return f"{self.value}"
