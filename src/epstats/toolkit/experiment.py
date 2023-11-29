@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from .metric import Metric, SimpleMetric
 from .check import Check
 from .utils import get_utc_timestamp, goals_wide_to_long
-from .parser import EpGoal, UnitType, AggType, Goal
+from .parser import Parser, EpGoal, UnitType, AggType, Goal
 
 from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
 from ..prometheus import get_prometheus_metric, Counter as PrometheusCounter
@@ -193,7 +193,13 @@ class Experiment:
         can work properly.
         """
 
-        all_goals = [metric_or_check.get_goals() for metric_or_check in self.metrics + self.checks]
+        all_goals = []
+        for metric_or_check in self.metrics + self.checks:
+            for attr in metric_or_check.__dict__.values():
+                if isinstance(attr, Parser):
+                    all_goals.append(attr._nominator_expr.get_goals())
+                    all_goals.append(attr._denominator_expr.get_goals())
+
         all_goals = chain(*all_goals, self._exposure_goals)
 
         for goal in all_goals:
