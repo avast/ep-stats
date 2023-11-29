@@ -1,6 +1,7 @@
 import logging
 from typing import List, Any
 from enum import Enum
+from itertools import chain
 import pandas as pd
 import numpy as np
 from collections import Counter
@@ -192,7 +193,10 @@ class Experiment:
         can work properly.
         """
 
-        for goal in self.get_goals():
+        all_goals = [metric_or_check.get_goals() for metric_or_check in self.metrics + self.checks]
+        all_goals = chain(*all_goals, self._exposure_goals)
+
+        for goal in all_goals:
             for dimension in self.get_dimension_columns():
                 if dimension not in goal.dimension_to_value:
                     goal.dimension_to_value[dimension] = ""
