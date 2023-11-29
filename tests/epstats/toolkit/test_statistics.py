@@ -189,3 +189,36 @@ def test_required_sample_size_per_variant_not_valid(minimum_effect, mean, std, e
             n_variants=2,
         )
     )
+
+
+@pytest.mark.parametrize(
+    "n_variants, sample_size_per_variant",
+    [
+        (2, 400000),
+        (2, 200000),
+        (3, 500000),
+        (4, 300000),
+    ],
+)
+def test_power_from_required_sample_size_per_variant(n_variants, sample_size_per_variant):
+    mean = 0.2
+    std = 2.0
+    effect_size = (mean * 1.05 - mean) / std
+    required_sample_size_per_variant = 627911
+
+    # nobs1
+    expected = TTestIndPower().solve_power(
+        effect_size=effect_size,
+        ratio=1.0,
+        alpha=0.05 / (n_variants - 1),
+        power=None,
+        nobs1=sample_size_per_variant,
+    )
+
+    power = Statistics.power_from_required_sample_size_per_variant(
+        sample_size_per_variant=sample_size_per_variant,
+        required_sample_size_per_variant=required_sample_size_per_variant,
+        n_variants=n_variants,
+    )
+
+    assert power == expected

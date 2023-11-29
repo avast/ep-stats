@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from .metric import Metric, SimpleMetric
 from .check import Check
 from .utils import get_utc_timestamp, goals_wide_to_long
-from .parser import EpGoal, UnitType, AggType, Goal
+from .parser import Parser, EpGoal, UnitType, AggType, Goal
 
 from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
 from ..prometheus import get_prometheus_metric, Counter as PrometheusCounter
@@ -52,6 +52,9 @@ class Evaluation:
         1. `confidence_interval` - confidence interval of the `diff` under current `confidence_level`
         1. `standard_error` - standard error of the `diff`
         1. `degrees_of_freedom` - degrees of freedom of this variant mean
+        1. `sample_size` - current sample size
+        1. `required_sample_size` - size of the sample required to reach the required power
+        1. `power` - power based on the collected `sample_size`
         """
         return [
             "timestamp",
@@ -73,6 +76,7 @@ class Evaluation:
             "minimum_effect",
             "sample_size",
             "required_sample_size",
+            "power",
         ]
 
     @classmethod
@@ -193,7 +197,13 @@ class Experiment:
         can work properly.
         """
 
-        all_goals = [metric_or_check.get_goals() for metric_or_check in self.metrics + self.checks]
+        all_goals = []
+        for metric_or_check in self.metrics + self.checks:
+            for attr in metric_or_check.__dict__.values():
+                if isinstance(attr, Parser):
+                    all_goals.append(attr._nominator_expr.get_goals())
+                    all_goals.append(attr._denominator_expr.get_goals())
+
         all_goals = chain(*all_goals, self._exposure_goals)
 
         for goal in all_goals:
@@ -736,6 +746,19 @@ class Experiment:
             axis=1,
         )
 
+    def _get_power_from_required_sample_sizes(self, metrics: pd.DataFrame, n_variants: int) -> pd.Series:
+
+        return metrics.apply(
+            lambda metric_row: Statistics.power_from_required_sample_size_per_variant(
+                sample_size_per_variant=metric_row["sample_size"],
+                required_sample_size_per_variant=metric_row["required_sample_size"],
+                n_variants=n_variants,
+                required_confidence_level=metric_row["confidence_level"],
+                required_power=DEFAULT_POWER,
+            ),
+            axis=1,
+        )
+
     def _evaluate_metrics(self, goals: pd.DataFrame, column_fce) -> pd.DataFrame:
         if not self.metrics:
             return pd.DataFrame([], columns=Evaluation.metric_columns())
@@ -792,4 +815,5 @@ class Experiment:
         c["exp_id"] = self.id
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         c[["minimum_effect", "sample_size", "required_sample_size"]] = self._get_required_sample_sizes(c, n_variants)
+        c["power"] = self._get_power_from_required_sample_sizes(c, n_variants)
         return c[Evaluation.metric_columns()]
