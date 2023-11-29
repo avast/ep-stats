@@ -54,6 +54,12 @@ def test_update_dimension_to_value(unit_type):
             "value(test_unit_type.unit.conversion(product=p_1)) + value(test_unit_type.view)",
             "count(test_unit_type.global.exposure)",
         ),
+        Metric(
+            3,
+            "Average Bookings",
+            "value(test_unit_type.unit.conversion(country=A))",
+            "count(test_unit_type.global.exposure)",
+        ),
     ]
 
     experiment = Experiment(
