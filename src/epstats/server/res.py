@@ -57,7 +57,10 @@ class MetricStat(BaseModel):
         title="Required sample size",
         description=f"Size of the sample required to reach {DEFAULT_POWER:.0%} power.",
     )
-    power: Optional[float] = Field(title="Power", description="Test power based on the collected `sample_size`.")
+    power: Optional[float] = Field(
+        title="Power",
+        description="Test power based on the collected `sample_size`.",
+    )
 
     @staticmethod
     def from_df(df: pd.DataFrame):

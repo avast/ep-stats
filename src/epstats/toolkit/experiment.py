@@ -750,9 +750,9 @@ class Experiment:
 
         return metrics.apply(
             lambda metric_row: Statistics.power_from_required_sample_size_per_variant(
+                n_variants=n_variants,
                 sample_size_per_variant=metric_row["sample_size"],
                 required_sample_size_per_variant=metric_row["required_sample_size"],
-                n_variants=n_variants,
                 required_confidence_level=metric_row["confidence_level"],
                 required_power=DEFAULT_POWER,
             ),

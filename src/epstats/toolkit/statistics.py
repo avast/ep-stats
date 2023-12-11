@@ -368,9 +368,9 @@ class Statistics:
 
     @staticmethod
     def power_from_required_sample_size_per_variant(
+        n_variants: int,
         sample_size_per_variant: Union[int, float],
         required_sample_size_per_variant: Union[int, float],
-        n_variants: int,
         required_power: float = DEFAULT_POWER,
         required_confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
     ) -> float:
@@ -405,10 +405,10 @@ class Statistics:
         $$
 
         Arguments:
+            n_variants: number of variants in the experiment
             sample_size_per_variant: number of samples in one variant
             required_sample_size_per_variant: number of samples required to reach the
                                               `required_power` using the `required_confidence_level`
-            n_variants: number of variants in the experiment
             required_confidence_level: confidence level used to compute the
                                        `required_sample_size_per_variant`
             required_power: power used to compute the `required_sample_size_per_variant`
@@ -418,7 +418,7 @@ class Statistics:
         """
 
         if n_variants < 2:
-            raise ValueError("There must be at least two variants.")
+            return np.nan
 
         required_sample_size_ratio = sample_size_per_variant / required_sample_size_per_variant
         alpha = (1 - required_confidence_level) / (n_variants - 1)
