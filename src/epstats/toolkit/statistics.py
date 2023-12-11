@@ -324,7 +324,7 @@ class Statistics:
     ) -> Union[int, float]:
         """
         Computes the sample size required to reach the defined `confidence_level`
-        and `power` when the data follow Bernoulli distribution
+        and `power` when the data follow Bernoulli distribution.
 
         Uses `Statistics.required_sample_size_per_variant` with `std_2` defined as
 
@@ -364,4 +364,66 @@ class Statistics:
             std_2=get_std(mean_2),
             confidence_level=confidence_level,
             power=power,
+        )
+
+    @staticmethod
+    def power_from_required_sample_size_per_variant(
+        n_variants: int,
+        sample_size_per_variant: Union[int, float],
+        required_sample_size_per_variant: Union[int, float],
+        required_power: float = DEFAULT_POWER,
+        required_confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
+    ) -> float:
+        """
+        Computes power based on the ratio of `sample_size_per_variant`
+        and `required_sample_size_per_variant`.
+
+        How does it work? Consider the formula for computing the sample size $N$
+        for a given $\\alpha$ and $1-\\beta$:
+
+        $$
+        N = \\frac{(Z_{1-\\alpha/2} + Z_{1-\\beta})^2(s_1^2 + s_2^2)}{\\Delta^2}
+        $$
+
+        We can define the required sample size $N_R$ to reach 80% power as
+
+        $$
+        N_r = \\frac{(Z_{1-\\alpha/2} + Z_{0.8})^2(s_1^2 + s_2^2)}{\\Delta^2}
+        $$
+
+        The ratio $\\frac{N}{N_r}$ simplifies to
+
+        $$
+        \\frac{N}{N_r} = \\frac{(Z_{1-\\alpha/2} + Z_{1-\\beta})^2}{(Z_{1-\\alpha/2} + Z_{0.8})^2}
+        $$
+
+        This means that the power can be computed as
+
+        $$
+        Z_{1-\\beta} = \\sqrt\\frac{N}{N_r}(Z_{1-\\alpha/2}+Z_{0.8})-Z_{1-\\alpha/2} \\\\
+        1-\\beta = \\Phi(Z_{1-\\beta})
+        $$
+
+        Arguments:
+            n_variants: number of variants in the experiment
+            sample_size_per_variant: number of samples in one variant
+            required_sample_size_per_variant: number of samples required to reach the
+                                              `required_power` using the `required_confidence_level`
+            required_confidence_level: confidence level used to compute the
+                                       `required_sample_size_per_variant`
+            required_power: power used to compute the `required_sample_size_per_variant`
+
+        Returns:
+            power
+        """
+
+        if n_variants < 2:
+            return np.nan
+
+        required_sample_size_ratio = sample_size_per_variant / required_sample_size_per_variant
+        alpha = (1 - required_confidence_level) / (n_variants - 1)
+
+        return st.norm.cdf(
+            np.sqrt(required_sample_size_ratio) * (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(required_power))
+            - st.norm.ppf(1 - alpha / 2)
         )

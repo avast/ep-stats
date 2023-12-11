@@ -4,11 +4,11 @@ from statsmodels.stats.power import TTestIndPower
 from src.epstats.toolkit.statistics import Statistics
 
 
-def _assert_equal(x, y):
+def _assert_sample_sizes_equal(x, y):
     assert abs(x - y) <= 2
 
 
-def _assert_equal_within_tolerance(x, y, n_variants):
+def _assert_sample_sizes_equal_within_tolerance(x, y, n_variants):
     # Booking calculator is using Sidak's correction instead of Bonferroni's,
     # https://github.com/bookingcom/powercalculator/blob/master/src/js/math.js#L303
     # it produces slightly different results in case of multiple variants.
@@ -17,7 +17,7 @@ def _assert_equal_within_tolerance(x, y, n_variants):
         rel_tol = 0.005
         assert abs((x - y) / x) <= rel_tol
     else:
-        _assert_equal(x, y)
+        _assert_sample_sizes_equal(x, y)
 
 
 @pytest.mark.parametrize(
@@ -75,8 +75,8 @@ def test_required_sample_size_per_variant_equal_variance(n_variants, minimum_eff
         nobs1=None,
     )
 
-    _assert_equal(sample_size_per_variant, round(expected_from_statsmodels))
-    _assert_equal_within_tolerance(sample_size_per_variant, expected, n_variants)
+    _assert_sample_sizes_equal(sample_size_per_variant, round(expected_from_statsmodels))
+    _assert_sample_sizes_equal_within_tolerance(sample_size_per_variant, expected, n_variants)
 
 
 @pytest.mark.parametrize(
@@ -110,7 +110,7 @@ def test_required_sample_size_per_variant_unequal_variance(minimum_effect, mean,
         nobs1=None,
     )
 
-    _assert_equal(sample_size_per_variant, round(expected_from_statsmodels))
+    _assert_sample_sizes_equal(sample_size_per_variant, round(expected_from_statsmodels))
 
 
 @pytest.mark.parametrize(
@@ -147,8 +147,8 @@ def test_required_sample_size_per_variant_bernoulli(n_variants, minimum_effect, 
         nobs1=None,
     )
 
-    _assert_equal(sample_size_per_variant, round(expected_from_statsmodels))
-    _assert_equal_within_tolerance(sample_size_per_variant, expected, n_variants)
+    _assert_sample_sizes_equal(sample_size_per_variant, round(expected_from_statsmodels))
+    _assert_sample_sizes_equal_within_tolerance(sample_size_per_variant, expected, n_variants)
 
 
 @pytest.mark.parametrize(
@@ -187,5 +187,54 @@ def test_required_sample_size_per_variant_not_valid(minimum_effect, mean, std, e
             mean=mean,
             std=std,
             n_variants=2,
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    "n_variants, sample_size_per_variant",
+    [
+        (2, 400000),
+        (2, 200000),
+        (2, 627911),
+        (3, 500000),
+        (4, 300000),
+    ],
+)
+def test_power_from_required_sample_size_per_variant(n_variants, sample_size_per_variant):
+    mean = 0.2
+    std = 2.0
+    minimum_effect = 0.05
+    required_sample_size_per_variant = Statistics.required_sample_size_per_variant(
+        n_variants=n_variants,
+        std=std,
+        mean=mean,
+        minimum_effect=minimum_effect,
+    )
+
+    expected = TTestIndPower().solve_power(
+        effect_size=(mean * (1 + minimum_effect) - mean) / std,
+        ratio=1.0,
+        alpha=0.05 / (n_variants - 1),
+        power=None,
+        nobs1=sample_size_per_variant,
+    )
+
+    power = Statistics.power_from_required_sample_size_per_variant(
+        n_variants=n_variants,
+        sample_size_per_variant=sample_size_per_variant,
+        required_sample_size_per_variant=required_sample_size_per_variant,
+    )
+
+    assert np.allclose(power, expected, atol=1e-3)
+
+
+def test_power_from_required_sample_size_per_variant_nan_params():
+
+    assert np.isnan(
+        Statistics.power_from_required_sample_size_per_variant(
+            n_variants=np.nan,
+            sample_size_per_variant=np.nan,
+            required_sample_size_per_variant=np.nan,
         )
     )

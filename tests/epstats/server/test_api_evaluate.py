@@ -317,6 +317,7 @@ def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected
             "confidence_level": [],
             "sample_size": [],
             "required_sample_size": [],
+            "power": [],
         }
         for s in m["stats"]:
             for i in s.items():

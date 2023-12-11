@@ -52,6 +52,9 @@ class Evaluation:
         1. `confidence_interval` - confidence interval of the `diff` under current `confidence_level`
         1. `standard_error` - standard error of the `diff`
         1. `degrees_of_freedom` - degrees of freedom of this variant mean
+        1. `sample_size` - current sample size
+        1. `required_sample_size` - size of the sample required to reach the required power
+        1. `power` - power based on the collected `sample_size`
         """
         return [
             "timestamp",
@@ -73,6 +76,7 @@ class Evaluation:
             "minimum_effect",
             "sample_size",
             "required_sample_size",
+            "power",
         ]
 
     @classmethod
@@ -742,6 +746,19 @@ class Experiment:
             axis=1,
         )
 
+    def _get_power_from_required_sample_sizes(self, metrics: pd.DataFrame, n_variants: int) -> pd.Series:
+
+        return metrics.apply(
+            lambda metric_row: Statistics.power_from_required_sample_size_per_variant(
+                n_variants=n_variants,
+                sample_size_per_variant=metric_row["sample_size"],
+                required_sample_size_per_variant=metric_row["required_sample_size"],
+                required_confidence_level=metric_row["confidence_level"],
+                required_power=DEFAULT_POWER,
+            ),
+            axis=1,
+        )
+
     def _evaluate_metrics(self, goals: pd.DataFrame, column_fce) -> pd.DataFrame:
         if not self.metrics:
             return pd.DataFrame([], columns=Evaluation.metric_columns())
@@ -798,4 +815,5 @@ class Experiment:
         c["exp_id"] = self.id
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         c[["minimum_effect", "sample_size", "required_sample_size"]] = self._get_required_sample_sizes(c, n_variants)
+        c["power"] = self._get_power_from_required_sample_sizes(c, n_variants)
         return c[Evaluation.metric_columns()]
