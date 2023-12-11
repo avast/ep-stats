@@ -212,7 +212,6 @@ def test_power_from_required_sample_size_per_variant(n_variants, sample_size_per
         minimum_effect=minimum_effect,
     )
 
-    # nobs1
     expected = TTestIndPower().solve_power(
         effect_size=(mean * (1 + minimum_effect) - mean) / std,
         ratio=1.0,
