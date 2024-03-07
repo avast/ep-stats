@@ -206,6 +206,8 @@ class Number:
         return f"{self.value}"
 
     def evaluate_agg(self, goals):
+        # n_variants = goals["exp_variant_id"].nunique()
+        # return [self.value] * n_variants
         return self.value
 
     def evaluate_by_unit(self, goals):
