@@ -66,3 +66,5 @@ test-conversion-with-minimum-effect	b	test_unit_type	global	exposure	26
 test-conversion-with-minimum-effect	c	test_unit_type	global	exposure	30
 test-dim-operators	a	test_unit_type	global	exposure	1000
 test-dim-operators	b	test_unit_type	global	exposure	1001
+test-operator-precedence	a	test_unit_type	global	exposure	80
+test-operator-precedence	b	test_unit_type	global	exposure	70

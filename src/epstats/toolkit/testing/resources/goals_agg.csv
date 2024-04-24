@@ -183,3 +183,11 @@ test-dim-operators		a	test_unit_type	unit	view	^button-1	>1	200	200	200	200	200
 test-dim-operators		b	test_unit_type	unit	view	^button-1	>1	220	220	220	220	220
 test-dim-operators		a	test_unit_type	unit	view	^button-1	!=1	300	300	300	300	300
 test-dim-operators		b	test_unit_type	unit	view	^button-1	!=1	400	400	400	400	400
+test-operator-precedence		a	test_unit_type	unit	click_1			55	55	55	55	55
+test-operator-precedence		a	test_unit_type	unit	click_2			7	7	7	7	7
+test-operator-precedence		a	test_unit_type	unit	click_3			9	9	9	9	9
+test-operator-precedence		b	test_unit_type	unit	click_1			45	45	45	45	45
+test-operator-precedence		b	test_unit_type	unit	click_2			7	7	7	7	7
+test-operator-precedence		b	test_unit_type	unit	click_3			9	9	9	9	9
+test-operator-precedence		a	test_unit_type	global	exposure			80	80	80	80	80
+test-operator-precedence		b	test_unit_type	global	exposure			70	70	70	70	70

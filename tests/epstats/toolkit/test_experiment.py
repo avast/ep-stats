@@ -601,3 +601,25 @@ def test_dimension_operators(dao, metrics, checks, unit_type):
         variants=["a", "b"],
     )
     evaluate_experiment_agg(experiment, dao)
+
+
+def test_operator_precedence(dao, unit_type):
+    experiment = Experiment(
+        "test-operator-precedence",
+        "a",
+        [
+            Metric(
+                id=1,
+                name="Clicks",
+                nominator="""
+                    count(test_unit_type.unit.click_1)
+                    - count(test_unit_type.unit.click_2)
+                    + count(test_unit_type.unit.click_3)
+                """,
+                denominator="count(test_unit_type.global.exposure)",
+            )
+        ],
+        checks=[],
+        unit_type=unit_type,
+    )
+    evaluate_experiment_agg(experiment, dao)
