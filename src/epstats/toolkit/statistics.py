@@ -417,7 +417,7 @@ class Statistics:
             power
         """
 
-        if n_variants < 2:
+        if n_variants < 2 or required_sample_size_per_variant == 0:
             return np.nan
 
         required_sample_size_ratio = sample_size_per_variant / required_sample_size_per_variant

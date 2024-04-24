@@ -238,3 +238,23 @@ def test_power_from_required_sample_size_per_variant_nan_params():
             required_sample_size_per_variant=np.nan,
         )
     )
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        {
+            "n_variants": 1,
+            "sample_size_per_variant": 100,
+            "required_sample_size_per_variant": 100,
+        },
+        {
+            "n_variants": 2,
+            "sample_size_per_variant": 0,
+            "required_sample_size_per_variant": 0,
+        },
+    ],
+)
+def test_power_from_required_sample_size_per_variant_is_nan(args):
+
+    assert np.isnan(Statistics.power_from_required_sample_size_per_variant(**args))
