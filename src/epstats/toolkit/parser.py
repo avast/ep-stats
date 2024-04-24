@@ -50,8 +50,8 @@ class Parser:
             [
                 (multop, 2, opAssoc.LEFT, MultBinOp),
                 (divop, 2, opAssoc.LEFT, DivBinOp),
-                (plusop, 2, opAssoc.LEFT, PlusBinOp),
                 (subop, 2, opAssoc.LEFT, SubBinOp),
+                (plusop, 2, opAssoc.LEFT, PlusBinOp),
                 (tildaop, 2, opAssoc.LEFT, TildaBinOp),
             ],
         )
