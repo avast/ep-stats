@@ -242,7 +242,7 @@ class SumRatioCheck(Check):
         super().__init__(id, name, denominator)
         self.max_sum_ratio = max_sum_ratio
         self.confidence_level = confidence_level
-        self._nominator = nominator
+        self.nominator = nominator
         self._nominator_parser = Parser(nominator, nominator)
         self._goals = self._goals.union(self._nominator_parser.get_goals())
 
