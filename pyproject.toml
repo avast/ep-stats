@@ -4,10 +4,17 @@ name = "ep-stats"
 version = "2.3.3"
 homepage = "https://github.com/avast/ep-stats"
 description = "Statistical package to evaluate ab tests in experimentation platform."
-authors = ["Ondra Zahradnik <ondra.zahradnik@gmail.com>"]
+authors = [
+    "Ondra Zahradnik <ondra.zahradnik@gmail.com>",
+    "Jan Cervenka <jan.cervenka1@avast.com>",
+    "Jachym Solecky <jachym.solecky@avast.com>",
+]
 readme = "README.md"
 classifiers = [
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
