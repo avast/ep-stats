@@ -1,10 +1,7 @@
 import pandas as pd
 
-from ..dao import Dao
-from ..dao import DaoFactory
-from ..experiment import Experiment
-from ..experiment import Evaluation
-from ..experiment import FilterScope
+from ..dao import Dao, DaoFactory
+from ..experiment import Evaluation, Experiment, FilterScope
 from .test_data import TestData
 
 

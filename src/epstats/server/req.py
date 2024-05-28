@@ -1,15 +1,16 @@
-from typing import List, Optional, Any
-from pydantic import BaseModel, validator, root_validator, Field
-from pyparsing import ParseException
 from datetime import datetime
 from inspect import signature
+from typing import Any, List, Optional
 
-from ..toolkit import Experiment as EvExperiment, Filter as EvFilter, FilterScope
+from pydantic import BaseModel, Field, root_validator, validator
+from pyparsing import ParseException
+
+from ..toolkit import DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER, FilterScope, Parser
+from ..toolkit import Experiment as EvExperiment
+from ..toolkit import Filter as EvFilter
 from ..toolkit import Metric as EvMetric
 from ..toolkit import SrmCheck as EvSrmCheck
 from ..toolkit import SumRatioCheck as EvSumRatioCheck
-from ..toolkit import Parser
-from ..toolkit import DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
 
 
 class Metric(BaseModel):
@@ -153,7 +154,6 @@ class Check(BaseModel):
 
     @staticmethod
     def _validate_nominator_or_denominator(value, which):
-
         if not value:
             raise ValueError(f"we expect {which} to be non-empty")
 
@@ -171,7 +171,6 @@ class Check(BaseModel):
 
     @root_validator
     def check_nominator(cls, values):
-
         class_ = cls._ALLOWED_CHECKS[values.get("type")]
         if "nominator" in signature(class_).parameters:
             _ = cls._validate_nominator_or_denominator(values.get("nominator"), "nominator")
@@ -321,7 +320,7 @@ class Experiment(BaseModel):
             raise ValueError("date_for requires date_from and date_to to be present as well")
         if date_from is not None and date_to is not None:
             try:
-                df = datetime.strptime(date_from, "%Y-%m-%d")
+                df = datetime.strptime(date_from, "%Y-%m-%d")  # noqa: PD901
                 dt = datetime.strptime(date_to, "%Y-%m-%d")
             except ValueError:
                 raise ValueError("cannot parse date_from, date_to")

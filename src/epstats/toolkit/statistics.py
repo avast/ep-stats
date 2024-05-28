@@ -1,9 +1,10 @@
-import pandas as pd
-import numpy as np
-import scipy.stats as st
-from typing import Optional, Union
-from statsmodels.stats.multitest import multipletests
 import warnings
+from typing import Optional, Union
+
+import numpy as np
+import pandas as pd
+import scipy.stats as st
+from statsmodels.stats.multitest import multipletests
 
 DEFAULT_CONFIDENCE_LEVEL = 0.95
 DEFAULT_POWER = 0.8
@@ -93,9 +94,9 @@ class Statistics:
             std_treat = s[2]  # standard deviation
 
             # degrees of freedom
-            num = (std_cont ** 2 / count_cont + std_treat ** 2 / count_treat) ** 2
-            den = (std_cont ** 4 / (count_cont ** 2 * (count_cont - 1))) + (
-                std_treat ** 4 / (count_treat ** 2 * (count_treat - 1))
+            num = (std_cont**2 / count_cont + std_treat**2 / count_treat) ** 2
+            den = (std_cont**4 / (count_cont**2 * (count_cont - 1))) + (
+                std_treat**4 / (count_treat**2 * (count_treat - 1))
             )
 
             with np.errstate(divide="ignore", invalid="ignore"):
@@ -118,9 +119,7 @@ class Statistics:
                 rel_diff = (mean_treat - mean_cont) / np.abs(mean_cont)
                 # standard error for relative difference
                 rel_se = (
-                    np.sqrt(
-                        (mean_treat * std_cont) ** 2 / (mean_cont ** 2 * count_cont) + (std_treat ** 2 / count_treat)
-                    )
+                    np.sqrt((mean_treat * std_cont) ** 2 / (mean_cont**2 * count_cont) + (std_treat**2 / count_treat))
                     / mean_cont
                 )
                 test_stat = rel_diff / rel_se
@@ -300,7 +299,7 @@ class Statistics:
         if n_variants < 2:
             raise ValueError("There must be at least two variants.")
 
-        two_vars = 2 * (std ** 2) if std_2 is None else (std ** 2 + std_2 ** 2)
+        two_vars = 2 * (std**2) if std_2 is None else (std**2 + std_2**2)
         delta = np.float64(mean * minimum_effect)
 
         alpha = 1 - confidence_level
@@ -309,7 +308,7 @@ class Statistics:
         # 7.84 for 80% power and 95% confidence, alpha / 2 for two-sided hypothesis
         confidence_and_power = (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(power)) ** 2
         with np.errstate(divide="ignore", invalid="ignore"):
-            samples_size_per_variant = confidence_and_power * (two_vars / delta ** 2)
+            samples_size_per_variant = confidence_and_power * (two_vars / delta**2)
         return np.round(samples_size_per_variant)
 
     @classmethod

@@ -1,8 +1,8 @@
 import pandas as pd
 from numpy import allclose
-from numpy.testing import assert_array_equal, assert_array_almost_equal
+from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from ..experiment import Experiment, Evaluation
+from ..experiment import Evaluation, Experiment
 from .test_dao import TestDao
 from .test_data import TestData
 
@@ -80,7 +80,7 @@ def assert_metrics(
             "power",
         ]
     ].astype(float)
-    atol = 10 ** -precision
+    atol = 10**-precision
     assert allclose(t["sum_value"], expected["sum_value"], atol=atol, equal_nan=True)
     assert allclose(t["diff"], expected["diff"], atol=atol, equal_nan=True)
     assert allclose(t["mean"], expected["mean"], atol=atol, equal_nan=True)
@@ -109,7 +109,6 @@ def assert_checks(
 
     assert_array_equal(target.check_id, expected.check_id)
     for variable_id in expected["variable_id"].tolist():
-
         assert_array_almost_equal(
             target[target["variable_id"] == variable_id]["value"],
             expected[expected["variable_id"] == variable_id]["value"],
@@ -150,4 +149,4 @@ def check_docstring(doc, indent):
         if end != -1:
             code_part = doc[(start + 10) : end].replace(" " * indent, "")  # noqa: E203
             print(code_part)
-            exec(code_part)  # nosec
+            exec(code_part)  # noqa: S102

@@ -1,5 +1,6 @@
 import logging
 from typing import Dict
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.exception_handlers import (
@@ -11,8 +12,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from .api_evaluate import get_evaluate_router
 from .api_sample_size_calculation import get_sample_size_calculation_router
-from .json_response import DataScienceJsonResponse
 from .api_settings import ApiSettings
+from .json_response import DataScienceJsonResponse
 
 
 def get_api(settings: ApiSettings, get_dao, get_executor_pool) -> FastAPI:

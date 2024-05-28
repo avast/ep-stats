@@ -1,6 +1,7 @@
+from importlib.resources import files
+
 import pandas as pd
 
-from importlib.resources import files
 from . import resources  # relative-import the *package* containing the templates
 
 
@@ -22,8 +23,8 @@ class TestData:
             exp_id: experiment id
         """
         with files(resources) / "goals_agg.csv" as df_file:
-            df = pd.read_csv(df_file, sep="\t")
-        return df[df.exp_id == exp_id] if exp_id is not None else df
+            goals_df = pd.read_csv(df_file, sep="\t")
+        return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
     def load_goals_simple_agg(cls) -> pd.DataFrame:
@@ -36,8 +37,8 @@ class TestData:
         See `load_evaluations` set of functions to load corresponding evaluation results.
         """
         with files(resources) / "goals_simple_agg.csv" as df_file:
-            df = pd.read_csv(df_file, sep="\t")
-        return df
+            goals_df = pd.read_csv(df_file, sep="\t")
+        return goals_df
 
     @classmethod
     def load_goals_by_unit(cls, exp_id: str = None) -> pd.DataFrame:
@@ -51,8 +52,8 @@ class TestData:
             exp_id: experiment id
         """
         with files(resources) / "goals_by_unit.csv" as df_file:
-            df = pd.read_csv(df_file, sep="\t")
-        return df[df.exp_id == exp_id] if exp_id is not None else df
+            goals_df = pd.read_csv(df_file, sep="\t")
+        return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
     def load_evaluations_checks(cls, exp_id: str = None) -> pd.DataFrame:
@@ -65,8 +66,8 @@ class TestData:
             exp_id: experiment id
         """
         with files(resources) / "evaluations_checks.csv" as df_file:
-            df = pd.read_csv(df_file, sep="\t")
-        return df[df.exp_id == exp_id] if exp_id is not None else df
+            goals_df = pd.read_csv(df_file, sep="\t")
+        return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
     def load_evaluations_exposures(cls, exp_id: str = None) -> pd.DataFrame:
@@ -79,8 +80,8 @@ class TestData:
             exp_id: experiment id
         """
         with files(resources) / "evaluations_exposures.csv" as df_file:
-            df = pd.read_csv(df_file, sep="\t")
-        return df[df.exp_id == exp_id] if exp_id is not None else df
+            exposures_df = pd.read_csv(df_file, sep="\t")
+        return exposures_df[exposures_df.exp_id == exp_id] if exp_id is not None else exposures_df
 
     @classmethod
     def load_evaluations_metrics(cls, exp_id: str = None) -> pd.DataFrame:
@@ -93,5 +94,5 @@ class TestData:
             exp_id: experiment id
         """
         with files(resources) / "evaluations_metrics.csv" as df_file:
-            df = pd.read_csv(df_file, sep="\t")
-        return df[df.exp_id == exp_id] if exp_id is not None else df
+            goals_df = pd.read_csv(df_file, sep="\t")
+        return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df

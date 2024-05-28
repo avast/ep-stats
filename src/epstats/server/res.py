@@ -1,9 +1,10 @@
-import pandas as pd
 from typing import List, Optional
+
+import pandas as pd
 from pydantic import BaseModel, Field
 
-from ..toolkit import Evaluation, DEFAULT_POWER
-from .req import Experiment, Metric, Check
+from ..toolkit import DEFAULT_POWER, Evaluation
+from .req import Check, Experiment, Metric
 
 
 class MetricStat(BaseModel):
