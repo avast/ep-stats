@@ -2,7 +2,7 @@ from datetime import datetime
 from inspect import signature
 from typing import Any, List, Optional
 
-from pydantic import BaseModel, Field, root_validator, validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from pyparsing import ParseException
 
 from ..toolkit import DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER, FilterScope, Parser
@@ -19,60 +19,40 @@ class Metric(BaseModel):
     """
 
     id: int = Field(
+        ...,
         title="Metric Id",
         description="""Database id of the metric, not used at the moment in ep-stats. We only
         repeat this id in response so the caller knows what result belongs to what request.""",
     )
     name: str = Field(
+        ...,
         title="Metric Name",
         description="""Official metric name as it appears in EP.
         The name is only for debugging and has no meaning for ep-stats. We only repeat the name in the response
         for caller's convenience.""",
     )
     nominator: str = Field(
+        ...,
         title="Metric Nominator",
         description="""EP metric is defined in the form of `nominator / denominator`.
         Both parts are entered as expressions. Example: `count(my_unit_type.unit.conversion)`.""",
     )
     denominator: str = Field(
+        ...,
         title="Metric Denominator",
         description="""EP metric is defined in the form of `nominator / denominator`.
         Both parts are entered as expressions. Example: `count(my_unit_type.unit.conversion)`.""",
     )
     minimum_effect: Optional[float] = Field(
+        None,
         title="Minimum effect of interest",
         description=f"""The minimum effect of interest is the smallest relative difference that is meaningful to detect,
         defining it allows us to estimate the size of the sample data required to reach {DEFAULT_POWER:.0%} power.""",
-        default=None,
     )
 
-    @validator("id")
-    def id_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect id to be non-empty")
-        return value
-
-    @validator("name")
-    def name_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect name to be non-empty")
-        return value
-
-    @validator("nominator")
-    def nominator_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect nominator to be non-empty")
-        return value
-
-    @validator("denominator")
-    def denominator_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect denominator to be non-empty")
-        return value
-
-    @root_validator
-    def check_nominator_denominator(cls, values):
-        nominator, denominator = values.get("nominator"), values.get("denominator")
+    @model_validator(mode="after")
+    def check_nominator_denominator(self):
+        nominator, denominator = self.nominator, self.denominator
         if not nominator:
             raise ValueError("we expect nominator to be non-empty")
         if not denominator:
@@ -81,7 +61,7 @@ class Metric(BaseModel):
             parser = Parser(nominator, denominator)
             if not parser.get_goals():
                 raise ValueError("We expect the metric to have at least one goal in nominator and denominator")
-            return values
+            return self
         except ParseException as e:
             raise ValueError(f"Cannot parse nominator '{nominator}' or '{denominator}' because of '{e}'")
 
@@ -108,49 +88,34 @@ class Check(BaseModel):
     }
 
     id: int = Field(
+        ...,
         title="Check Id",
         description="""Database id of the check, not used at the moment in ep-stats. We only
         repeat this id in response so the caller knows what result belongs to what request.""",
     )
     name: str = Field(
+        ...,
         title="Check Name",
         description="""Name to identify each check.""",
     )
     type: str = Field(
+        _SRM_TYPE,
         title="Check Type",
         description="""Defines which check to run. Currently supported types are `"SRM", "SumRatio"`.
         Default is `SRM`""",
-        default_factory=lambda: Check._SRM_TYPE,
     )
     nominator: Optional[str] = Field(
+        None,
         title="Check Nominator",
         description="""Nominator is only required by `SumRatio` check.
         Example: `count(my_unit_type.global.inconsistent_exposure)`.""",
     )
     denominator: str = Field(
+        ...,
         title="Check Denominator",
         description="""Denominator is required by both `SRM` and `SumRatio` checks.
         Example: `count(my_unit_type.global.exposure)`.""",
     )
-
-    @validator("id")
-    def id_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect id to be non-empty")
-        return value
-
-    @validator("name")
-    def name_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect name to be non-empty")
-        return value
-
-    @validator("type")
-    def type_must_be_allowed(cls, value):
-        if not value or value not in cls._ALLOWED_CHECKS.keys():
-            raise ValueError(f"we expect type to be one of: {cls._ALLOWED_CHECKS.keys()}")
-
-        return value
 
     @staticmethod
     def _validate_nominator_or_denominator(value, which):
@@ -165,17 +130,18 @@ class Check(BaseModel):
         except ParseException as e:
             raise ValueError(f"Cannot parse '{value}' because of '{e}'")
 
-    @validator("denominator")
+    @field_validator("denominator")
+    @classmethod
     def check_denominator(cls, value):
         return cls._validate_nominator_or_denominator(value, "denominator")
 
-    @root_validator
-    def check_nominator(cls, values):
-        class_ = cls._ALLOWED_CHECKS[values.get("type")]
+    @model_validator(mode="after")
+    def check_nominator(self):
+        class_ = self._ALLOWED_CHECKS[self.type]
         if "nominator" in signature(class_).parameters:
-            _ = cls._validate_nominator_or_denominator(values.get("nominator"), "nominator")
+            _ = Check._validate_nominator_or_denominator(self.nominator, "nominator")
 
-        return values
+        return self
 
     def to_check(self):
         class_ = self._ALLOWED_CHECKS[self.type]
@@ -187,31 +153,15 @@ class Filter(BaseModel):
     Filter specification for data to evaluate.
     """
 
-    dimension: str = Field(title="Name of the dimension")
+    dimension: str = Field(..., title="Name of the dimension")
 
-    value: List[Any] = Field(title="List of possible values")
+    value: List[Any] = Field(..., title="List of possible values")
 
     scope: FilterScope = Field(
-        title="Scope of the filter", description="Scope of the filter is either `exposure` or `goal`."
+        ...,
+        title="Scope of the filter",
+        description="Scope of the filter is either `exposure` or `goal`.",
     )
-
-    @validator("dimension")
-    def dimension_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect dimension to be non-empty")
-        return value
-
-    @validator("scope")
-    def scope_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect scope to be either `exposure` or `goal`")
-        return value
-
-    @validator("value")
-    def value_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect value to be non-empty")
-        return value
 
     def to_filter(self):
         return EvFilter(self.dimension, self.value, self.scope)
@@ -223,73 +173,67 @@ class Experiment(BaseModel):
     """
 
     id: str = Field(
+        ...,
         title="Experiment Id",
     )
 
     control_variant: str = Field(
+        ...,
         title="Identification of the control variant",
         description="""All other variant data
         in the experiment are evaluated against this control variant.""",
     )
 
     variants: Optional[List[str]] = Field(
-        title="Variants", description="""List of experiment variants to evaluate for."""
+        None, title="Variants", description="""List of experiment variants to evaluate for."""
     )
 
     unit_type: str = Field(
+        ...,
         title="Experiment/randomization Unit Type",
         description="""Experiment (randomization) unit type is
         needed to correctly retrieve number of exposures per experiment variant.""",
     )
 
     date_from: Optional[str] = Field(
+        None,
         title="Start of the date range",
         description="""Required format is `2020-06-15`.
         `date_from` is optional, data are unbound from the start when `date_from` is not present.""",
-        default=None,
     )
 
     date_to: Optional[str] = Field(
+        None,
         title="End of the date range (inclusive)",
         description="""Required format is `2020-06-15`.
         `date_to` is optional, data are unbound from the end when `date_to` is not present.""",
-        default=None,
     )
 
     date_for: Optional[str] = Field(
+        None,
         title="Date of the experiment to evaluate for",
         description="""Required format is `2020-06-15`.
         `date_for` is optional. If present, both `date_from` and `date_to` must be present too and `date_for` must be
         between `date_from` and `date_to`. `date_from` and `date_to` set expected experiment duration,
         while `date_for` informs about position within the experiment duration. It is used for sequential analysis.""",
-        default=None,
     )
-    metrics: List[Metric] = Field(title="List of metrics to evaluate")
+    metrics: List[Metric] = Field(..., title="List of metrics to evaluate")
 
-    checks: List[Check] = Field(title="List of checks to evaluate")
+    checks: List[Check] = Field(..., title="List of checks to evaluate")
 
     filters: Optional[List[Filter]] = Field(
-        title="Filtering conditions", description="""List of filtering conditions to apply on exposure and goals."""
+        None,
+        title="Filtering conditions",
+        description="""List of filtering conditions to apply on exposure and goals.""",
     )
 
     query_parameters: dict = Field(
+        {},
         title="Custom query parameters used in the data access.",
-        default={},
     )
 
-    @validator("id")
-    def id_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect id to be non-empty")
-        return value
-
-    @validator("control_variant")
-    def control_variant_must_be_not_empty(cls, value):
-        if not value:
-            raise ValueError("we expect control_variant to be non-empty")
-        return value
-
-    @validator("date_from")
+    @field_validator("date_from")
+    @classmethod
     def date_from_must_be_date(cls, value):
         if value is not None:
             try:
@@ -299,7 +243,8 @@ class Experiment(BaseModel):
 
         return value
 
-    @validator("date_to")
+    @field_validator("date_to")
+    @classmethod
     def date_to_must_be_date(cls, value):
         if value is not None:
             try:
@@ -309,24 +254,19 @@ class Experiment(BaseModel):
 
         return value
 
-    @root_validator
-    def check_date_from_to(cls, values):
-        date_from, date_to, date_for = (
-            values.get("date_from"),
-            values.get("date_to"),
-            values.get("date_for"),
-        )
-        if date_for is not None and (date_from is None or date_to is None):
+    @model_validator(mode="after")
+    def check_date_from_to(self):
+        if self.date_for is not None and (self.date_from is None or self.date_to is None):
             raise ValueError("date_for requires date_from and date_to to be present as well")
-        if date_from is not None and date_to is not None:
+        if self.date_from is not None and self.date_to is not None:
             try:
-                df = datetime.strptime(date_from, "%Y-%m-%d")  # noqa: PD901
-                dt = datetime.strptime(date_to, "%Y-%m-%d")
+                df = datetime.strptime(self.date_from, "%Y-%m-%d")  # noqa: PD901
+                dt = datetime.strptime(self.date_to, "%Y-%m-%d")
             except ValueError:
                 raise ValueError("cannot parse date_from, date_to")
-            if date_for is not None:
+            if self.date_for is not None:
                 try:
-                    dfor = datetime.strptime(date_for, "%Y-%m-%d")
+                    dfor = datetime.strptime(self.date_for, "%Y-%m-%d")
                 except ValueError:
                     raise ValueError("cannot parse date_for")
                 if dfor < df:
@@ -336,7 +276,7 @@ class Experiment(BaseModel):
             if dt < df:
                 raise ValueError("we expect date_to to be greater or equal to date_from")
 
-        return values
+        return self
 
     def to_experiment(self):
         metrics = [m.to_metric() for m in self.metrics]
@@ -391,16 +331,19 @@ class SampleSizeCalculationData(BaseModel):
     """
 
     n_variants: int = Field(
+        ...,
         title="Number of variants",
         description="Number of variants in the experiment.",
     )
 
     minimum_effect: float = Field(
+        ...,
         title="Minimum effect of interest",
         description="Relative effect, must be greater than zero.",
     )
 
     mean: float = Field(
+        ...,
         title="Current mean",
         description="""Estimate of the current population mean. If `std` is empty,
         it is assumed that the data comes from Bernoulli distribution. In such case,
@@ -408,21 +351,16 @@ class SampleSizeCalculationData(BaseModel):
     )
 
     std: Optional[float] = Field(
+        None,
         title="Current standard deviation",
         description="""Estimate of the current population standard deviation. If empty,
         it is assumed that the data comes from Bernoulli distribution. In such case,
         `mean` must be between zero and one.""",
     )
 
-    confidence_level: float = Field(
-        title="Confidence level",
-        default=DEFAULT_CONFIDENCE_LEVEL,
-    )
+    confidence_level: float = Field(DEFAULT_CONFIDENCE_LEVEL, title="Confidence level")
 
-    power: float = Field(
-        title="Power",
-        default=DEFAULT_POWER,
-    )
+    power: float = Field(DEFAULT_POWER, title="Power")
 
     class Config:
         schema_extra = {

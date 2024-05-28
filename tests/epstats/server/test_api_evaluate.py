@@ -1,4 +1,5 @@
 import pandas as pd
+from epstats.server.req import Experiment
 from fastapi.testclient import TestClient
 
 from src.epstats.main import api, get_dao, get_executor_pool
@@ -39,6 +40,7 @@ def test_conversion_evaluate():
         ],
     }
 
+    Experiment.model_validate(json_blob)
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 200
     assert_experiment(resp.json(), dao_factory.get_dao(), 1)

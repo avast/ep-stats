@@ -11,7 +11,7 @@ api.dependency_overrides[get_executor_pool] = get_test_executor_pool
 
 def test_validate_control_variant():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "controlvariant": "a",
         "metrics": [
             {
@@ -28,7 +28,7 @@ def test_validate_control_variant():
     assert resp.status_code == 422
     json = resp.json()
     assert json["detail"][0]["loc"][1] == "control_variant"
-    assert json["detail"][0]["type"] == "value_error.missing"
+    assert json["detail"][0]["type"] == "missing"
 
 
 def test_validate_metric_nominator():
@@ -51,14 +51,12 @@ def test_validate_metric_nominator():
     assert resp.status_code == 422
     json = resp.json()
     assert json["detail"][0]["loc"][3] == "nominator"
-    assert json["detail"][0]["type"] == "value_error.missing"
-    assert json["detail"][1]["loc"][3] == "__root__"
-    assert json["detail"][1]["type"] == "value_error"
+    assert json["detail"][0]["type"] == "missing"
 
 
 def test_validate_metric_denominator():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "unit_type": "test_unit_type",
         "metrics": [
@@ -76,14 +74,12 @@ def test_validate_metric_denominator():
     assert resp.status_code == 422
     json = resp.json()
     assert json["detail"][0]["loc"][3] == "denominator"
-    assert json["detail"][0]["type"] == "value_error.missing"
-    assert json["detail"][1]["loc"][3] == "__root__"
-    assert json["detail"][1]["type"] == "value_error"
+    assert json["detail"][0]["type"] == "missing"
 
 
 def test_validate_default_check_type():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "unit_type": "test_unit_type",
         "metrics": [],
@@ -102,7 +98,7 @@ def test_validate_default_check_type():
 
 def test_validate_sum_ratio_nominator():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "unit_type": "test_unit_type",
         "metrics": [],
@@ -126,7 +122,7 @@ def test_validate_sum_ratio_nominator():
 
 def test_validate_metric_parsing():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "unit_type": "test_unit_type",
         "metrics": [
@@ -143,13 +139,13 @@ def test_validate_metric_parsing():
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 422
     json = resp.json()
-    assert json["detail"][0]["loc"][3] == "__root__"
+    assert json["detail"][0]["loc"][1] == "metrics"
     assert json["detail"][0]["type"] == "value_error"
 
 
 def test_date_parsing():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "date_from": "2020-01-01",
         "date_to": "2020-01-14",
@@ -162,7 +158,7 @@ def test_date_parsing():
     assert resp.status_code == 200
 
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "date_from": "2020-01-40",
         "date_to": "2020-01-",
@@ -182,7 +178,7 @@ def test_date_parsing():
 
 def test_validate_date_to_ge_from():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "date_from": "2020-01-02",
         "date_to": "2020-01-01",
@@ -193,13 +189,13 @@ def test_validate_date_to_ge_from():
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 422
     json = resp.json()
-    assert json["detail"][0]["loc"][1] == "__root__"
+    assert json["detail"][0]["loc"][0] == "body"
     assert json["detail"][0]["type"] == "value_error"
 
 
 def test_validate_date_for_requires_date_to_and_date_for():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "date_from": "2020-01-01",
         "date_for": "2020-01-10",
@@ -210,11 +206,11 @@ def test_validate_date_for_requires_date_to_and_date_for():
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 422
     json = resp.json()
-    assert json["detail"][0]["loc"][1] == "__root__"
+    assert json["detail"][0]["loc"][0] == "body"
     assert json["detail"][0]["type"] == "value_error"
 
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "date_for": "2020-01-01",
         "date_to": "2020-01-10",
@@ -225,13 +221,13 @@ def test_validate_date_for_requires_date_to_and_date_for():
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 422
     json = resp.json()
-    assert json["detail"][0]["loc"][1] == "__root__"
+    assert json["detail"][0]["loc"][0] == "body"
     assert json["detail"][0]["type"] == "value_error"
 
 
 def test_validate_date_for_between_date_to_and_date_for():
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "date_from": "2020-01-01",
         "date_to": "2020-01-05",
@@ -243,11 +239,11 @@ def test_validate_date_for_between_date_to_and_date_for():
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 422
     json = resp.json()
-    assert json["detail"][0]["loc"][1] == "__root__"
+    assert json["detail"][0]["loc"][0] == "body"
     assert json["detail"][0]["type"] == "value_error"
 
     json_blob = {
-        "id": "test-converions",
+        "id": "test-conversions",
         "control_variant": "a",
         "date_from": "2020-01-05",
         "date_to": "2020-01-10",
@@ -259,5 +255,5 @@ def test_validate_date_for_between_date_to_and_date_for():
     resp = client.post("/evaluate", json=json_blob)
     assert resp.status_code == 422
     json = resp.json()
-    assert json["detail"][0]["loc"][1] == "__root__"
+    assert json["detail"][0]["loc"][0] == "body"
     assert json["detail"][0]["type"] == "value_error"
