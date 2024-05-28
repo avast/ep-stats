@@ -1,10 +1,8 @@
 from fastapi.testclient import TestClient
 
-from src.epstats.main import api
-from src.epstats.main import get_dao, get_executor_pool
+from src.epstats.main import api, get_dao, get_executor_pool
 
 from .depend import get_test_dao, get_test_executor_pool
-
 
 client = TestClient(api)
 api.dependency_overrides[get_dao] = get_test_dao

@@ -1,10 +1,10 @@
 import numpy as np
-from numpy.testing import assert_almost_equal
 import pandas as pd
 import pytest
+from numpy.testing import assert_almost_equal
 from pyparsing import ParseException
 
-from src.epstats.toolkit.parser import Parser, MultBinOp
+from src.epstats.toolkit.parser import MultBinOp, Parser
 
 
 def test_evaluate_agg():
@@ -42,10 +42,10 @@ def test_evaluate_agg():
         "count(test_unit_type.unit.exposure)",
     )
 
-    conversion_sqr_value = goals[goals.goal == "conversion"]["sum_sqr_value"].values
-    refund_sqr_value = goals[goals.goal == "refund"]["sum_sqr_value"].values
-    conversion_value = goals[goals.goal == "conversion"]["sum_value"].values
-    refund_value = goals[goals.goal == "refund"]["sum_value"].values
+    conversion_sqr_value = goals[goals.goal == "conversion"]["sum_sqr_value"].to_numpy()
+    refund_sqr_value = goals[goals.goal == "refund"]["sum_sqr_value"].to_numpy()
+    conversion_value = goals[goals.goal == "conversion"]["sum_value"].to_numpy()
+    refund_value = goals[goals.goal == "refund"]["sum_value"].to_numpy()
     assert_count_value(
         parser.evaluate_agg(goals),
         goals[goals.goal == "exposure"]["count"],
@@ -70,7 +70,7 @@ def test_evaluate_agg():
     )
     assert_count_value(
         parser.evaluate_agg(goals),
-        goals[goals.goal == "exposure"]["count"].values / 1000,
+        goals[goals.goal == "exposure"]["count"].to_numpy() / 1000,
         conversion_value,
         conversion_sqr_value,
     )
@@ -355,7 +355,6 @@ def test_operator_position_not_correct(dimension_value):
     ],
 )
 def test_numbers(nominator):
-
     assert isinstance(
         Parser(nominator, "count(test_unit_type.unit.conversion)")._nominator_expr,
         MultBinOp,
