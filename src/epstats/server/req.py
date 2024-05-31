@@ -2,7 +2,7 @@ from datetime import datetime
 from inspect import signature
 from typing import Any, List, Optional
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pyparsing import ParseException
 
 from ..toolkit import DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER, FilterScope, Parser
@@ -232,6 +232,36 @@ class Experiment(BaseModel):
         title="Custom query parameters used in the data access.",
     )
 
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "id": "test-conversion",
+                "variants": ["a", "b", "c"],
+                "control_variant": "a",
+                "unit_type": "test_unit_type",
+                "filters": [
+                    {"dimension": "element", "value": ["button-1"], "scope": "goal"},
+                    {"dimension": "browser", "value": ["firefox"], "scope": "exposure"},
+                ],
+                "metrics": [
+                    {
+                        "id": 1,
+                        "name": "Click-through Rate",
+                        "nominator": "count(test_unit_type.unit.click)",
+                        "denominator": "count(test_unit_type.global.exposure)",
+                    }
+                ],
+                "checks": [
+                    {
+                        "id": 1,
+                        "name": "SRM",
+                        "denominator": "count(test_unit_type.global.exposure)",
+                    }
+                ],
+            }
+        }
+    )
+
     @field_validator("date_from")
     @classmethod
     def date_from_must_be_date(cls, value):
@@ -295,35 +325,6 @@ class Experiment(BaseModel):
             query_parameters=self.query_parameters,
         )
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "id": "test-conversion",
-                "variants": ["a", "b", "c"],
-                "control_variant": "a",
-                "unit_type": "test_unit_type",
-                "filters": [
-                    {"dimension": "element", "value": ["button-1"], "scope": "goal"},
-                    {"dimension": "browser", "value": ["firefox"], "scope": "exposure"},
-                ],
-                "metrics": [
-                    {
-                        "id": 1,
-                        "name": "Click-through Rate",
-                        "nominator": "count(test_unit_type.unit.click)",
-                        "denominator": "count(test_unit_type.global.exposure)",
-                    }
-                ],
-                "checks": [
-                    {
-                        "id": 1,
-                        "name": "SRM",
-                        "denominator": "count(test_unit_type.global.exposure)",
-                    }
-                ],
-            }
-        }
-
 
 class SampleSizeCalculationData(BaseModel):
     """
@@ -362,8 +363,8 @@ class SampleSizeCalculationData(BaseModel):
 
     power: float = Field(DEFAULT_POWER, title="Power")
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "minimum_effect": 0.1,
                 "mean": 0.2,
@@ -371,3 +372,4 @@ class SampleSizeCalculationData(BaseModel):
                 "n_variants": 2,
             }
         }
+    )

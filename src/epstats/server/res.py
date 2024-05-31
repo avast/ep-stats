@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 import pandas as pd
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..toolkit import DEFAULT_POWER, Evaluation
 from .req import Check, Experiment, Metric
@@ -236,8 +236,8 @@ class Result(BaseModel):
 
         return Result(id=experiment.id, metrics=metrics, checks=checks, exposure=exposure)
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "id": "test-conversion",
                 "metrics": [
@@ -299,6 +299,7 @@ class Result(BaseModel):
                 },
             }
         }
+    )
 
 
 class SampleSizeCalculationResult(BaseModel):
@@ -308,9 +309,10 @@ class SampleSizeCalculationResult(BaseModel):
 
     sample_size_per_variant: float = Field(..., title="Sample size per variant")
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "sample_size_per_variant": 100_000,
             }
         }
+    )
