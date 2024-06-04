@@ -282,8 +282,7 @@ class Statistics:
         Arguments:
             n_variants: number of variants in the experiment
             minimum_effect: minimum (relative) effect that we find meaningful to detect
-            mean: estimate of the current population mean,
-            also known as rate in case of Bernoulli distribution
+            mean: estimate of the current population mean, also known as rate in case of Bernoulli distribution
             std: estimate of the current population standard deviation
             std_2: estimate of the treatment population standard deviation
             confidence_level: confidence level of the test

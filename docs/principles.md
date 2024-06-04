@@ -56,7 +56,7 @@ The exposure is a (special) goal in the ep-stats as well.
 
 We attribute goals to experiments and variants based on units exposures. This means that every event that should make a goal in ep-stats must reference some unit. Without that, ep-stats is not able to recognize what exposure to look up to determine which experiment(s) and variant(s) the goal should be attributed to.
 
-See [Supported Unit Types](user_guide/aggregation.md#supported_unit_types).
+See [Supported Unit Types](./user_guide/aggregation.md#supported-unit-types).
 
 ## Metrics
 

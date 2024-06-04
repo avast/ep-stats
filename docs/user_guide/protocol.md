@@ -83,7 +83,7 @@ Checking for SRM-Sample Ratio Mismatch, is an important test everyone doing expe
 
 Failing SRM check tells us there is some underlying problem in the experiment randomization. Experiments with failed SRM check should not be evaluated at all.
 
-See [SRM](../stats/basics.md#sample_ratio_mismatch) for details about EP implementation.
+See [SRM](../stats/basics.md#sample-ratio-mismatch-check) for details about EP implementation.
 
 ## Pros and Cons
 
