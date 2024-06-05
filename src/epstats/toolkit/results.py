@@ -3,12 +3,16 @@ import pandas as pd
 from .experiment import Experiment
 
 
-def results_long_to_wide(metrics: pd.DataFrame) -> pd.DataFrame:
-    """Adjusts metric results from long format to wide."""
-
+def _add_confidence_intervals(metrics: pd.DataFrame) -> pd.DataFrame:
     # Compute lower and upper bound for confidence interval
     metrics["conf_int_lower"] = metrics["diff"] - metrics["confidence_interval"]
     metrics["conf_int_upper"] = metrics["diff"] + metrics["confidence_interval"]
+
+    return metrics
+
+
+def results_long_to_wide(metrics: pd.DataFrame) -> pd.DataFrame:
+    """Adjusts metric results from long format to wide."""
 
     # Change experiment variants to upper case
     metrics = metrics.assign(exp_variant_id=lambda r: r.exp_variant_id.str.title())
@@ -108,6 +112,88 @@ def format_results(
 
     # Apply columns formatting including colour p-value format
     return r.style.format(columns_format).map(_p_value_color_format, subset=columns_pvalue)
+
+
+def format_metrics_long(
+    metrics: pd.DataFrame,
+    experiment: Experiment,
+    format_pct: str = "{:+,.1%}",
+    format_pval: str = "{:,.3f}",
+) -> pd.DataFrame:
+    """
+    Method formatting long dataframe with result metrics. Using params `format_pct` and `format_pval` you can set number of
+    decimals.
+
+    Arguments:
+        metrics: dataframe with result metrics in long format
+        experiment: evaluated experiment
+        format_pct: optional param with format of columns `Impact`, `Conf. interval lower bound` and `Conf. interval
+        upper bound`
+        format_pval: optional param with format of `p-value` column
+
+    Returns:
+        nicely formatted dataframe
+    """
+
+    metrics = _add_confidence_intervals(metrics)
+    # Fix ugly naming
+    metrics = metrics.rename(
+        columns={
+            "exp_id": "Experiment Id",
+            "exp_variant_id": "Variant",
+            "metric_id": "Metric Id",
+            "metric_name": "Metric",
+            "mean": "Mean",
+            "diff": "Impact",
+            "conf_int_lower": "Conf. interval lower bound",
+            "conf_int_upper": "Conf. interval upper bound",
+            "p_value": "p-value",
+            "sum_value": "Value",
+        }
+    )
+
+    # How should mean (metric value) formatted
+    format_mean_df = pd.DataFrame(
+        [{"Metric Id": metric.id, "metric_format": metric.metric_format} for metric in experiment.metrics]
+    )
+    metric_mean_multipliers_df = pd.DataFrame(
+        [
+            {"Metric Id": metric.id, "metric_value_multiplier": metric.metric_value_multiplier}
+            for metric in experiment.metrics
+        ]
+    )
+
+    # Merge with format_mean_df and metric_mean_multipliers_df to apply formatting
+    metrics = metrics.merge(metric_mean_multipliers_df, on="Metric Id", how="inner")
+    metrics["Mean"] = metrics["Mean"] * metrics["metric_value_multiplier"]
+    metrics["Value"] = metrics["Value"] * metrics["metric_value_multiplier"]
+
+    metrics = metrics.merge(format_mean_df, on="Metric Id", how="inner")
+    metrics["Mean"] = metrics.apply(lambda row: row["metric_format"].format(row["Mean"]), axis=1)
+    metrics["Value"] = metrics.apply(lambda row: row["metric_format"].format(row["Value"]), axis=1)
+
+    # Select appropriate columns
+    columns_pct = [col for col in metrics.columns if ("interval" in col) | ("Impact" in col)]
+    columns_format = {
+        **{col: format_pct for col in columns_pct},
+        "p-value": format_pval,
+    }
+
+    metrics = metrics[
+        [
+            "Experiment Id",
+            "Variant",
+            "Metric",
+            "Mean",
+            "Value",
+            "Impact",
+            "Conf. interval lower bound",
+            "Conf. interval upper bound",
+            "p-value",
+        ]
+    ]
+
+    return metrics.style.format(columns_format).map(_p_value_color_format, subset=["p-value"])
 
 
 def _p_value_color_format(pval):
