@@ -454,7 +454,7 @@ class Experiment:
                 ]
                 + self.get_dimension_columns(),
                 columns="goal",
-                aggfunc=np.sum,
+                aggfunc="sum",
                 fill_value=0,
             )
             .swaplevel(axis=1)
