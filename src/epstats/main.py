@@ -2,7 +2,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 
 from prometheus_client import CollectorRegistry, make_asgi_app, multiprocess
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 from .server import ApiSettings, get_api, serve
 from .toolkit.testing import TestDaoFactory, TestData

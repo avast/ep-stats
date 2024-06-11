@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 import pandas as pd
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..toolkit import DEFAULT_POWER, Evaluation
 from .req import Check, Experiment, Metric
@@ -12,26 +12,31 @@ class MetricStat(BaseModel):
     Per-variant metric evaluation result.
     """
 
-    exp_variant_id: str = Field(title="Variant in the Experiment")
+    exp_variant_id: str = Field(..., title="Variant in the Experiment")
     diff: float = Field(
+        ...,
         title="Difference",
         description="""Relative difference of means of this variant and control variant.
         If this is a variant `b` and `a` is the control variant, then `diff = (b.mean - a.mean) / a.mean`.""",
     )
     mean: float = Field(
+        ...,
         title="Metric Mean",
         description="""Nominator and denominator to calculate the mean
         are given in metric definition. `mean = nominator / denominator`.""",
     )
     std: float = Field(
+        ...,
         title="Metric Standard Deviation",
     )
     sum_value: float = Field(
+        ...,
         title="Metric Value",
         description="""Value of the metric, it is given by the
         nominator in the metric definition.""",
     )
     p_value: float = Field(
+        ...,
         title="p-Value",
         description="""We calculate p-value (under `confidence_level` statistical significance) of the relative
         difference (`diff`) of this variant mean and the control variant mean. We use
@@ -40,25 +45,30 @@ class MetricStat(BaseModel):
         of freedom.""",
     )
     confidence_interval: float = Field(
+        ...,
         title="Confidence Interval",
         description="""Confidence interval for relative difference ('diff`)
         of means of this variant and control variant - `[mean - confidence_interval, mean + confidence_interval]`.
         Associated confidence level is the next parameter.""",
     )
     confidence_level: float = Field(
+        ...,
         title="Confidence Level (Statistical Significance)",
         description="""Confidence level used
         to compute (obtain) `confidence_interval`.""",
     )
     sample_size: Optional[float] = Field(
+        None,
         title="Sample size",
         description="Current sample size.",
     )
     required_sample_size: Optional[float] = Field(
+        None,
         title="Required sample size",
         description=f"Size of the sample required to reach {DEFAULT_POWER:.0%} power.",
     )
     power: Optional[float] = Field(
+        None,
         title="Power",
         description="Test power based on the collected `sample_size`.",
     )
@@ -89,15 +99,18 @@ class MetricResult(BaseModel):
     """
 
     id: int = Field(
+        ...,
         title="Metric Id",
         description="""Database id of the metric, not used at the moment in ep-stats""",
     )
     name: str = Field(
+        ...,
         title="Metric Name",
         description="""Official metric name as it appears in EP.
         The name is only for debugging and has no meaning for ep-stats.""",
     )
     stats: List[MetricStat] = Field(
+        ...,
         title="Per-variant statistics",
         description="""List with one entry per
         variant statistical results.""",
@@ -110,12 +123,14 @@ class MetricResult(BaseModel):
 
 class CheckStat(BaseModel):
     variable_id: str = Field(
+        ...,
         title="Check Variable",
         description="""Every check can return different
         variables and their values. E.g. SRM check returns `test_stat` and `p_value` variables with
         their `value`s.""",
     )
     value: float = Field(
+        ...,
         title="Value of the Variable",
         description="""Value of some variable returned by
         the check. E.g. SRM check returns `test_stat` and `p_value` variables with
@@ -133,15 +148,18 @@ class CheckResult(BaseModel):
     """
 
     id: int = Field(
+        ...,
         title="Check Id",
         description="Database id of the check, not used at the moment.",
     )
     name: str = Field(
+        ...,
         title="Check Name",
         description="""Official check name as it appears in EP.
         The name is only for debugging and has no meaning for ep-stats.""",
     )
     stats: List[CheckStat] = Field(
+        ...,
         title="Per-variant statistics",
         description="""List with one entry per
         variant statistical results.""",
@@ -157,8 +175,9 @@ class ExposureStat(BaseModel):
     Exposures in the experiment per-variant.
     """
 
-    exp_variant_id: str = Field(title="Variant in the Experiment")
+    exp_variant_id: str = Field(..., title="Variant in the Experiment")
     count: int = Field(
+        ...,
         title="Per-variant exposures",
         description="""Exposure count of experiment (randomization) unit.""",
     )
@@ -174,11 +193,13 @@ class ExposureResult(BaseModel):
     """
 
     unit_type: str = Field(
+        ...,
         title="Experiment/randomization Unit Type",
         description="""Experiment (randomization) unit type is
     needed to correctly retrieve number of exposures per experiment variant.""",
     )
     stats: List[ExposureStat] = Field(
+        ...,
         title="Experiment Exposures",
         description="""List with experiment variant exposure counts per entry.""",
     )
@@ -195,14 +216,13 @@ class Result(BaseModel):
     Top-level element in the response.
     """
 
-    id: str = Field(
-        title="Experiment Id",
-    )
+    id: str = Field(..., title="Experiment Id")
     metrics: List[MetricResult] = Field(
         title="Metric Results",
         description="""List with one entry per evaluated metric.""",
     )
     checks: List[CheckResult] = Field(
+        ...,
         title="Check Results",
         description="""List with one entry per evaluated check.""",
     )
@@ -216,8 +236,8 @@ class Result(BaseModel):
 
         return Result(id=experiment.id, metrics=metrics, checks=checks, exposure=exposure)
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "id": "test-conversion",
                 "metrics": [
@@ -279,6 +299,7 @@ class Result(BaseModel):
                 },
             }
         }
+    )
 
 
 class SampleSizeCalculationResult(BaseModel):
@@ -286,13 +307,12 @@ class SampleSizeCalculationResult(BaseModel):
     Result of the sample size calculation.
     """
 
-    sample_size_per_variant: float = Field(
-        title="Sample size per variant",
-    )
+    sample_size_per_variant: float = Field(..., title="Sample size per variant")
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "sample_size_per_variant": 100_000,
             }
         }
+    )

@@ -316,7 +316,7 @@ class EpGoal:
                 & self._get_dimension_mask(goals)
             ]
             .groupby(groupby_columns)
-            .agg({column: sum})[column]
+            .agg({column: "sum"})[column]
             .to_numpy()
         )
 
