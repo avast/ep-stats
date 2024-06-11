@@ -16,4 +16,4 @@ jobs:
         run: pip install poetry
       - run: |
           make install
-          mkdocs gh-deploy --force
+          poetry run mkdocs gh-deploy --force
