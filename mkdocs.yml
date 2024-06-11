@@ -42,8 +42,10 @@ nav:
 
 plugins:
   - mkdocstrings:
-      watch:
-        - src
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
   - search
   - mkdocs-jupyter:
       include_source: True

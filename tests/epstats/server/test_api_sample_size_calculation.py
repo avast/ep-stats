@@ -1,12 +1,11 @@
-import pytest
 from math import isnan
+
+import pytest
 from fastapi.testclient import TestClient
 
-from src.epstats.main import api
-from src.epstats.main import get_executor_pool
+from src.epstats.main import api, get_executor_pool
 
 from .depend import get_test_executor_pool
-
 
 client = TestClient(api)
 api.dependency_overrides[get_executor_pool] = get_test_executor_pool

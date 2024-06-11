@@ -1,22 +1,21 @@
 import logging
-from typing import List, Any
+from collections import Counter
+from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from itertools import chain
-import pandas as pd
+from typing import Any, List, Optional
+
 import numpy as np
-from collections import Counter
-from typing import Optional
-from datetime import datetime
-from dataclasses import dataclass
+import pandas as pd
 
-from .metric import Metric, SimpleMetric
+from ..prometheus import Counter as PrometheusCounter
+from ..prometheus import get_prometheus_metric
 from .check import Check
+from .metric import Metric, SimpleMetric
+from .parser import AggType, EpGoal, Goal, Parser, UnitType
+from .statistics import DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER, Statistics
 from .utils import get_utc_timestamp, goals_wide_to_long
-from .parser import Parser, EpGoal, UnitType, AggType, Goal
-
-from .statistics import Statistics, DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER
-from ..prometheus import get_prometheus_metric, Counter as PrometheusCounter
-
 
 check_evaluation_errors_metric = get_prometheus_metric("check_evaluation_errors_total", PrometheusCounter)
 
@@ -236,8 +235,8 @@ class Experiment:
         to `sum_sqr_value`
         1. `sum_value` - value of observed goals
         1. `sum_sqr_value` - summed squared value per unit.  This is used to calculate
-        sample standard deviation from pre-aggregated data (it is a term $\sum x^2$
-        in $\hat{\sigma}^2 = \\frac{\sum x^2 - \\frac{(\sum x)^2}{n}}{n-1}$).
+        sample standard deviation from pre-aggregated data (it is a term $\\sum x^2$
+        in $\\hat{\\sigma}^2 = \\frac{\\sum x^2 - \\frac{(\\sum x)^2}{n}}{n-1}$).
         1. `count_unique` - number of units with at least 1 observed goal
 
         Returns:
@@ -517,26 +516,26 @@ class Experiment:
         """
         Evaluates checks from already aggregated goals.
         """
-        df = (
+        checks_df = (
             goals[(goals["unit_type"] == unit_type) & (goals["agg_type"] == "global") & (goals["goal"] == "exposure")]
             .groupby("exp_variant_id")
             .agg(exposures=("count", "sum"))
             .reset_index()
         )
-        df["exp_id"] = exp_id
-        return df
+        checks_df["exp_id"] = exp_id
+        return checks_df
 
     @staticmethod
     def _exposures_fce_by_unit(goals: pd.DataFrame, exp_id: str, unit_type: str):
         """
         Evaluates checks from already aggregated goals.
         """
-        df = goals[(goals["unit_type"] == unit_type) & (goals["agg_type"] == "unit")][
+        checks_df = goals[(goals["unit_type"] == unit_type) & (goals["agg_type"] == "unit")][
             [("exp_variant_id", ""), ("exposure", "count")]
         ]
-        df = df.droplevel(0, axis=1)
-        df.columns = ["exp_variant_id", "exposures"]
-        d = df.groupby("exp_variant_id").agg(exposures=("exposures", "sum")).reset_index()
+        checks_df = checks_df.droplevel(0, axis=1)
+        checks_df.columns = ["exp_variant_id", "exposures"]
+        d = checks_df.groupby("exp_variant_id").agg(exposures=("exposures", "sum")).reset_index()
         d["exp_id"] = exp_id
         return d
 
@@ -690,7 +689,6 @@ class Experiment:
         metrics_with_value_denominator: set,
         n_variants: int,
     ) -> pd.Series:
-
         metric_id = metric_row["metric_id"]
         minimum_effect = minimum_effects[metric_id]
         index = ["minimum_effect", "sample_size", "required_sample_size"]
@@ -701,7 +699,7 @@ class Experiment:
         # parser will return an additional column equal to count or count_unique.
         sample_size = metric_row["count"] if metric_id not in metrics_with_value_denominator else np.nan
 
-        if metric_row["exp_variant_id"] == self.control_variant or pd.isnull(minimum_effect):
+        if metric_row["exp_variant_id"] == self.control_variant or pd.isna(minimum_effect):
             return pd.Series([np.nan, sample_size, np.nan], index)
 
         metric_id = metric_row["metric_id"]
@@ -723,7 +721,6 @@ class Experiment:
         )
 
     def _get_required_sample_sizes(self, metrics: pd.DataFrame, n_variants: int) -> pd.DataFrame:
-
         controls = {
             r["metric_id"]: {"mean": r["mean"], "std": r["std"]}
             for _, r in metrics.iterrows()
@@ -747,7 +744,6 @@ class Experiment:
         )
 
     def _get_power_from_required_sample_sizes(self, metrics: pd.DataFrame, n_variants: int) -> pd.Series:
-
         return metrics.apply(
             lambda metric_row: Statistics.power_from_required_sample_size_per_variant(
                 n_variants=n_variants,

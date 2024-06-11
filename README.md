@@ -104,20 +104,19 @@ cd ep-stats
 make install-dev
 ```
 
-It sets a new virtual environment `venv` in `./venv` using [venv](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/), installs all development dependencies, and sets [pre-commit](https://pre-commit.com/) git hooks to keep the code neatly formatted with [flake8](https://pypi.org/project/flake8/) and [brunette](https://pypi.org/project/brunette/).
+It sets a new virtual environment `.venv` in `./.venv` using [.venv](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/), installs all development dependencies, and sets [pre-commit](https://pre-commit.com/) git hooks to keep the code neatly formatted with [ruff](https://pypi.org/project/ruff).
 
 To run tests, you can use `Makefile` as well.
 
 ```bash
-source venv/bin/activate  # activate python environment
+poetry shell  # activate python environment
 make check
 ```
 
 To run a development version of ep-stats do
 
 ```bash
-source venv/bin/activate
-cd src
+poetry shell
 python -m epstats
 ```
 

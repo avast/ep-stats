@@ -1,14 +1,14 @@
 import pytest
 
-from src.epstats.toolkit.metric import Metric, SimpleMetric
-from src.epstats.toolkit.check import SrmCheck, SimpleSrmCheck
+from src.epstats.toolkit.check import SimpleSrmCheck, SrmCheck
 from src.epstats.toolkit.experiment import Experiment, Filter, FilterScope
+from src.epstats.toolkit.metric import Metric, SimpleMetric
 from src.epstats.toolkit.testing import (
-    evaluate_experiment_agg,
-    evaluate_experiment_simple_agg,
-    evaluate_experiment_by_unit,
     TestDao,
     TestData,
+    evaluate_experiment_agg,
+    evaluate_experiment_by_unit,
+    evaluate_experiment_simple_agg,
 )
 
 
@@ -40,7 +40,6 @@ def unit_type():
 
 
 def test_update_dimension_to_value(unit_type):
-
     metrics = [
         Metric(
             1,

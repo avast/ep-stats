@@ -1,18 +1,19 @@
-from typing import Set
 from collections import Counter
-from pyparsing import (
-    Word,
-    alphas,
-    oneOf,
-    infixNotation,
-    opAssoc,
-    nums,
-    ParseException,
-    alphanums,
-    delimitedList,
-    Optional,
-)
+from typing import Set
+
 import pandas as pd
+from pyparsing import (
+    Optional,
+    ParseException,
+    Word,
+    alphanums,
+    alphas,
+    delimitedList,
+    infixNotation,
+    nums,
+    oneOf,
+    opAssoc,
+)
 
 
 class Parser:
@@ -123,8 +124,8 @@ class Parser:
         count_variants, count = self._denominator_expr.evaluate_by_unit(goals, "count")
         count_df = pd.DataFrame({"exp_variant_id": count_variants, "count": count}).groupby("exp_variant_id").sum()
 
-        df = value_df.join(count_df)
-        return df["count"], df["sum_value"], df["sum_sqr_value"]
+        metrics_df = value_df.join(count_df)
+        return metrics_df["count"], metrics_df["sum_value"], metrics_df["sum_sqr_value"]
 
     def get_goals(self) -> Set:
         """
@@ -316,7 +317,7 @@ class EpGoal:
             ]
             .groupby(groupby_columns)
             .agg({column: sum})[column]
-            .values
+            .to_numpy()
         )
 
     def get_goals_str(self) -> Set[str]:

@@ -1,6 +1,7 @@
-import pytest
 import numpy as np
+import pytest
 from statsmodels.stats.power import TTestIndPower
+
 from src.epstats.toolkit.statistics import Statistics
 
 
@@ -35,7 +36,6 @@ def _assert_sample_sizes_equal_within_tolerance(x, y, n_variants):
     ],
 )
 def test_obf_alpha_spending_function(test_length, actual_day, expected):
-
     alpha = Statistics.obf_alpha_spending_function(0.95, test_length, actual_day)
     assert alpha == expected
 
@@ -87,7 +87,6 @@ def test_required_sample_size_per_variant_equal_variance(n_variants, minimum_eff
     ],
 )
 def test_required_sample_size_per_variant_unequal_variance(minimum_effect, mean, std, std_2):
-
     sample_size_per_variant = Statistics.required_sample_size_per_variant(
         n_variants=2,
         minimum_effect=minimum_effect,
@@ -97,7 +96,7 @@ def test_required_sample_size_per_variant_unequal_variance(minimum_effect, mean,
     )
 
     mean_2 = mean * (1 + minimum_effect)
-    var_ = (std ** 2 + std_2 ** 2) / 2
+    var_ = (std**2 + std_2**2) / 2
     std_ = np.sqrt(var_)
     effect_size = (mean_2 - mean) / std_
 
@@ -124,7 +123,6 @@ def test_required_sample_size_per_variant_unequal_variance(minimum_effect, mean,
     ],
 )
 def test_required_sample_size_per_variant_bernoulli(n_variants, minimum_effect, mean, std, expected):
-
     sample_size_per_variant = Statistics.required_sample_size_per_variant_bernoulli(
         n_variants=n_variants,
         minimum_effect=minimum_effect,
@@ -160,7 +158,6 @@ def test_required_sample_size_per_variant_bernoulli(n_variants, minimum_effect, 
     ],
 )
 def test_required_sample_size_per_variant_raises_exception(n_variants, minimum_effect, mean, std, f):
-
     args = {"minimum_effect": minimum_effect, "mean": mean, "n_variants": n_variants}
 
     if std is not None:
@@ -230,7 +227,6 @@ def test_power_from_required_sample_size_per_variant(n_variants, sample_size_per
 
 
 def test_power_from_required_sample_size_per_variant_nan_params():
-
     assert np.isnan(
         Statistics.power_from_required_sample_size_per_variant(
             n_variants=np.nan,
@@ -256,5 +252,4 @@ def test_power_from_required_sample_size_per_variant_nan_params():
     ],
 )
 def test_power_from_required_sample_size_per_variant_is_nan(args):
-
     assert np.isnan(Statistics.power_from_required_sample_size_per_variant(**args))

@@ -1,35 +1,19 @@
-brunette-check:
-	brunette src/epstats tests setup.py --check
-
-brunette:
-	brunette src/epstats tests setup.py
-
-flake:
-	flake8 src/epstats tests setup.py
+ruff:
+	poetry run ruff check src/epstats tests
 
 test:
-	pytest
+	poetry run pytest
 
-bandit:
-	bandit --skip "B101" --recursive src/epstats
-
-check: brunette-check flake bandit test
+check: ruff test
 
 install:
-	python -m pip install -e .
+	poetry update
+	poetry install
 
-venv:
-	python -m pip install virtualenv
-	python -m virtualenv venv
-
-install-dev: venv
-	source venv/bin/activate && python -m pip install -e ".[dev]"
-	source venv/bin/activate && pre-commit install
-	source venv/bin/activate && python -m pip install ipykernel
-	source venv/bin/activate && ipython kernel install --user --name=ep-stats
-
-install-test:
-	python -m pip install -e ".[test]"
+install-dev: install
+	poetry run ipython kernel install --user --name=ep-stats
+	poetry run pre-commit autoupdate
+	poetry run pre-commit install
 
 clean:
 	rm -rf build src/__pycache__ src/epstats/__pycache__ src/epstats/server/__pycache__ __pycache__ \

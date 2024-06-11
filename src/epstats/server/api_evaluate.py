@@ -1,16 +1,15 @@
-import logging
-import numpy as np
-from fastapi import APIRouter, Depends, HTTPException
 import asyncio
+import logging
 from concurrent.futures import ThreadPoolExecutor
 
-from ..prometheus import get_prometheus_metric, Summary, Counter
-from ..toolkit import Experiment as EvExperiment
-from ..toolkit import Dao
+import numpy as np
+from fastapi import APIRouter, Depends, HTTPException
 
+from ..prometheus import Counter, Summary, get_prometheus_metric
+from ..toolkit import Dao
+from ..toolkit import Experiment as EvExperiment
 from .req import Experiment
 from .res import Result
-
 
 _logger = logging.getLogger("epstats")
 evaluation_duration_metric = get_prometheus_metric(

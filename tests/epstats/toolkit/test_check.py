@@ -1,8 +1,8 @@
 import pytest
 
-from src.epstats.toolkit.experiment import Experiment
 from src.epstats.toolkit.check import SrmCheck, SumRatioCheck
-from src.epstats.toolkit.testing import evaluate_experiment_agg, TestDao, TestData
+from src.epstats.toolkit.experiment import Experiment
+from src.epstats.toolkit.testing import TestDao, TestData, evaluate_experiment_agg
 
 
 @pytest.fixture(scope="module")

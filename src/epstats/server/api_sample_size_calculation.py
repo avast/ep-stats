@@ -1,13 +1,12 @@
-import logging
-from fastapi import APIRouter, Depends, HTTPException
 import asyncio
+import logging
 from concurrent.futures import ThreadPoolExecutor
 
-from ..toolkit.statistics import Statistics
+from fastapi import APIRouter, Depends, HTTPException
 
+from ..toolkit.statistics import Statistics
 from .req import SampleSizeCalculationData
 from .res import SampleSizeCalculationResult
-
 
 _logger = logging.getLogger("epstats")
 
@@ -15,7 +14,6 @@ _logger = logging.getLogger("epstats")
 def get_sample_size_calculation_router(get_executor_pool) -> APIRouter:
     def _sample_size_calculation(data: SampleSizeCalculationData):
         try:
-
             if data.std is None:
                 f = Statistics.required_sample_size_per_variant_bernoulli
             else:

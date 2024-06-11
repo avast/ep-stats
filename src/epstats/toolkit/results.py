@@ -1,9 +1,10 @@
 import pandas as pd
+
 from .experiment import Experiment
 
 
 def results_long_to_wide(metrics: pd.DataFrame) -> pd.DataFrame:
-    """Adjusts metric resutls from long format to wide."""
+    """Adjusts metric results from long format to wide."""
 
     # Compute lower and upper bound for confidence interval
     metrics["conf_int_lower"] = metrics["diff"] - metrics["confidence_interval"]
@@ -13,24 +14,24 @@ def results_long_to_wide(metrics: pd.DataFrame) -> pd.DataFrame:
     metrics = metrics.assign(exp_variant_id=lambda r: r.exp_variant_id.str.title())
 
     # Reshape metrics DataFrame - from long to wide
-    r = metrics.pivot(
+    r = metrics.pivot_table(
         index=["exp_id", "exp_variant_id"],
         columns=["metric_name", "metric_id"],
         values=["mean", "diff", "conf_int_lower", "conf_int_upper", "p_value"],
     )
 
-    # Add column multiindex names and transpose
+    # Add column multi-index names and transpose
     r.columns.names = ["statistic", "metric_name", "metric_id"]
     r = r.transpose()
 
     # Sort metrics and statistics in the right order
-    r.reset_index(inplace=True)
+    r.reset_index(inplace=True)  # noqa: PD002
     r["metric_id"] = r.apply(_enrich_metric_id, axis="columns")
-    r.sort_values(by="metric_id", inplace=True)
-    r.drop(columns=[("metric_id", "")], inplace=True)
+    r.sort_values(by="metric_id", inplace=True)  # noqa: PD002
+    r.drop(columns=[("metric_id", "")], inplace=True)  # noqa: PD002
 
     # Set index and transpose back
-    r.set_index(["metric_name", "statistic"], inplace=True)
+    r.set_index(["metric_name", "statistic"], inplace=True)  # noqa: PD002
     r = r.transpose()
 
     return r
@@ -76,7 +77,7 @@ def format_results(
             "conf_int_upper": "Conf. interval upper bound",
             "p_value": "p-value",
         },
-        inplace=True,
+        inplace=True,  # noqa: PD002
     )
 
     # Set names for axis

@@ -1,5 +1,5 @@
-import pytz
 import pandas as pd
+import pytz
 
 
 def get_utc_timestamp(dt):
@@ -7,12 +7,12 @@ def get_utc_timestamp(dt):
     return mytz.normalize(mytz.localize(dt, is_dst=False))
 
 
-def goals_wide_to_long(df: pd.DataFrame, unit_type: str = "test_unit_type") -> pd.DataFrame:
+def goals_wide_to_long(wide_df: pd.DataFrame, unit_type: str = "test_unit_type") -> pd.DataFrame:
     """
-    Modify the input DataFrame in a way that it can be evaluatetd using Experiment.evaluate_agg().
+    Modify the input DataFrame in a way that it can be evaluated using Experiment.evaluate_agg().
 
     Arguments:
-        df: dataframe in wide format - one row per variant and aggregated data in columns
+        wide_df: dataframe in wide format - one row per variant and aggregated data in columns
         unit_type: should be the same value as the `unit_type` passed to `Experiment`
 
     Returns:
@@ -29,27 +29,31 @@ def goals_wide_to_long(df: pd.DataFrame, unit_type: str = "test_unit_type") -> p
     """
 
     # Do not modify the input `df` via reference
-    df = df.copy()
+    wide_df = wide_df.copy()
     # Rename first two columns
-    df.columns = ["exp_id", "exp_variant_id"] + df.columns.to_list()[2:]
+    wide_df.columns = ["exp_id", "exp_variant_id"] + wide_df.columns.to_list()[2:]
 
     # DataFrame `sum_value` to long format
     # Select non squared columns and switch from long to wide
-    cols = [col for col in df.columns.to_list()[2:] if "square" not in col]
+    cols = [col for col in wide_df.columns.to_list()[2:] if "square" not in col]
     df_long = pd.melt(
-        df, id_vars=["exp_id", "exp_variant_id"], value_vars=cols, var_name="goal", value_name="sum_value"
+        wide_df, id_vars=["exp_id", "exp_variant_id"], value_vars=cols, var_name="goal", value_name="sum_value"
     )
 
     # DataFrame `sum_sqr_value` to long format
     # Select squared columns and swich from long to wide
-    cols_squared = [col for col in df.columns.to_list()[2:] if "square" in col]
+    cols_squared = [col for col in wide_df.columns.to_list()[2:] if "square" in col]
     df_long_sqr = pd.melt(
-        df, id_vars=["exp_id", "exp_variant_id"], value_vars=cols_squared, var_name="goal", value_name="sum_sqr_value"
+        wide_df,
+        id_vars=["exp_id", "exp_variant_id"],
+        value_vars=cols_squared,
+        var_name="goal",
+        value_name="sum_sqr_value",
     )
     df_long_sqr["goal"] = df_long_sqr["goal"].apply(lambda x: "_".join(x.split("_")[:-1]))
 
     # Merge together and add other necessary columns for evaluation
-    goals = pd.merge(left=df_long, right=df_long_sqr, how="outer", on=["exp_id", "exp_variant_id", "goal"])
+    goals = df_long.merge(right=df_long_sqr, how="outer", on=["exp_id", "exp_variant_id", "goal"])
     goals.insert(2, "unit_type", unit_type)
     goals.insert(3, "agg_type", "global")
     goals.insert(5, "dimension", "")

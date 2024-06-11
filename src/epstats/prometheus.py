@@ -1,6 +1,6 @@
-from prometheus_client import Counter, Summary, REGISTRY
 from typing import Union
 
+from prometheus_client import REGISTRY, Counter, Summary
 
 application_prefix = "ep_stats_"
 

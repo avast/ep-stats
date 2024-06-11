@@ -1,6 +1,7 @@
-from typing import Set, Optional
-import pandas as pd
+from typing import Optional, Set
+
 import numpy as np
+import pandas as pd
 
 from .parser import Parser
 

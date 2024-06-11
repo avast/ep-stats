@@ -1,19 +1,16 @@
 import pandas as pd
 from fastapi.testclient import TestClient
 
+from src.epstats.main import api, get_dao, get_executor_pool
+from src.epstats.server.res import Result
 from src.epstats.toolkit.testing import (
-    assert_metrics,
+    TestDao,
     assert_checks,
     assert_exposures,
-    TestDao,
+    assert_metrics,
 )
 
-from src.epstats.main import api
-from src.epstats.main import get_dao, get_executor_pool
-from src.epstats.server.res import Result
-
-from .depend import get_test_dao, get_test_executor_pool, dao_factory
-
+from .depend import dao_factory, get_test_dao, get_test_executor_pool
 
 client = TestClient(api)
 api.dependency_overrides[get_dao] = get_test_dao
@@ -323,26 +320,26 @@ def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected
             for i in s.items():
                 d[i[0]].append(i[1])
 
-        df = pd.DataFrame(d)
-        df["exp_id"] = target["id"]
-        df["metric_id"] = m["id"]
-        assert_metrics(target["id"], m["id"], df, test_dao)
+        metric_df = pd.DataFrame(d)
+        metric_df["exp_id"] = target["id"]
+        metric_df["metric_id"] = m["id"]
+        assert_metrics(target["id"], m["id"], metric_df, test_dao)
 
     for m in target["checks"]:
         d = {"variable_id": [], "value": []}
         for s in m["stats"]:
             for i in s.items():
                 d[i[0]].append(i[1])
-        df = pd.DataFrame(d)
-        df["exp_id"] = target["id"]
-        df["check_id"] = m["id"]
-        assert_checks(target["id"], m["id"], df, test_dao)
+        metric_df = pd.DataFrame(d)
+        metric_df["exp_id"] = target["id"]
+        metric_df["check_id"] = m["id"]
+        assert_checks(target["id"], m["id"], metric_df, test_dao)
 
     m = target["exposure"]
     d = {"exp_variant_id": [], "exposures": []}
     for s in m["stats"]:
         d["exp_variant_id"].append(s["exp_variant_id"])
         d["exposures"].append(s["count"])
-    df = pd.DataFrame(d)
-    df["exp_id"] = target["id"]
-    assert_exposures(target["id"], df, test_dao, unit_type="test_unit_type", agg_type="global")
+    metric_df = pd.DataFrame(d)
+    metric_df["exp_id"] = target["id"]
+    assert_exposures(target["id"], metric_df, test_dao, unit_type="test_unit_type", agg_type="global")
