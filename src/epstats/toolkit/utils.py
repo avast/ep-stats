@@ -68,8 +68,8 @@ def goals_wide_to_long(wide_df: pd.DataFrame, unit_type: str = "test_unit_type")
 
 def _add_value_squared_where_missing(row):
     """Add values `value_squared` where missing."""
-    value_squared = row[-2]
-    value = row[-3]
+    value_squared = row.iloc[-2]
+    value = row.iloc[-3]
 
     if value_squared != value_squared:
         return value

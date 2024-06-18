@@ -54,7 +54,7 @@ SELECT
 
 ## Configuring REST API
 
-After having access to our data in custom implementation of [`Dao`](../api/dao.md) class e.g. `CustomDao`, we can follow up an example in [`main.py`](/doodlebug/ep-stats-lib/tree/master/src/epstats/main.py) to configure the REST API with our `CustomDao`. We need to implement `CustomDaoFactory` that creates instances of our `CustomDao` for every request served. We can then customize `get_dao_factory()` method in `main.py` and to launch the server.
+After having access to our data in custom implementation of [`Dao`](../api/dao.md) class e.g. `CustomDao`, we can follow up an example in [`main.py`](https://github.com/avast/ep-stats/blob/master/src/epstats/main.py) to configure the REST API with our `CustomDao`. We need to implement `CustomDaoFactory` that creates instances of our `CustomDao` for every request served. We can then customize `get_dao_factory()` method in `main.py` and to launch the server.
 
 ```python
 def get_dao_factory():

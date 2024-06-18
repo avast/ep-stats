@@ -19,11 +19,11 @@ Ep-stats support any type of randomization unit. It is a responsibility of an in
 
 ### Note on Randomization
 
-It is necessary for the statistics to work correctly that unit exposures are randomly (independently and identically a.k.a. IID) distributed within one experiment into its variants. This is usually the case when we randomize at pageview or event session unit types.
+It is necessary for the statistics to work correctly that unit exposures are randomly (independently and identically a.k.a. IID) distributed within one experiment into its variants. This is usually the case when we randomize at page view or event session unit types.
 
 In general, one unit can experience the experiment variant multiple times.
 
-Violation of IID leads to uncontrolled false-positive errors in metric evaluation. Ep-stats remedies this IID violation by using [delta method for IID](../stats/ctr.md##asymptotic-distribution-of-ctr).
+Violation of IID leads to uncontrolled false-positive errors in metric evaluation. Ep-stats remedies this IID violation by using [delta method for IID](../stats/ctr.md#asymptotic-distribution-of-ctr).
 
 ## Aggregation Types
 
@@ -69,7 +69,7 @@ value(test_unit_type.unit.conversion(product=p_1, country=A)) / count(test_unit_
 
 ## Example
 
-Following SQL snippet shows how top-level aggregation should be made to obtain `goals` for [`Experiment.evaluate_agg`](./api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_agg).
+Following SQL snippet shows how top-level aggregation should be made to obtain `goals` for [`Experiment.evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_agg].
 
 ```SQL
 SELECT
@@ -111,4 +111,4 @@ SELECT
         goal,
 ```
 
-See [Test Data](test_data.md) for examples of pre-aggregated goals that make input to statistical evaluation using [`Experiment.evaluate_agg`](../api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_agg) or per unit goals that make input to statistical evaluation using [`Experiment.evaluate_by_unit`](../api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_by_unit).
+See [Test Data](test_data.md) for examples of pre-aggregated goals that make input to statistical evaluation using [`Experiment.evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_agg] or per unit goals that make input to statistical evaluation using [`Experiment.evaluate_by_unit`][epstats.toolkit.experiment.Experiment.evaluate_by_unit].

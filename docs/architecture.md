@@ -12,7 +12,7 @@ While we built Experimentation Portal in Avast, we are far from being able to op
 
 Event data, goals, metrics, database, storage, access those are all implementation-specific and heavily proprietary. Ep-Stats does not require any particular database or data format. Ep-Stats provides abstract experiment definition including definitions of goals required for experiment evaluation. It is left to implementors to transform this abstract experiment definition to SQL queries, Spark queries, or anything that has been in place. It is also left to implementators if they support all Ep-Stats features in these queries e.g. filtering results by domains, having goals with parameters, etc.
 
-Ep-Stats only requires goals aggregated per variant in [`Experiment.evaluate_agg`](./api/experiment.md#epstats.toolkit.experiment.Experiment.evaluate_agg) method input. See [this example](./user_guide/aggregation.md#example) for details.
+Ep-Stats only requires goals aggregated per variant in [`Experiment.evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_agg] method input. See [this example](./user_guide/aggregation.md#example) for details.
 
 Ep-Stats abstracts access to date using proprietary implementations of [`Dao`](./api/dao.md) and [`DaoFactory`](./api/dao_factory.md) classes that are passed via dependency injection into the rest app.
 

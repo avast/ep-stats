@@ -22,7 +22,7 @@ Two-sample t-test is only correct when we deal with absolute difference, i.e. $B
 ### Independent and Identically Distributed Observations
 Welch's t-test assumes that observations are independent and identically distributed (i.i.d.). Unfortunately this assumption does not hold always.
 
-Let's assume Click-through rate metric (i.e. clicks / views). Since multiple views (and clicks) from the same user (user being randomization unit here) are allowed, the assumption of independence is violated. Multiple observations from the same user are not independent. [Delta method for iid](ctr.md##asymptotic-distribution-of-ctr) is necessary (has not been implemented yet).
+Let's assume Click-through rate metric (i.e. clicks / views). Since multiple views (and clicks) from the same user (user being randomization unit here) are allowed, the assumption of independence is violated. Multiple observations from the same user are not independent. [Delta method for iid](ctr.md#asymptotic-distribution-of-ctr) is necessary (has not been implemented yet).
 
 ### Multiple Comparisons Problem
 If we have only one control $A$ and one treatment $B$ variant, we need to run just one Welch's t-test, i.e. relative difference between $B$ and $A$. If we have multiple treatment variants, e.g. $B$, $C$ and $D$, we need to run three Welch's t-tests, i.e. relative difference between $B$ and $A$, $C$ and $A$, $D$ and $A$. If we run every single test on 5% level of significance, the overall level of significance is lower. The probability of false-positive error (i.e. we wrongly reject at least one null hypothesis) is higher than required 5% level.

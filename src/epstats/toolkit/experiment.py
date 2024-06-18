@@ -301,7 +301,7 @@ class Experiment:
 
         It assumes that the first two columns are name of the experiment and variants. Than follows columns with data.
 
-        See usage of the method in the notebook [Ad-hoc A/B test evaluation using Ep-Stats](../user_guide/ab_test_simple_evaluation.html).
+        See usage of the method in the notebook [Ad-hoc A/B test evaluation using Ep-Stats][ad-hoc-ab-test-evaluation-using-ep-stats].
 
         Arguments:
             goals: dataframe with one row per variant and aggregated data in columns
@@ -369,7 +369,7 @@ class Experiment:
         """
         Evaluate all metrics and checks in the experiment from goals grouped by `unit_id`.
 
-        This method is usefull when there are not many (<1M) units in the experiment to evaluate it.
+        This method is useful when there are not many (<1M) units in the experiment to evaluate it.
         If there many units exposed to the experiment, pre-aggregate data and use [`evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_agg].
 
         Does best effort to fill in missing goals and variants with zeros.
@@ -454,7 +454,7 @@ class Experiment:
                 ]
                 + self.get_dimension_columns(),
                 columns="goal",
-                aggfunc=np.sum,
+                aggfunc="sum",
                 fill_value=0,
             )
             .swaplevel(axis=1)
