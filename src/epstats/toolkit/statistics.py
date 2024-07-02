@@ -82,6 +82,7 @@ class Statistics:
         count_cont = stats_values_control_variant[0]  # number of observations
         mean_cont = stats_values_control_variant[1]  # mean
         std_cont = stats_values_control_variant[2]  # standard deviation
+        sum_value = stats_values_control_variant[3] # sum of observations
         conf_level = stats_values_control_variant[4]  # confidence level
 
         # this for loop goes over variants and compares one variant values against control variant values for
@@ -123,6 +124,13 @@ class Statistics:
                     / mean_cont
                 )
                 test_stat = rel_diff / rel_se
+
+                # If test_stat is inf and sum of non-zero observations is low,
+                # set test_stat to 0 to prevent p-value from being 0.
+                if np.isinf(test_stat) and sum_value <= 10:
+                    test_stat = np.array([0.0], dtype=np.float64)
+                else:
+                    test_stat
 
             # p-value
             with warnings.catch_warnings():
