@@ -92,6 +92,7 @@ class Statistics:
             count_treat = s[0]  # number of observations
             mean_treat = s[1]  # mean
             std_treat = s[2]  # standard deviation
+            sum_value = s[3]  # sum of observations
 
             # degrees of freedom
             num = (std_cont**2 / count_cont + std_treat**2 / count_treat) ** 2
@@ -123,6 +124,13 @@ class Statistics:
                     / mean_cont
                 )
                 test_stat = rel_diff / rel_se
+
+                # If test_stat is inf and sum of non-zero observations is low,
+                # set test_stat to 0 to prevent p-value from being 0.
+                if np.any(np.isinf(test_stat)) and np.any(sum_value <= 10):
+                    test_stat = np.array([0.0], dtype=np.float64)
+                else:
+                    test_stat
 
             # p-value
             with warnings.catch_warnings():

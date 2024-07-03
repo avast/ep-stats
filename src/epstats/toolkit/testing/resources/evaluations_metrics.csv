@@ -23,7 +23,7 @@ test-missing-default-exposure	b	1	Click-through Rate	50	20	20	0.4	-inf	N/A	0.494
 test-missing-default-value	a	1	Click-through Rate	42	0	0	0.0	0.0	N/A	0.0	0.0	N/A	N/A	N/A	N/A	N/A	N/A	0.95	N/A	N/A	0.95	N/A	42	N/A	N/A
 test-missing-default-value	b	1	Click-through Rate	40	10	10	0.25	0.25	inf	0.4385290097	0.0048076923	N/A	N/A	39.0	N/A	N/A	N/A	0.95	N/A	N/A	0.95	N/A	40	N/A	N/A
 test-missing-value	a	1	Click-through Rate	50	30	30	0.6	0.0	0.0	0.4948716593	0.0097959184	0.1649572198	0.0	98.0	1.0	1.0	1.0	0.95	N/A	0.327352234	0.95	N/A	50	N/A	N/A
-test-missing-value	b	1	Click-through Rate	60	0	0	0.0	-0.6	-1.0	0.0	0.0048979592	0.0	N/A	49.0	N/A	0.0	N/A	0.95	N/A	0.0	0.95	N/A	60	N/A	N/A
+test-missing-value	b	1	Click-through Rate	60	0	0	0.0	-0.6	-1.0	0.0	0.0048979592	0.0	N/A	49.0	N/A	1.0	N/A	0.95	N/A	0.0	0.95	N/A	60	N/A	N/A
 test-missing-exposure	a	1	Click-through Rate	50	30	30	0.6	0.0	0.0	0.4948716593	0.0097959184	0.1649572198	0.0	98.0	1.0	1.0	1.0	0.95	N/A	0.327352234	0.95	N/A	50	N/A	N/A
 test-missing-exposure	b	1	Click-through Rate	0	20	20	inf	inf	inf	inf	inf	inf	N/A	N/A	N/A	N/A	N/A	0.95	N/A	N/A	0.95	N/A	0	N/A	N/A
 test-missing-all-value	a	1	Click-through Rate	120	0	0	0.0	0.0	N/A	0.0	0.0	N/A	N/A	N/A	N/A	N/A	N/A	0.95	N/A	N/A	0.95	N/A	120	N/A	N/A
