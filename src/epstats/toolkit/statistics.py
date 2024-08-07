@@ -127,10 +127,9 @@ class Statistics:
 
                 # If test_stat is inf and sum of non-zero observations is low,
                 # set test_stat to 0 to prevent p-value from being 0.
-                if np.any(np.isinf(test_stat)) and np.any(sum_value <= 10):
-                    test_stat = np.array([0.0], dtype=np.float64)
-                else:
-                    test_stat
+                if test_stat.shape == sum_value.shape:
+                    mask = np.isinf(test_stat) & (sum_value <= 10)
+                    test_stat[mask] = 0.0
 
             # p-value
             with warnings.catch_warnings():
