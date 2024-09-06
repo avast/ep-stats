@@ -171,7 +171,7 @@ class Filter(BaseModel):
             if not self.goal:
                 raise ValueError("Goal is required for scope 'trigger'")
         else:
-            if not (self.dimension or self.value):
+            if not (self.dimension and self.value):
                 raise ValueError("Dimension and value are required for this scope")
         return self
 

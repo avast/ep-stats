@@ -131,7 +131,7 @@ class Filter:
             if not self.goal:
                 raise ValueError("Trigger scope requires goal")
         else:
-            if not (self.dimension or self.value):
+            if not (self.dimension and self.value):
                 raise ValueError("Dimension and value are required for this scope")
 
 
