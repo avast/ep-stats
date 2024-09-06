@@ -257,3 +257,60 @@ def test_validate_date_for_between_date_to_and_date_for():
     json = resp.json()
     assert json["detail"][0]["loc"][0] == "body"
     assert json["detail"][0]["type"] == "value_error"
+
+
+def test_filter_scope_trigger_empty_goal():
+    json_blob = {
+        "id": "test-trigger",
+        "control_variant": "a",
+        "variants": ["a", "b"],
+        "unit_type": "test_unit_type",
+        "filters": [
+            {"dimension": "element", "value": ["button-1"], "scope": "trigger"},
+        ],
+        "metrics": [],
+        "checks": [],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 422
+    json = resp.json()
+    assert json["detail"][0]["loc"][0] == "body"
+    assert json["detail"][0]["type"] == "value_error"
+
+
+def test_filter_scope_trigger_empty_dimension():
+    json_blob = {
+        "id": "test-trigger",
+        "control_variant": "a",
+        "variants": ["a", "b"],
+        "unit_type": "test_unit_type",
+        "filters": [
+            {"dimension": None, "value": [], "scope": "trigger", "goal": "view"},
+        ],
+        "metrics": [],
+        "checks": [],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 200
+
+
+def test_filter_scope_exposure_empty_dimension():
+    json_blob = {
+        "id": "test-trigger",
+        "control_variant": "a",
+        "variants": ["a", "b"],
+        "unit_type": "test_unit_type",
+        "filters": [
+            {"dimension": None, "value": [], "scope": "exposure"},
+        ],
+        "metrics": [],
+        "checks": [],
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 422
+    json = resp.json()
+    assert json["detail"][0]["loc"][0] == "body"
+    assert json["detail"][0]["type"] == "value_error"

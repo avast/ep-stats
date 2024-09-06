@@ -112,6 +112,7 @@ class FilterScope(str, Enum):
 
     exposure = "exposure"
     goal = "goal"
+    trigger = "trigger"
 
 
 @dataclass
@@ -120,9 +121,18 @@ class Filter:
     Filter specification for data to evaluate.
     """
 
-    dimension: str
-    value: List[Any]
     scope: FilterScope
+    dimension: Optional[str] = None
+    value: Optional[List[Any]] = None
+    goal: Optional[str] = None
+
+    def __post_init__(self):
+        if self.scope == FilterScope.trigger:
+            if not self.goal:
+                raise ValueError("Trigger scope requires goal")
+        else:
+            if not (self.dimension and self.value):
+                raise ValueError("Dimension and value are required for this scope")
 
 
 class Experiment:

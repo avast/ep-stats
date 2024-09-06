@@ -153,18 +153,30 @@ class Filter(BaseModel):
     Filter specification for data to evaluate.
     """
 
-    dimension: str = Field(..., title="Name of the dimension")
-
-    value: List[Any] = Field(..., title="List of possible values")
-
     scope: FilterScope = Field(
         ...,
         title="Scope of the filter",
         description="Scope of the filter is either `exposure` or `goal`.",
     )
 
+    dimension: Optional[str] = Field(None, title="Name of the dimension")
+
+    value: Optional[List[Any]] = Field(None, title="List of possible values")
+
+    goal: Optional[str] = Field(None, title="Specify goals if filter scope is `trigger`")
+
+    @model_validator(mode="after")
+    def check_trigger(self):
+        if self.scope == FilterScope.trigger:
+            if not self.goal:
+                raise ValueError("Goal is required for scope 'trigger'")
+        else:
+            if not (self.dimension and self.value):
+                raise ValueError("Dimension and value are required for this scope")
+        return self
+
     def to_filter(self):
-        return EvFilter(self.dimension, self.value, self.scope)
+        return EvFilter(self.scope, self.dimension, self.value, self.goal)
 
 
 class Experiment(BaseModel):
