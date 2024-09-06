@@ -410,7 +410,7 @@ def test_filter_scope_goal(dao, metrics, checks, unit_type):
         [SrmCheck(1, "SRM", "count(test_unit_type.global.exposure)")],
         unit_type=unit_type,
         variants=["a", "b"],
-        filters=[Filter("element", ["button-1"], FilterScope.goal)],
+        filters=[Filter(FilterScope.goal, "element", ["button-1"])],
     )
     evaluate_experiment_agg(experiment, dao)
 

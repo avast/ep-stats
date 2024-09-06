@@ -176,7 +176,7 @@ class Filter(BaseModel):
         return self
 
     def to_filter(self):
-        return EvFilter(self.dimension, self.value, self.scope, self.goal)
+        return EvFilter(self.scope, self.dimension, self.value, self.goal)
 
 
 class Experiment(BaseModel):
