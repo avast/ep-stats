@@ -415,6 +415,28 @@ def test_filter_scope_goal(dao, metrics, checks, unit_type):
     evaluate_experiment_agg(experiment, dao)
 
 
+def test_trigger_evaluate(dao, unit_type):
+    experiment = Experiment(
+        "test-trigger",
+        "a",
+        [
+            Metric(
+                2,
+                "Average Bookings",
+                "value(test_unit_type.unit.conversion)",
+                "count(test_unit_type.unit.exposure)",
+            )
+        ],
+        [SrmCheck(1, "SRM", "count(test_unit_type.unit.exposure)")],
+        unit_type=unit_type,
+        filters=[
+            Filter(FilterScope.trigger, "product", ["1"], "click"),
+            Filter(FilterScope.exposure, "country", ["FR"]),
+        ],
+    )
+    evaluate_experiment_by_unit(experiment, dao)
+
+
 def test_degrees_of_freedom(dao, metrics, checks, unit_type):
     """Testing functions np.round() and np.trunc() used when converting degrees of freedom from float to int."""
     experiment = Experiment(

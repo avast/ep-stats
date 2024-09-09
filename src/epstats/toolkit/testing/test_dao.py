@@ -38,11 +38,44 @@ class TestDao(Dao):
                 goals = goals[(goals.goal != "exposure") | (goals[f.dimension].isin(f.value))]
             if f.scope == FilterScope.goal:
                 goals = goals[(goals.goal == "exposure") | (goals[f.dimension].isin(f.value))]
+            if f.scope == FilterScope.trigger:
+                if f.dimension and f.value:
+                    goals = goals[
+                        (goals.goal == "exposure") | ((goals.goal == f.goal) & (goals[f.dimension].isin(f.value)))
+                    ]
+                else:
+                    goals = goals[(goals.goal == "exposure") | (goals.goal == f.goal)]
 
         return goals
 
     def get_unit_goals(self, experiment: Experiment) -> pd.DataFrame:
-        return self.goals_unit[self.goals_unit.exp_id == experiment.id]
+        goals = self.goals_unit[self.goals_unit.exp_id == experiment.id]
+
+        segments = []
+
+        for f in experiment.filters:
+            exposure_condition = goals.goal == "exposure"
+            dimension_condition = goals.dimension == f.dimension
+            value_condition = goals.dimension_value.isin(f.value)
+
+            if f.scope == FilterScope.exposure:
+                segments.append(set(goals["unit_id"][exposure_condition & dimension_condition & value_condition]))
+
+            elif f.scope == FilterScope.goal:
+                goals = goals[exposure_condition | (dimension_condition & value_condition)]
+
+            elif f.scope == FilterScope.trigger:
+                trigger_condition = goals.goal == f.goal
+                if f.dimension and f.value:
+                    segments.append(set(goals["unit_id"][trigger_condition & dimension_condition & value_condition]))
+                else:
+                    segments.append(set(goals["unit_id"][trigger_condition]))
+
+        if segments:
+            intersecting_units = set.intersection(*segments)
+            goals = goals[goals.unit_id.isin(intersecting_units)]
+
+        return goals
 
     def load_evaluations_metrics(self, experiment_id: str) -> pd.DataFrame:
         return self.test_data.load_evaluations_metrics(experiment_id)
