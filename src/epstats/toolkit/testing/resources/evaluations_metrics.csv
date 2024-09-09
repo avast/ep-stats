@@ -76,3 +76,5 @@ test-dim-operators	a	2	^button-1, product!=1	1000	300	300	0.3	0.0	0.0	0.45848687
 test-dim-operators	b	2	^button-1, product!=1	1001	400	400	0.3996003996	0.0996003996	0.332001332	0.4900610576	0.0004501301	0.0825214225	4.0232138728	1990.4598431179	5.95556e-05	5.95556e-05	1.0	0.95	N/A	0.1618374485	0.95	N/A	1001	N/A	N/A
 test-operator-precedence	a	1	Clicks	80	57	N/A	0.712500	N/A	0.0	N/A	N/A	N/A	N/A	N/A	1.0	1.0	N/A	N/A	N/A	0.199625	0.95	N/A	80	N/A	N/A
 test-operator-precedence	b	1	Clicks	70	47	N/A	0.671429	N/A	-0.057644	N/A	N/A	N/A	N/A	N/A	0.580573	0.580573	N/A	N/A	N/A	0.205746	0.95	N/A	70	N/A	N/A
+test-trigger	a	2	Average Bookings	1.0	10.0	N/A	10.0	N/A	0.0	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	0.95	N/A	1.0	N/A	N/A
+test-trigger	b	2	Average Bookings	2.0	23.0	N/A	11.5	N/A	0.15	0.7071067811865476	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	N/A	0.95	N/A	2.0	N/A	N/A

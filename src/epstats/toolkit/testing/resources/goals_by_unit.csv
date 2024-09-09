@@ -74,3 +74,91 @@ test-real-valued	b	test_unit_type	unit	conversion			37	1	10
 test-real-valued	b	test_unit_type	unit	conversion			38	1	11
 test-real-valued	b	test_unit_type	unit	conversion			39	1	12
 test-real-valued	b	test_unit_type	unit	conversion			40	1	13
+test-trigger	a	test_unit_type	unit	exposure	country	FR	1	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	2	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	3	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	4	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	5	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	6	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	7	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	8	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	9	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	10	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	11	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	12	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	13	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	14	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	15	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	16	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	17	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	18	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	19	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	20	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	21	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	22	1	1
+test-trigger	a	test_unit_type	unit	exposure	country	US	23	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	24	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	25	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	FR	26	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	27	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	28	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	FR	29	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	30	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	31	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	32	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	FR	33	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	34	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	35	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	36	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	37	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	38	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	39	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	40	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	41	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	42	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	43	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	44	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	45	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	46	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	47	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	48	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	49	1	1
+test-trigger	b	test_unit_type	unit	exposure	country	US	50	1	1
+test-trigger	a	test_unit_type	unit	conversion			1	1	10
+test-trigger	a	test_unit_type	unit	conversion			2	1	11
+test-trigger	a	test_unit_type	unit	conversion			3	1	12
+test-trigger	a	test_unit_type	unit	conversion			4	1	13
+test-trigger	a	test_unit_type	unit	conversion			5	1	10
+test-trigger	a	test_unit_type	unit	conversion			6	1	11
+test-trigger	a	test_unit_type	unit	conversion			7	1	12
+test-trigger	a	test_unit_type	unit	conversion			8	1	13
+test-trigger	b	test_unit_type	unit	conversion			24	1	10
+test-trigger	b	test_unit_type	unit	conversion			25	1	11
+test-trigger	b	test_unit_type	unit	conversion			26	1	12
+test-trigger	b	test_unit_type	unit	conversion			27	1	13
+test-trigger	b	test_unit_type	unit	conversion			28	1	10
+test-trigger	b	test_unit_type	unit	conversion			29	1	11
+test-trigger	b	test_unit_type	unit	conversion			30	1	12
+test-trigger	b	test_unit_type	unit	conversion			31	1	13
+test-trigger	b	test_unit_type	unit	conversion			32	1	10
+test-trigger	b	test_unit_type	unit	conversion			33	1	11
+test-trigger	b	test_unit_type	unit	conversion			34	1	12
+test-trigger	b	test_unit_type	unit	conversion			35	1	13
+test-trigger	b	test_unit_type	unit	conversion			36	1	13
+test-trigger	b	test_unit_type	unit	conversion			37	1	10
+test-trigger	b	test_unit_type	unit	conversion			38	1	11
+test-trigger	b	test_unit_type	unit	conversion			39	1	12
+test-trigger	b	test_unit_type	unit	conversion			40	1	13
+test-trigger	a	test_unit_type	unit	click	product	1	1	1	10
+test-trigger	a	test_unit_type	unit	click	product	1	2	1	11
+test-trigger	a	test_unit_type	unit	click	product	1	3	1	12
+test-trigger	a	test_unit_type	unit	click	product	1	4	1	13
+test-trigger	b	test_unit_type	unit	click	product	1	24	1	10
+test-trigger	b	test_unit_type	unit	click	product	1	25	1	11
+test-trigger	b	test_unit_type	unit	click	product	1	26	1	12
+test-trigger	b	test_unit_type	unit	click	product	1	27	1	13
+test-trigger	b	test_unit_type	unit	click	product	1	28	1	10
+test-trigger	b	test_unit_type	unit	click	product	1	29	1	11
+test-trigger	b	test_unit_type	unit	click	product	1	30	1	12
+test-trigger	b	test_unit_type	unit	click	product	1	31	1	13
+test-trigger	b	test_unit_type	unit	click	product	1	32	1	10
