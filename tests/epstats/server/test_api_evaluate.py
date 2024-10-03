@@ -292,6 +292,37 @@ def test_metric_with_minimum_effect():
     assert_experiment(resp.json(), dao_factory.get_dao(), 1, 0)
 
 
+def test_false_positive_risk():
+    json_blob = {
+        "id": "test-false-positive-risk",
+        "control_variant": "a",
+        "variants": ["a", "b"],
+        "unit_type": "test_unit_type",
+        "metrics": [
+            {
+                "id": 1,
+                "name": "Views per User of Screen button-1",
+                "nominator": "count(test_unit_type.unit.view(element=button-1))",
+                "denominator": "count(test_unit_type.global.exposure)",
+                "minimum_effect": 0.05,
+            },
+            {
+                "id": 2,
+                "name": "Views per User of Screen button-%",
+                "nominator": "count(test_unit_type.unit.view(element=button-%))",
+                "denominator": "count(test_unit_type.global.exposure)",
+                "minimum_effect": 0.05,
+            },
+        ],
+        "checks": [],
+        "null_hypothesis_rate": 0.1,
+    }
+
+    resp = client.post("/evaluate", json=json_blob)
+    assert resp.status_code == 200
+    assert_experiment(resp.json(), dao_factory.get_dao(), 2, 0)
+
+
 def test_prometheus_metrics():
     prometheus_resp = client.get("/metrics")
     assert prometheus_resp.status_code == 200
@@ -317,6 +348,7 @@ def assert_experiment(target, test_dao: TestDao, expected_metrics: int, expected
             "sample_size": [],
             "required_sample_size": [],
             "power": [],
+            "false_positive_risk": [],
         }
         for s in m["stats"]:
             for i in s.items():

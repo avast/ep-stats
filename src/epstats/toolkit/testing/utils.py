@@ -78,6 +78,7 @@ def assert_metrics(
             "sample_size",
             "required_sample_size",
             "power",
+            "false_positive_risk",
         ]
     ].astype(float)
     atol = 10**-precision
@@ -90,6 +91,7 @@ def assert_metrics(
     assert allclose(t["sample_size"], expected["sample_size"], atol=0, equal_nan=True)
     assert allclose(t["required_sample_size"], expected["required_sample_size"], atol=0, equal_nan=True)
     assert allclose(t["power"], expected["power"], atol=atol, equal_nan=True)
+    assert allclose(t["false_positive_risk"], expected["false_positive_risk"], atol=atol, equal_nan=True)
 
     if "minimum_effect" in target.columns:
         assert allclose(target["minimum_effect"], expected["minimum_effect"], atol=0, equal_nan=True)
