@@ -573,6 +573,34 @@ def test_metric_with_minimum_effect(dao, unit_type):
     evaluate_experiment_agg(experiment, dao)
 
 
+def test_false_positive_risk(dao, unit_type):
+    experiment = Experiment(
+        "test-false-positive-risk",
+        "a",
+        [
+            Metric(
+                1,
+                "Views per User of Screen button-1",
+                "count(test_unit_type.unit.view(element=button-1))",
+                "count(test_unit_type.global.exposure)",
+                minimum_effect=0.05,
+            ),
+            Metric(
+                2,
+                "Views per User of Screen button-%",
+                "count(test_unit_type.unit.view(element=button-%))",
+                "count(test_unit_type.global.exposure)",
+                minimum_effect=0.05,
+            ),
+        ],
+        [],
+        null_hypothesis_rate=0.1,
+        unit_type=unit_type,
+        variants=["a", "b"],
+    )
+    evaluate_experiment_agg(experiment, dao)
+
+
 def test_duplicate_metric_ids_raise_exception():
     with pytest.raises(ValueError):
         Experiment(

@@ -72,6 +72,9 @@ class MetricStat(BaseModel):
         title="Power",
         description="Test power based on the collected `sample_size`.",
     )
+    false_positive_risk: Optional[float] = Field(
+        None, title="False positive risk.", description="False positive risk of a statistically significant result."
+    )
 
     @staticmethod
     def from_df(df: pd.DataFrame):
@@ -88,6 +91,7 @@ class MetricStat(BaseModel):
                 sample_size=r["sample_size"],
                 required_sample_size=r["required_sample_size"],
                 power=r["power"],
+                false_positive_risk=r["false_positive_risk"],
             )
             for i, r in df.iterrows()
         ]

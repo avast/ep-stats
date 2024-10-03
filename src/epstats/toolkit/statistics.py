@@ -432,3 +432,36 @@ class Statistics:
             np.sqrt(required_sample_size_ratio) * (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(required_power))
             - st.norm.ppf(1 - alpha / 2)
         )
+
+    @staticmethod
+    def false_positive_risk(
+        null_hypothesis_rate: float,
+        power: float,
+        p_value: float,
+    ) -> float:
+        """
+        Computes false positive risk defined as:
+
+        $$
+        P(H_0|S) = \\frac{P(S|H_0)P(H_0)}{P(S)} = \\frac{\\alpha\\pi}{\\alpha\\pi + (1 - \\beta)(1 - \\pi)}
+        $$
+
+        where $S$ is a statisically significant outcome, $H_0$ is the null hypothesis, $1 - \\beta$
+        is the power of a test, and $\\pi$ is the global null hypothesis rate defined as the proportion
+        of all tests in an experimentation program that have not improved or degraded the primary metric.
+
+        False positive risk $P(H_0|S)$ is not the same as the false positive rate $P(S|H_0) = \\alpha$.
+
+        More information can be found in the paper: https://bit.ly/ABTestingIntuitionBusters.
+
+        Arguments:
+            null_hypothesis_rate: global null hypothesis rate of the experimanation program
+            current_power: power achieved in the test
+            confidence_level: confidence level of the test
+
+        Returns:
+            false positive risk
+        """
+
+        pi = null_hypothesis_rate
+        return (p_value * pi) / (p_value * pi + power * (1 - pi))

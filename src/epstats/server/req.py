@@ -239,6 +239,13 @@ class Experiment(BaseModel):
         description="""List of filtering conditions to apply on exposure and goals.""",
     )
 
+    null_hypothesis_rate: Optional[float] = Field(
+        None,
+        title="Null hypothesis rate",
+        description="""Global null hypothesis rate of the experimentation program. It is defined as the
+        proportion of all tests in an experimentation program that have not improved or degraded the primary metric.""",
+    )
+
     query_parameters: dict = Field(
         {},
         title="Custom query parameters used in the data access.",
@@ -334,6 +341,7 @@ class Experiment(BaseModel):
             unit_type=self.unit_type,
             variants=self.variants,
             filters=[f.to_filter() for f in self.filters] if self.filters else [],
+            null_hypothesis_rate=self.null_hypothesis_rate,
             query_parameters=self.query_parameters,
         )
 

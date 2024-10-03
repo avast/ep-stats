@@ -253,3 +253,9 @@ def test_power_from_required_sample_size_per_variant_nan_params():
 )
 def test_power_from_required_sample_size_per_variant_is_nan(args):
     assert np.isnan(Statistics.power_from_required_sample_size_per_variant(**args))
+
+
+def test_false_positive_risk():
+    false_positive_risk = Statistics.false_positive_risk(null_hypothesis_rate=1 - 0.33, power=0.8, p_value=0.025)
+
+    assert false_positive_risk == 0.05966162065894922
