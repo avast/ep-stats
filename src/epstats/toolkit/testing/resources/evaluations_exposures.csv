@@ -64,6 +64,8 @@ test-multi-check	c	test_unit_type	global	exposure	5200
 test-conversion-with-minimum-effect	a	test_unit_type	global	exposure	21
 test-conversion-with-minimum-effect	b	test_unit_type	global	exposure	26
 test-conversion-with-minimum-effect	c	test_unit_type	global	exposure	30
+test-false-positive-risk	a	test_unit_type	global	exposure	1000
+test-false-positive-risk	b	test_unit_type	global	exposure	1001
 test-dim-operators	a	test_unit_type	global	exposure	1000
 test-dim-operators	b	test_unit_type	global	exposure	1001
 test-operator-precedence	a	test_unit_type	global	exposure	80

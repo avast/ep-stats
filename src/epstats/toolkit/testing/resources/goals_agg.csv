@@ -191,3 +191,17 @@ test-operator-precedence		b	test_unit_type	unit	click_2			7	7	7	7	7
 test-operator-precedence		b	test_unit_type	unit	click_3			9	9	9	9	9
 test-operator-precedence		a	test_unit_type	global	exposure			80	80	80	80	80
 test-operator-precedence		b	test_unit_type	global	exposure			70	70	70	70	70
+test-false-positive-risk		a	test_unit_type	global	exposure			1000	1000	1000	1000	1000
+test-false-positive-risk		b	test_unit_type	global	exposure			1001	1001	1001	1001	1001
+test-false-positive-risk		a	test_unit_type	unit	view	button-1		200	200	200	200	200
+test-false-positive-risk		b	test_unit_type	unit	view	button-1		220	220	220	220	220
+test-false-positive-risk		a	test_unit_type	unit	view	button-2		100	100	100	100	100
+test-false-positive-risk		b	test_unit_type	unit	view	button-2		180	180	180	180	180
+test-false-positive-risk		a	test_unit_type	unit	view	button-%		300	300	300	300	300
+test-false-positive-risk		b	test_unit_type	unit	view	button-%		400	400	400	400	400
+test-false-positive-risk		a	test_unit_type	unit	view			200	200	200	200	200
+test-false-positive-risk		b	test_unit_type	unit	view			220	220	220	220	220
+test-false-positive-risk		a	test_unit_type	unit	view			100	100	100	100	100
+test-false-positive-risk		b	test_unit_type	unit	view			180	180	180	180	180
+test-false-positive-risk		a	test_unit_type	unit	view			300	300	300	300	300
+test-false-positive-risk		b	test_unit_type	unit	view			400	400	400	400	400

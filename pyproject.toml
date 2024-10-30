@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "ep-stats"
-version = "2.4.0"
+version = "2.5.0"
 homepage = "https://github.com/avast/ep-stats"
 description = "Statistical package to evaluate ab tests in experimentation platform."
 authors = [

@@ -54,6 +54,7 @@ class Evaluation:
         1. `sample_size` - current sample size
         1. `required_sample_size` - size of the sample required to reach the required power
         1. `power` - power based on the collected `sample_size`
+        1. `false_positive_risk` - false positive risk of a significant metric
         """
         return [
             "timestamp",
@@ -76,6 +77,7 @@ class Evaluation:
             "sample_size",
             "required_sample_size",
             "power",
+            "false_positive_risk",
         ]
 
     @classmethod
@@ -156,6 +158,7 @@ class Experiment:
         confidence_level: float = DEFAULT_CONFIDENCE_LEVEL,
         variants: Optional[List[str]] = None,
         filters: Optional[List[Filter]] = None,
+        null_hypothesis_rate: Optional[float] = None,
         query_parameters: dict = {},
     ):
         self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
@@ -189,6 +192,7 @@ class Experiment:
         self._update_dimension_to_value()
         self.filters = filters if filters is not None else []
         self.query_parameters = query_parameters
+        self.null_hypothesis_rate = null_hypothesis_rate
 
     def _check_metric_ids_unique(self):
         """
@@ -765,6 +769,22 @@ class Experiment:
             axis=1,
         )
 
+    def _get_false_positive_risk(self, metric_row: pd.Series) -> float:
+        if self.null_hypothesis_rate is None:
+            return np.nan
+
+        if metric_row["p_value"] >= metric_row["confidence_level"]:
+            return np.nan
+
+        return Statistics.false_positive_risk(
+            null_hypothesis_rate=self.null_hypothesis_rate,
+            power=metric_row["power"],
+            p_value=metric_row["p_value"],
+        )
+
+    def _get_false_positive_risks(self, metrics: pd.DataFrame) -> pd.Series:
+        return metrics.apply(self._get_false_positive_risk, axis=1)
+
     def _evaluate_metrics(self, goals: pd.DataFrame, column_fce) -> pd.DataFrame:
         if not self.metrics:
             return pd.DataFrame([], columns=Evaluation.metric_columns())
@@ -822,4 +842,5 @@ class Experiment:
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         c[["minimum_effect", "sample_size", "required_sample_size"]] = self._get_required_sample_sizes(c, n_variants)
         c["power"] = self._get_power_from_required_sample_sizes(c, n_variants)
+        c["false_positive_risk"] = self._get_false_positive_risks(c)
         return c[Evaluation.metric_columns()]
