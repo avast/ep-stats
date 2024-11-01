@@ -22,8 +22,8 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with files(resources) / "goals_agg.csv" as df_file:
-            goals_df = pd.read_csv(df_file, sep="\t")
+        df_file = files(resources).joinpath("goals_agg.csv")
+        goals_df = pd.read_csv(df_file, sep="\t")
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
@@ -36,8 +36,8 @@ class TestData:
 
         See `load_evaluations` set of functions to load corresponding evaluation results.
         """
-        with files(resources) / "goals_simple_agg.csv" as df_file:
-            goals_df = pd.read_csv(df_file, sep="\t")
+        df_file = files(resources).joinpath("goals_simple_agg.csv")
+        goals_df = pd.read_csv(df_file, sep="\t")
         return goals_df
 
     @classmethod
@@ -51,8 +51,8 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with files(resources) / "goals_by_unit.csv" as df_file:
-            goals_df = pd.read_csv(df_file, sep="\t")
+        df_file = files(resources).joinpath("goals_by_unit.csv")
+        goals_df = pd.read_csv(df_file, sep="\t")
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
@@ -65,8 +65,8 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with files(resources) / "evaluations_checks.csv" as df_file:
-            goals_df = pd.read_csv(df_file, sep="\t")
+        df_file = files(resources).joinpath("evaluations_checks.csv")
+        goals_df = pd.read_csv(df_file, sep="\t")
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
@@ -79,8 +79,8 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with files(resources) / "evaluations_exposures.csv" as df_file:
-            exposures_df = pd.read_csv(df_file, sep="\t")
+        df_file = files(resources).joinpath("evaluations_exposures.csv")
+        exposures_df = pd.read_csv(df_file, sep="\t")
         return exposures_df[exposures_df.exp_id == exp_id] if exp_id is not None else exposures_df
 
     @classmethod
@@ -93,6 +93,6 @@ class TestData:
         Arguments:
             exp_id: experiment id
         """
-        with files(resources) / "evaluations_metrics.csv" as df_file:
-            goals_df = pd.read_csv(df_file, sep="\t")
+        df_file = files(resources).joinpath("evaluations_metrics.csv")
+        goals_df = pd.read_csv(df_file, sep="\t")
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
