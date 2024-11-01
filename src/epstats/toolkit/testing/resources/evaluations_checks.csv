@@ -1,80 +1,80 @@
-exp_id	check_id	check_name	variable_id	value
-test-srm	1	SRM	p_value	0.140747987
-test-srm	1	SRM	test_stat	3.9215686
-test-srm	1	SRM	confidence_level	0.999
-test-srm-negative	1	SRM	p_value	0.0106153
-test-srm-negative	1	SRM	test_stat	9.090909
-test-srm-negative	1	SRM	confidence_level	0.999
-test-srm-one-variant	1	SRM	p_value	0.0000000000
-test-srm-one-variant	1	SRM	test_stat	5100
-test-srm-one-variant	1	SRM	confidence_level	0.999
-test-conversion	1	SRM	p_value	0.4528439056
-test-conversion	1	SRM	test_stat	1.584415584
-test-conversion	1	SRM	confidence_level	0.999
-test-real-valued	1	SRM	p_value	0.571607645
-test-real-valued	1	SRM	test_stat	0.32
-test-real-valued	1	SRM	confidence_level	0.999
-test-multiple	1	SRM	p_value	0.9255676
-test-multiple	1	SRM	test_stat	0.15469613
-test-multiple	1	SRM	confidence_level	0.999
-test-missing-default	1	SRM	p_value	0.0000100000
-test-missing-default	1	SRM	test_stat	20
-test-missing-default	1	SRM	confidence_level	0.999
-test-missing-default-exposure	1	SRM	p_value	0
-test-missing-default-exposure	1	SRM	test_stat	50
-test-missing-default-exposure	1	SRM	confidence_level	0.999
-test-missing-default-value	1	SRM	p_value	0.8252
-test-missing-default-value	1	SRM	test_stat	0.04878
-test-missing-default-value	1	SRM	confidence_level	0.999
-test-missing-exposure	1	SRM	p_value	0
-test-missing-exposure	1	SRM	test_stat	50
-test-missing-exposure	1	SRM	confidence_level	0.999
-test-missing-value	1	SRM	p_value	0.34036
-test-missing-value	1	SRM	test_stat	0.90909
-test-missing-value	1	SRM	confidence_level	0.999
-test-missing-all	1	SRM	p_value	N/A
-test-missing-all	1	SRM	test_stat	N/A
-test-missing-all	1	SRM	confidence_level	0.999
-test-missing-all-value	1	SRM	p_value	0.74939
-test-missing-all-value	1	SRM	test_stat	0.10204
-test-missing-all-value	1	SRM	confidence_level	0.999
-bad-experiment-unit	1	SRM	p_value	0.19296
-bad-experiment-unit	1	SRM	test_stat	1.69489
-bad-experiment-unit	1	SRM	confidence_level	0.999
-test-missing-variant	1	SRM	p_value	0
-test-missing-variant	1	SRM	test_stat	50
-test-missing-variant	1	SRM	confidence_level	0.999
-test-missing-data-unique-goal	1	SRM	p_value	N/A
-test-missing-data-unique-goal	1	SRM	test_stat	N/A
-test-missing-data-unique-goal	1	SRM	confidence_level	0.999
-test-dimension	1	SRM	p_value	0.98216470
-test-dimension	1	SRM	test_stat	0.00049975
-test-dimension	1	SRM	confidence_level	0.999
-test-degrees-of-freedom	1	SRM	p_value	0.52708926
-test-degrees-of-freedom	1	SRM	test_stat	0.4
-test-degrees-of-freedom	1	SRM	confidence_level	0.999
-test-simple-metric	1	SRM	p_value	0.02520447203
-test-simple-metric	1	SRM	test_stat	5.009782616
-test-simple-metric	1	SRM	confidence_level	0.999
-test-multi-dimension	1	SRM	p_value	0.98216470
-test-multi-dimension	1	SRM	test_stat	0.00049975
-test-multi-dimension	1	SRM	confidence_level	0.999
-test-sum-ratio	1	EVA	sum_ratio	0.19607843137254902
-test-sum-ratio	1	EVA	max_sum_ratio	0.01
-test-sum-ratio	1	EVA	p_value	6.840197664885593e-73
-test-sum-ratio	1	EVA	test_stat	326.0869565217391
-test-sum-ratio	1	EVA	confidence_level	0.999
-test-multi-check	1	EVA	sum_ratio	0.19607843137254902
-test-multi-check	1	EVA	max_sum_ratio	0.01
-test-multi-check	1	EVA	p_value	6.840197664885593e-73
-test-multi-check	1	EVA	test_stat	326.0869565217391
-test-multi-check	1	EVA	confidence_level	0.999
-test-multi-check	2	SRM	p_value	0.140747987
-test-multi-check	2	SRM	test_stat	3.9215686
-test-multi-check	2	SRM	confidence_level	0.999
-test-dim-operators	1	SRM	p_value	0.98216470
-test-dim-operators	1	SRM	test_stat	0.00049975
-test-dim-operators	1	SRM	confidence_level	0.999
-test-trigger	1	SRM	p_value	0.563703
-test-trigger	1	SRM	test_stat	0.333333
-test-trigger	1	SRM	confidence_level	0.999
+exp_id,check_id,check_name,variable_id,value
+test-srm,1,SRM,p_value,0.140747987
+test-srm,1,SRM,test_stat,3.9215686
+test-srm,1,SRM,confidence_level,0.999
+test-srm-negative,1,SRM,p_value,0.0106153
+test-srm-negative,1,SRM,test_stat,9.090909
+test-srm-negative,1,SRM,confidence_level,0.999
+test-srm-one-variant,1,SRM,p_value,0.0000000000
+test-srm-one-variant,1,SRM,test_stat,5100
+test-srm-one-variant,1,SRM,confidence_level,0.999
+test-conversion,1,SRM,p_value,0.4528439056
+test-conversion,1,SRM,test_stat,1.584415584
+test-conversion,1,SRM,confidence_level,0.999
+test-real-valued,1,SRM,p_value,0.571607645
+test-real-valued,1,SRM,test_stat,0.32
+test-real-valued,1,SRM,confidence_level,0.999
+test-multiple,1,SRM,p_value,0.9255676
+test-multiple,1,SRM,test_stat,0.15469613
+test-multiple,1,SRM,confidence_level,0.999
+test-missing-default,1,SRM,p_value,0.0000100000
+test-missing-default,1,SRM,test_stat,20
+test-missing-default,1,SRM,confidence_level,0.999
+test-missing-default-exposure,1,SRM,p_value,0
+test-missing-default-exposure,1,SRM,test_stat,50
+test-missing-default-exposure,1,SRM,confidence_level,0.999
+test-missing-default-value,1,SRM,p_value,0.8252
+test-missing-default-value,1,SRM,test_stat,0.04878
+test-missing-default-value,1,SRM,confidence_level,0.999
+test-missing-exposure,1,SRM,p_value,0
+test-missing-exposure,1,SRM,test_stat,50
+test-missing-exposure,1,SRM,confidence_level,0.999
+test-missing-value,1,SRM,p_value,0.34036
+test-missing-value,1,SRM,test_stat,0.90909
+test-missing-value,1,SRM,confidence_level,0.999
+test-missing-all,1,SRM,p_value,N/A
+test-missing-all,1,SRM,test_stat,N/A
+test-missing-all,1,SRM,confidence_level,0.999
+test-missing-all-value,1,SRM,p_value,0.74939
+test-missing-all-value,1,SRM,test_stat,0.10204
+test-missing-all-value,1,SRM,confidence_level,0.999
+bad-experiment-unit,1,SRM,p_value,0.19296
+bad-experiment-unit,1,SRM,test_stat,1.69489
+bad-experiment-unit,1,SRM,confidence_level,0.999
+test-missing-variant,1,SRM,p_value,0
+test-missing-variant,1,SRM,test_stat,50
+test-missing-variant,1,SRM,confidence_level,0.999
+test-missing-data-unique-goal,1,SRM,p_value,N/A
+test-missing-data-unique-goal,1,SRM,test_stat,N/A
+test-missing-data-unique-goal,1,SRM,confidence_level,0.999
+test-dimension,1,SRM,p_value,0.98216470
+test-dimension,1,SRM,test_stat,0.00049975
+test-dimension,1,SRM,confidence_level,0.999
+test-degrees-of-freedom,1,SRM,p_value,0.52708926
+test-degrees-of-freedom,1,SRM,test_stat,0.4
+test-degrees-of-freedom,1,SRM,confidence_level,0.999
+test-simple-metric,1,SRM,p_value,0.02520447203
+test-simple-metric,1,SRM,test_stat,5.009782616
+test-simple-metric,1,SRM,confidence_level,0.999
+test-multi-dimension,1,SRM,p_value,0.98216470
+test-multi-dimension,1,SRM,test_stat,0.00049975
+test-multi-dimension,1,SRM,confidence_level,0.999
+test-sum-ratio,1,EVA,sum_ratio,0.19607843137254902
+test-sum-ratio,1,EVA,max_sum_ratio,0.01
+test-sum-ratio,1,EVA,p_value,6.840197664885593e-73
+test-sum-ratio,1,EVA,test_stat,326.0869565217391
+test-sum-ratio,1,EVA,confidence_level,0.999
+test-multi-check,1,EVA,sum_ratio,0.19607843137254902
+test-multi-check,1,EVA,max_sum_ratio,0.01
+test-multi-check,1,EVA,p_value,6.840197664885593e-73
+test-multi-check,1,EVA,test_stat,326.0869565217391
+test-multi-check,1,EVA,confidence_level,0.999
+test-multi-check,2,SRM,p_value,0.140747987
+test-multi-check,2,SRM,test_stat,3.9215686
+test-multi-check,2,SRM,confidence_level,0.999
+test-dim-operators,1,SRM,p_value,0.98216470
+test-dim-operators,1,SRM,test_stat,0.00049975
+test-dim-operators,1,SRM,confidence_level,0.999
+test-trigger,1,SRM,p_value,0.563703
+test-trigger,1,SRM,test_stat,0.333333
+test-trigger,1,SRM,confidence_level,0.999

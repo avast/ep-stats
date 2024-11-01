@@ -1,74 +1,74 @@
-exp_id	exp_variant_id	unit_type	agg_type	goal	count
-test-conversion	a	test_unit_type	global	exposure	21
-test-conversion	b	test_unit_type	global	exposure	26
-test-conversion	c	test_unit_type	global	exposure	30
-test-real-valued	a	test_unit_type	global	exposure	23
-test-real-valued	b	test_unit_type	global	exposure	27
-test-unique	a	test_unit_type	global	exposure	1000
-test-unique	b	test_unit_type	global	exposure	1010
-test-unique	c	test_unit_type	global	exposure	1020
-test-multiple	a	test_unit_type	global	exposure	3000
-test-multiple	b	test_unit_type	global	exposure	3030
-test-multiple	c	test_unit_type	global	exposure	3020
-test-missing-default	a	test_unit_type	global	exposure	0
-test-missing-default	b	test_unit_type	global	exposure	20
-test-missing-default-exposure	a	test_unit_type	global	exposure	0
-test-missing-default-exposure	b	test_unit_type	global	exposure	50
-test-missing-default-value	a	test_unit_type	global	exposure	42
-test-missing-default-value	b	test_unit_type	global	exposure	40
-test-missing-value	a	test_unit_type	global	exposure	50
-test-missing-value	b	test_unit_type	global	exposure	60
-test-missing-exposure	a	test_unit_type	global	exposure	50
-test-missing-exposure	b	test_unit_type	global	exposure	0
-test-missing-all-value	a	test_unit_type	global	exposure	120
-test-missing-all-value	b	test_unit_type	global	exposure	125
-test-missing-all	a	test_unit_type	global	exposure	0
-test-srm	a	test_unit_type	global	exposure	5000
-test-srm	b	test_unit_type	global	exposure	5100
-test-srm	c	test_unit_type	global	exposure	5200
-test-srm-negative	a	test_unit_type	global	exposure	5000
-test-srm-negative	b	test_unit_type	global	exposure	5100
-test-srm-negative	c	test_unit_type	global	exposure	5300
-test-srm-one-variant	a	test_unit_type	global	exposure	0
-test-srm-one-variant	b	test_unit_type	global	exposure	5100
-bad-experiment-unit	a	test_unit_type	global	exposure	299
-bad-experiment-unit	b	test_unit_type	global	exposure	268
-test-value-error	a	test_unit_type	global	exposure	450
-test-value-error	b	test_unit_type	global	exposure	460
-test-sequential-v1	a	test_unit_type	global	exposure	2000
-test-sequential-v1	b	test_unit_type	global	exposure	2020
-test-sequential-v2	a	test_unit_type	global	exposure	6000
-test-sequential-v2	b	test_unit_type	global	exposure	6060
-test-sequential-v3	a	test_unit_type	global	exposure	8000
-test-sequential-v3	b	test_unit_type	global	exposure	8080
-test-missing-variant	a	test_unit_type	global	exposure	50
-test-missing-variant	b	test_unit_type	global	exposure	0
-test-missing-data-unique-goal	a	test_unit_type	global	exposure	0
-test-missing-data-unique-goal	b	test_unit_type	global	exposure	0
-test-dimension	a	test_unit_type	global	exposure	1000
-test-dimension	b	test_unit_type	global	exposure	1001
-test-degrees-of-freedom	a	test_unit_type	global	exposure	6
-test-degrees-of-freedom	b	test_unit_type	global	exposure	4
-test-simple-metric	a	test_unit_type	global	exposure	0
-test-simple-metric	b	test_unit_type	global	exposure	0
-test-control-variant-b	a	test_unit_type	global	exposure	3000
-test-control-variant-b	b	test_unit_type	global	exposure	3030
-test-multi-dimension	a	test_unit_type	global	exposure	1000
-test-multi-dimension	b	test_unit_type	global	exposure	1001
-test-sum-ratio	a	test_unit_type	global	exposure	5000
-test-sum-ratio	b	test_unit_type	global	exposure	5100
-test-sum-ratio	c	test_unit_type	global	exposure	5200
-test-multi-check	a	test_unit_type	global	exposure	5000
-test-multi-check	b	test_unit_type	global	exposure	5100
-test-multi-check	c	test_unit_type	global	exposure	5200
-test-conversion-with-minimum-effect	a	test_unit_type	global	exposure	21
-test-conversion-with-minimum-effect	b	test_unit_type	global	exposure	26
-test-conversion-with-minimum-effect	c	test_unit_type	global	exposure	30
-test-false-positive-risk	a	test_unit_type	global	exposure	1000
-test-false-positive-risk	b	test_unit_type	global	exposure	1001
-test-dim-operators	a	test_unit_type	global	exposure	1000
-test-dim-operators	b	test_unit_type	global	exposure	1001
-test-operator-precedence	a	test_unit_type	global	exposure	80
-test-operator-precedence	b	test_unit_type	global	exposure	70
-test-trigger	a	test_unit_type	global	exposure	1
-test-trigger	b	test_unit_type	global	exposure	2
+exp_id,exp_variant_id,unit_type,agg_type,goal,count
+test-conversion,a,test_unit_type,global,exposure,21
+test-conversion,b,test_unit_type,global,exposure,26
+test-conversion,c,test_unit_type,global,exposure,30
+test-real-valued,a,test_unit_type,global,exposure,23
+test-real-valued,b,test_unit_type,global,exposure,27
+test-unique,a,test_unit_type,global,exposure,1000
+test-unique,b,test_unit_type,global,exposure,1010
+test-unique,c,test_unit_type,global,exposure,1020
+test-multiple,a,test_unit_type,global,exposure,3000
+test-multiple,b,test_unit_type,global,exposure,3030
+test-multiple,c,test_unit_type,global,exposure,3020
+test-missing-default,a,test_unit_type,global,exposure,0
+test-missing-default,b,test_unit_type,global,exposure,20
+test-missing-default-exposure,a,test_unit_type,global,exposure,0
+test-missing-default-exposure,b,test_unit_type,global,exposure,50
+test-missing-default-value,a,test_unit_type,global,exposure,42
+test-missing-default-value,b,test_unit_type,global,exposure,40
+test-missing-value,a,test_unit_type,global,exposure,50
+test-missing-value,b,test_unit_type,global,exposure,60
+test-missing-exposure,a,test_unit_type,global,exposure,50
+test-missing-exposure,b,test_unit_type,global,exposure,0
+test-missing-all-value,a,test_unit_type,global,exposure,120
+test-missing-all-value,b,test_unit_type,global,exposure,125
+test-missing-all,a,test_unit_type,global,exposure,0
+test-srm,a,test_unit_type,global,exposure,5000
+test-srm,b,test_unit_type,global,exposure,5100
+test-srm,c,test_unit_type,global,exposure,5200
+test-srm-negative,a,test_unit_type,global,exposure,5000
+test-srm-negative,b,test_unit_type,global,exposure,5100
+test-srm-negative,c,test_unit_type,global,exposure,5300
+test-srm-one-variant,a,test_unit_type,global,exposure,0
+test-srm-one-variant,b,test_unit_type,global,exposure,5100
+bad-experiment-unit,a,test_unit_type,global,exposure,299
+bad-experiment-unit,b,test_unit_type,global,exposure,268
+test-value-error,a,test_unit_type,global,exposure,450
+test-value-error,b,test_unit_type,global,exposure,460
+test-sequential-v1,a,test_unit_type,global,exposure,2000
+test-sequential-v1,b,test_unit_type,global,exposure,2020
+test-sequential-v2,a,test_unit_type,global,exposure,6000
+test-sequential-v2,b,test_unit_type,global,exposure,6060
+test-sequential-v3,a,test_unit_type,global,exposure,8000
+test-sequential-v3,b,test_unit_type,global,exposure,8080
+test-missing-variant,a,test_unit_type,global,exposure,50
+test-missing-variant,b,test_unit_type,global,exposure,0
+test-missing-data-unique-goal,a,test_unit_type,global,exposure,0
+test-missing-data-unique-goal,b,test_unit_type,global,exposure,0
+test-dimension,a,test_unit_type,global,exposure,1000
+test-dimension,b,test_unit_type,global,exposure,1001
+test-degrees-of-freedom,a,test_unit_type,global,exposure,6
+test-degrees-of-freedom,b,test_unit_type,global,exposure,4
+test-simple-metric,a,test_unit_type,global,exposure,0
+test-simple-metric,b,test_unit_type,global,exposure,0
+test-control-variant-b,a,test_unit_type,global,exposure,3000
+test-control-variant-b,b,test_unit_type,global,exposure,3030
+test-multi-dimension,a,test_unit_type,global,exposure,1000
+test-multi-dimension,b,test_unit_type,global,exposure,1001
+test-sum-ratio,a,test_unit_type,global,exposure,5000
+test-sum-ratio,b,test_unit_type,global,exposure,5100
+test-sum-ratio,c,test_unit_type,global,exposure,5200
+test-multi-check,a,test_unit_type,global,exposure,5000
+test-multi-check,b,test_unit_type,global,exposure,5100
+test-multi-check,c,test_unit_type,global,exposure,5200
+test-conversion-with-minimum-effect,a,test_unit_type,global,exposure,21
+test-conversion-with-minimum-effect,b,test_unit_type,global,exposure,26
+test-conversion-with-minimum-effect,c,test_unit_type,global,exposure,30
+test-false-positive-risk,a,test_unit_type,global,exposure,1000
+test-false-positive-risk,b,test_unit_type,global,exposure,1001
+test-dim-operators,a,test_unit_type,global,exposure,1000
+test-dim-operators,b,test_unit_type,global,exposure,1001
+test-operator-precedence,a,test_unit_type,global,exposure,80
+test-operator-precedence,b,test_unit_type,global,exposure,70
+test-trigger,a,test_unit_type,global,exposure,1
+test-trigger,b,test_unit_type,global,exposure,2
