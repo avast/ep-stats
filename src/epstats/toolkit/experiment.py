@@ -773,7 +773,7 @@ class Experiment:
         if self.null_hypothesis_rate is None:
             return np.nan
 
-        if metric_row["p_value"] >= metric_row["confidence_level"]:
+        if metric_row["p_value"] >= (1 - metric_row["confidence_level"]):
             return np.nan
 
         return Statistics.false_positive_risk(
