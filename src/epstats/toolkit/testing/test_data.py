@@ -23,7 +23,7 @@ class TestData:
             exp_id: experiment id
         """
         df_file = files(resources).joinpath("goals_agg.csv")
-        goals_df = pd.read_csv(df_file, sep="\t")
+        goals_df = pd.read_csv(df_file)
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
@@ -37,7 +37,7 @@ class TestData:
         See `load_evaluations` set of functions to load corresponding evaluation results.
         """
         df_file = files(resources).joinpath("goals_simple_agg.csv")
-        goals_df = pd.read_csv(df_file, sep="\t")
+        goals_df = pd.read_csv(df_file)
         return goals_df
 
     @classmethod
@@ -52,7 +52,7 @@ class TestData:
             exp_id: experiment id
         """
         df_file = files(resources).joinpath("goals_by_unit.csv")
-        goals_df = pd.read_csv(df_file, sep="\t")
+        goals_df = pd.read_csv(df_file)
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
@@ -66,7 +66,7 @@ class TestData:
             exp_id: experiment id
         """
         df_file = files(resources).joinpath("evaluations_checks.csv")
-        goals_df = pd.read_csv(df_file, sep="\t")
+        goals_df = pd.read_csv(df_file)
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
 
     @classmethod
@@ -80,7 +80,7 @@ class TestData:
             exp_id: experiment id
         """
         df_file = files(resources).joinpath("evaluations_exposures.csv")
-        exposures_df = pd.read_csv(df_file, sep="\t")
+        exposures_df = pd.read_csv(df_file)
         return exposures_df[exposures_df.exp_id == exp_id] if exp_id is not None else exposures_df
 
     @classmethod
@@ -94,5 +94,5 @@ class TestData:
             exp_id: experiment id
         """
         df_file = files(resources).joinpath("evaluations_metrics.csv")
-        goals_df = pd.read_csv(df_file, sep="\t")
+        goals_df = pd.read_csv(df_file)
         return goals_df[goals_df.exp_id == exp_id] if exp_id is not None else goals_df
