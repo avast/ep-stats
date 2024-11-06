@@ -32,7 +32,7 @@ class Parser:
         dimension_value_chars = alphanums + "_" + "-" + "." + "%" + " " + "/" + "|"
         dimension_operator = oneOf("< = > <= >= =^ !=")
         dimension_value = (dimension_operator + Word(dimension_value_chars)).setParseAction(DimensionValue)
-        dimension_list = delimitedList(dimension + dimension_value)
+        dimension_list = delimitedList(dimension + dimension_value, allow_trailing_delim=True)
 
         ep_goal = (func + "(" + unit_type + "." + agg_type + "." + goal + ")").setParseAction(EpGoal)
         ep_goal_with_dimensions = (
