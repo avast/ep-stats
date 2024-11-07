@@ -1,4 +1,5 @@
 from collections import Counter
+from functools import reduce
 from typing import Set
 
 import pandas as pd
@@ -49,11 +50,11 @@ class Parser:
         expr = infixNotation(
             operand,
             [
-                (multop, 2, opAssoc.LEFT, MultBinOp),
-                (divop, 2, opAssoc.LEFT, DivBinOp),
-                (subop, 2, opAssoc.LEFT, SubBinOp),
-                (plusop, 2, opAssoc.LEFT, PlusBinOp),
-                (tildaop, 2, opAssoc.LEFT, TildaBinOp),
+                (multop, 2, opAssoc.LEFT, MultOp),
+                (divop, 2, opAssoc.LEFT, DivOp),
+                (subop, 2, opAssoc.LEFT, SubOp),
+                (plusop, 2, opAssoc.LEFT, PlusOp),
+                (tildaop, 2, opAssoc.LEFT, TildaOp),
             ],
         )
 
@@ -332,7 +333,7 @@ class EpGoal:
     __repr__ = __str__
 
 
-class BinOp:
+class Op:
     """
     Operation connecting `EpGoal` or `Number` terms in nominator or denominator expression
     eg. `value(test_unit_type.unit.conversion) - value(test_unit_type.unit.refund)`.
@@ -344,14 +345,18 @@ class BinOp:
     def symbol(self):
         raise NotImplementedError()
 
-    def evaluate_agg(self, goals):
+    @staticmethod
+    def reduce_f(x, y):
         raise NotImplementedError()
+
+    def evaluate_agg(self, goals):
+        return reduce(self.reduce_f, [arg.evaluate_agg(goals) for arg in self.args])
 
     def evaluate_by_unit(self, goals):
-        raise NotImplementedError()
+        return reduce(self.reduce_f, [arg.evaluate_by_unit(goals) for arg in self.args])
 
     def evaluate_sqr(self, goals):
-        raise NotImplementedError()
+        return reduce(self.reduce_f, [arg.evaluate_sqr(goals) for arg in self.args])
 
     def get_goals_str(self) -> Set[str]:
         return set().union(*map(lambda o: o.get_goals_str(), self.args))
@@ -366,65 +371,45 @@ class BinOp:
     __repr__ = __str__
 
 
-class PlusBinOp(BinOp):
+class PlusOp(Op):
     def symbol(self):
         return "+"
 
-    def evaluate_agg(self, goals):
-        return self.args[0].evaluate_agg(goals) + self.args[1].evaluate_agg(goals)
-
-    def evaluate_sqr(self, goals):
-        return self.args[0].evaluate_sqr(goals) + self.args[1].evaluate_sqr(goals)
-
-    def evaluate_by_unit(self, goals):
-        return self.args[0].evaluate_by_unit(goals) + self.args[1].evaluate_by_unit(goals)
+    @staticmethod
+    def reduce_f(x, y):
+        return x + y
 
 
-class MultBinOp(BinOp):
+class MultOp(Op):
     def symbol(self):
         return "*"
 
-    def evaluate_agg(self, goals):
-        return self.args[0].evaluate_agg(goals) * self.args[1].evaluate_agg(goals)
-
-    def evaluate_sqr(self, goals):
-        return self.args[0].evaluate_sqr(goals) * self.args[1].evaluate_sqr(goals)
-
-    def evaluate_by_unit(self, goals):
-        return self.args[0].evaluate_by_unit(goals) * self.args[1].evaluate_by_unit(goals)
+    @staticmethod
+    def reduce_f(x, y):
+        return x * y
 
 
-class DivBinOp(BinOp):
+class DivOp(Op):
     def symbol(self):
         return "/"
 
-    def evaluate_agg(self, goals):
-        return self.args[0].evaluate_agg(goals) / self.args[1].evaluate_agg(goals)
-
-    def evaluate_sqr(self, goals):
-        return self.args[0].evaluate_sqr(goals) / self.args[1].evaluate_sqr(goals)
-
-    def evaluate_by_unit(self, goals):
-        return self.args[0].evaluate_by_unit(goals) / self.args[1].evaluate_by_unit(goals)
+    @staticmethod
+    def reduce_f(x, y):
+        return x / y
 
 
-class SubBinOp(BinOp):
+class SubOp(Op):
     def symbol(self):
         return "-"
 
-    def evaluate_agg(self, goals):
-        return self.args[0].evaluate_agg(goals) - self.args[1].evaluate_agg(goals)
-
-    def evaluate_sqr(self, goals):
-        return self.args[0].evaluate_sqr(goals) - self.args[1].evaluate_sqr(goals)
-
-    def evaluate_by_unit(self, goals):
-        return self.args[0].evaluate_by_unit(goals) - self.args[1].evaluate_by_unit(goals)
+    @staticmethod
+    def reduce_f(x, y):
+        return x - y
 
 
-class TildaBinOp(BinOp):
+class TildaOp(Op):
     """
-    Tilda treats the second operand as negative,
+    Tilda treats the following operands as negative,
     resulting in substraction of values and addition of squared values.
     """
 
@@ -432,10 +417,10 @@ class TildaBinOp(BinOp):
         return "~"
 
     def evaluate_agg(self, goals):
-        return self.args[0].evaluate_agg(goals) - self.args[1].evaluate_agg(goals)
+        return reduce(lambda x, y: x - y, [arg.evaluate_agg(goals) for arg in self.args])
 
     def evaluate_sqr(self, goals):
-        return self.args[0].evaluate_sqr(goals) + self.args[1].evaluate_sqr(goals)
+        return reduce(lambda x, y: x + y, [arg.evaluate_sqr(goals) for arg in self.args])
 
     def evaluate_by_unit(self, goals):
-        return self.args[0].evaluate_by_unit(goals) - self.args[1].evaluate_by_unit(goals)
+        return reduce(lambda x, y: x - y, [arg.evaluate_by_unit(goals) for arg in self.args])
