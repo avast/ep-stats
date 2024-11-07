@@ -4,7 +4,7 @@ import pytest
 from numpy.testing import assert_almost_equal
 from pyparsing import ParseException
 
-from src.epstats.toolkit.parser import MultBinOp, Parser
+from src.epstats.toolkit.parser import MultOp, Parser
 
 
 def test_evaluate_agg():
@@ -73,6 +73,21 @@ def test_evaluate_agg():
         goals[goals.goal == "exposure"]["count"].to_numpy() / 1000,
         conversion_value,
         conversion_sqr_value,
+    )
+
+    parser = Parser(
+        """
+        value(test_unit_type.unit.conversion)
+        - value(test_unit_type.unit.refund)
+        - value(test_unit_type.unit.refund)
+        """,
+        "count(test_unit_type.unit.exposure)",
+    )
+    assert_count_value(
+        parser.evaluate_agg(goals),
+        goals[goals.goal == "exposure"]["count"],
+        conversion_value - refund_value - refund_value,
+        conversion_sqr_value - refund_sqr_value - refund_sqr_value,
     )
 
 
@@ -357,7 +372,7 @@ def test_operator_position_not_correct(dimension_value):
 def test_numbers(nominator):
     assert isinstance(
         Parser(nominator, "count(test_unit_type.unit.conversion)")._nominator_expr,
-        MultBinOp,
+        MultOp,
     )
 
 
