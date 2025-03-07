@@ -1,95 +1,40 @@
-[tool]
-[tool.poetry]
+[project]
 name = "ep-stats"
-version = "2.5.3"
-homepage = "https://github.com/avast/ep-stats"
-description = "Statistical package to evaluate ab tests in experimentation platform."
-authors = [
-    "Ondra Zahradnik <ondra.zahradnik@gmail.com>",
-    "Jan Cervenka <jan.cervenka1@avast.com>",
-    "Jachym Solecky <jachym.solecky@avast.com>",
-]
+version = "2.5.4"
+description = "Statistical package for controlled experimentation"
 readme = "README.md"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+authors = [
+    { name = "Jan Červenka", email = "jan.cervenka1@gendigital.com" }
 ]
-
-packages = [
-    {include = "epstats", from="src"},
-    { include = "tests", format = "sdist" }
-]
-
-include = [
-    { path = "**/*.csv", format = ["sdist", "wheel"] },
-    { path = "**/*.txt", format = ["sdist", "wheel"] },
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.11",
+    "pandas>=2.2.3",
+    "prometheus-client>=0.21.1",
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.8.1",
+    "pyparsing<3",
+    "scipy>=1.15.2",
+    "statsmodels>=0.14.4",
 ]
 
 [build-system]
-requires = ["poetry-core>=1.7.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/epstats"]
 
-[[tool.poetry.source]]
-name = "pypi"
-priority = "primary"
-
-
-[tool.poetry.scripts]
-epstats = "epstats.main:main"
-
-
-[tool.poetry.dependencies]
-python = ">=3.9,<4"
-
-pandas = "^2"
-scipy = "^1"
-pyparsing = "^3"
-fastapi = "^0.111"
-statsmodels = "^0.14"
-prometheus-client = "^0.17"
-pydantic = "^2"
-pydantic-settings = "^2.2.1"
-
-[tool.poetry.group.test.dependencies]
-pytest = "^7"
-httpx = "^0.27.0"
-jinja2 = "^3.1.4"
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.4"
-mkdocs = "^1.6.0"
-mkdocs-jupyter = "^0.24.7"
-mkdocs-material = "^9.5.25"
-mkdocs-material-extensions = "^1.3.1"
-pygments = "^2.18.0"
-pymdown-extensions = "^10.8.1"
-pre-commit = "^3.7.1"
-pip-tools = "^7.4.1"
-twine = "^5.1.0"
-mkdocstrings = {version = "^0.25.1", extras = ["python"]}
-
-
-[tool.ruff]
-line-length = 120
-target-version = "py311"
-
-[tool.ruff.lint]
-select = ["W", "E4", "E7", "E9", "F", "I", "S", "PD"]
-ignore = ["S101", "S110"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
-
-[tool.ruff.lint.per-file-ignores]
-
-
-[tool.pytest.ini_options]
-testpaths = [
-    "tests",
+[dependency-groups]
+dev = [
+    "mkdocs>=1.6.1",
+    "mkdocs-jupyter>=0.25.1",
+    "mkdocs-material>=9.6.7",
+    "mkdocs-material-extensions>=1.3.1",
+    "mkdocstrings>=0.28.2",
+    "pre-commit>=4.1.0",
+    "pygments>=2.19.1",
+    "pymdown-extensions>=10.14.3",
+    "pytest>=8.3.5",
+    "ruff>=0.9.10",
 ]
-addopts="--color=yes -s"
