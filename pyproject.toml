@@ -27,6 +27,7 @@ packages = ["src/epstats"]
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "mkdocs>=1.6.1",
     "mkdocs-jupyter>=0.25.1",
     "mkdocs-material>=9.6.7",
@@ -39,5 +40,6 @@ dev = [
     "ruff>=0.9.10",
 ]
 test = [
+    "httpx>=0.28.1",
     "pytest>=8.3.5",
 ]
