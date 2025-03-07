@@ -328,6 +328,9 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
 ]
+test = [
+    { name = "pytest" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -354,6 +357,7 @@ dev = [
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "ruff", specifier = ">=0.9.10" },
 ]
+test = [{ name = "pytest", specifier = ">=8.3.5" }]
 
 [[package]]
 name = "executing"
