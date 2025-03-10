@@ -32,12 +32,28 @@ class Parser:
         dimension = Word(alphanums + "_").setParseAction(Dimension)
         dimension_value_chars = alphanums + "_" + "-" + "." + "%" + " " + "/" + "|"
         dimension_operator = oneOf("< = > <= >= =^ !=")
-        dimension_value = (dimension_operator + Word(dimension_value_chars)).setParseAction(DimensionValue)
-        dimension_list = delimitedList(dimension + dimension_value, allow_trailing_delim=True)
+        dimension_value = (
+            dimension_operator + Word(dimension_value_chars)
+        ).setParseAction(DimensionValue)
+        dimension_list = delimitedList(
+            dimension + dimension_value, allow_trailing_delim=True
+        )
 
-        ep_goal = (func + "(" + unit_type + "." + agg_type + "." + goal + ")").setParseAction(EpGoal)
+        ep_goal = (
+            func + "(" + unit_type + "." + agg_type + "." + goal + ")"
+        ).setParseAction(EpGoal)
         ep_goal_with_dimensions = (
-            func + "(" + unit_type + "." + agg_type + "." + goal + "(" + dimension_list + ")" + ")"
+            func
+            + "("
+            + unit_type
+            + "."
+            + agg_type
+            + "."
+            + goal
+            + "("
+            + dimension_list
+            + ")"
+            + ")"
         ).setParseAction(EpGoal)
         operand = number | ep_goal | ep_goal_with_dimensions
 
@@ -68,7 +84,9 @@ class Parser:
         in other `EpGoal` instances so the row masking can work properly.
         """
 
-        all_dimensions = {d for g in self.get_goals() for d in g.dimension_to_value.keys()}
+        all_dimensions = {
+            d for g in self.get_goals() for d in g.dimension_to_value.keys()
+        }
         for goal in self.get_goals():
             for dimension in all_dimensions:
                 if dimension not in goal.dimension_to_value:
@@ -109,7 +127,9 @@ class Parser:
             numpy array of shape (variants, metrics) where metrics are in order of
             (count, sum_value, sum_sqr_value)
         """
-        value_variants, value = self._nominator_expr.evaluate_by_unit(goals, "sum_value")
+        value_variants, value = self._nominator_expr.evaluate_by_unit(
+            goals, "sum_value"
+        )
         value_df = (
             pd.DataFrame(
                 {
@@ -123,7 +143,11 @@ class Parser:
         )
 
         count_variants, count = self._denominator_expr.evaluate_by_unit(goals, "count")
-        count_df = pd.DataFrame({"exp_variant_id": count_variants, "count": count}).groupby("exp_variant_id").sum()
+        count_df = (
+            pd.DataFrame({"exp_variant_id": count_variants, "count": count})
+            .groupby("exp_variant_id")
+            .sum()
+        )
 
         metrics_df = value_df.join(count_df)
         return metrics_df["count"], metrics_df["sum_value"], metrics_df["sum_sqr_value"]
@@ -132,13 +156,17 @@ class Parser:
         """
         Get set of goals that appear in `nominator` and `denominator` expressions as `EpGoal` instances.
         """
-        return self._nominator_expr.get_goals().union(self._denominator_expr.get_goals())
+        return self._nominator_expr.get_goals().union(
+            self._denominator_expr.get_goals()
+        )
 
     def get_goals_str(self) -> Set[str]:
         """
         Gets set of goals that appear in `nominator` and `denominator` expressions as strings.
         """
-        return self._nominator_expr.get_goals_str().union(self._denominator_expr.get_goals_str())
+        return self._nominator_expr.get_goals_str().union(
+            self._denominator_expr.get_goals_str()
+        )
 
 
 class UnitType:
@@ -154,7 +182,9 @@ class UnitType:
 class AggType:
     def __init__(self, t):
         if t[0] not in ["unit", "global"]:
-            raise ParseException(f"Only `unit` and `global` aggregation types are supported but `{t[0]}` received.")
+            raise ParseException(
+                f"Only `unit` and `global` aggregation types are supported but `{t[0]}` received."
+            )
         self.agg_type = t[0]
 
     def __str__(self):
@@ -236,7 +266,9 @@ class EpGoal:
 
     def __init__(self, t):
         if t[0] not in ["value", "count", "unique"]:
-            raise ParseException(f"Only `value`, `count`, `unique` functions are supported but `{t[0]}` received.")
+            raise ParseException(
+                f"Only `value`, `count`, `unique` functions are supported but `{t[0]}` received."
+            )
         if t[0] == "value":
             self.column = "sum_value" if t[0] == "value" else "count"
             self.column_sqr = "sum_sqr_value" if t[0] == "value" else "sum_sqr_count"
@@ -252,7 +284,9 @@ class EpGoal:
         self.goal = t[6].goal
 
         dimensions = [d.dimension for d in t if isinstance(d, Dimension)]
-        dimension_values = [v.dimension_value for v in t if isinstance(v, DimensionValue)]
+        dimension_values = [
+            v.dimension_value for v in t if isinstance(v, DimensionValue)
+        ]
         self._raise_if_duplicate_dimensions(dimensions)
         # empty dict if no dimensions
         self.dimension_to_value = {d: v for d, v in zip(dimensions, dimension_values)}
@@ -261,13 +295,17 @@ class EpGoal:
     def _raise_if_duplicate_dimensions(dimensions):
         duplicates = {k: v for k, v in Counter(dimensions).items() if v > 1}
         if duplicates:
-            raise ParseException(f"Multiple values encountered for dimensions: `{list(duplicates.keys())}`.")
+            raise ParseException(
+                f"Multiple values encountered for dimensions: `{list(duplicates.keys())}`."
+            )
 
     def _to_string(self):
         if self.is_dimensional():
             # we want to avoid stuff like `name=>=value` when formatting the dimensions
             dimension_list = ", ".join(
-                f"{d}{v}" if v[0] in "><=!" else f"{d}={v}" for d, v in self.dimension_to_value.items() if v != ""
+                f"{d}{v}" if v[0] in "><=!" else f"{d}={v}"
+                for d, v in self.dimension_to_value.items()
+                if v != ""
             )
             dimensions = f"[{dimension_list}]"
         else:
@@ -417,10 +455,16 @@ class TildaOp(Op):
         return "~"
 
     def evaluate_agg(self, goals):
-        return reduce(lambda x, y: x - y, [arg.evaluate_agg(goals) for arg in self.args])
+        return reduce(
+            lambda x, y: x - y, [arg.evaluate_agg(goals) for arg in self.args]
+        )
 
     def evaluate_sqr(self, goals):
-        return reduce(lambda x, y: x + y, [arg.evaluate_sqr(goals) for arg in self.args])
+        return reduce(
+            lambda x, y: x + y, [arg.evaluate_sqr(goals) for arg in self.args]
+        )
 
     def evaluate_by_unit(self, goals):
-        return reduce(lambda x, y: x - y, [arg.evaluate_by_unit(goals) for arg in self.args])
+        return reduce(
+            lambda x, y: x - y, [arg.evaluate_by_unit(goals) for arg in self.args]
+        )
