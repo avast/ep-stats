@@ -13,9 +13,10 @@ dependencies = [
     "prometheus-client>=0.21.1",
     "pydantic>=2.10.6",
     "pydantic-settings>=2.8.1",
-    "pyparsing<3",
+    "pyparsing>=3.2.1",
     "scipy>=1.15.2",
     "statsmodels>=0.14.4",
+    "uvicorn>=0.34.0",
 ]
 
 [build-system]
