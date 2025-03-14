@@ -62,12 +62,12 @@ test-multi-dimension,1,SRM,confidence_level,0.999
 test-sum-ratio,1,EVA,sum_ratio,0.19607843137254902
 test-sum-ratio,1,EVA,max_sum_ratio,0.01
 test-sum-ratio,1,EVA,p_value,0.0
-test-sum-ratio,1,EVA,test_stat,inf
+test-sum-ratio,1,EVA,test_stat,9000491.7764
 test-sum-ratio,1,EVA,confidence_level,0.999
 test-multi-check,1,EVA,sum_ratio,0.19607843137254902
 test-multi-check,1,EVA,max_sum_ratio,0.01
 test-multi-check,1,EVA,p_value,0.0
-test-multi-check,1,EVA,test_stat,inf
+test-multi-check,1,EVA,test_stat,9000491.7764
 test-multi-check,1,EVA,confidence_level,0.999
 test-multi-check,2,SRM,p_value,0.140747987
 test-multi-check,2,SRM,test_stat,3.9215686
