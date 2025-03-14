@@ -261,13 +261,13 @@ class SumRatioCheck(Check):
 
             stat, pval = chisquare(
                 f_obs=[
-                    denominator_counts.sum(),
-                    nominator_counts.sum(),
+                    denominator_counts.sum() + 1,
+                    nominator_counts.sum() + 1,
                 ],
                 f_exp=[
-                    denominator_counts.sum() + nominator_counts.sum(),
-                    0,
-                ]
+                    denominator_counts.sum() + nominator_counts.sum() + 1,
+                    1,
+                ],
             )
         r = pd.DataFrame(
             {
