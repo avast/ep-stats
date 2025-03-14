@@ -259,8 +259,16 @@ class SumRatioCheck(Check):
         with np.errstate(divide="ignore", invalid="ignore"):
             sum_ratio = nominator_counts.sum() / denominator_counts.sum()
 
-            stat, pval = chisquare([denominator_counts.sum(), denominator_counts.sum() - nominator_counts.sum()])
-
+            stat, pval = chisquare(
+                f_obs=[
+                    denominator_counts.sum(),
+                    nominator_counts.sum(),
+                ],
+                f_exp=[
+                    denominator_counts.sum() + nominator_counts.sum(),
+                    0,
+                ]
+            )
         r = pd.DataFrame(
             {
                 "check_id": self.id,
