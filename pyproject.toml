@@ -1,6 +1,6 @@
 [project]
 name = "ep-stats"
-version = "2.5.4"
+version = "2.5.7"
 description = "Statistical package for controlled experimentation"
 readme = "README.md"
 authors = [
