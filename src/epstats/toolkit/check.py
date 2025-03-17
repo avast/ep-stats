@@ -257,7 +257,7 @@ class SumRatioCheck(Check):
 
         # chi-square test
         with np.errstate(divide="ignore", invalid="ignore"):
-            sum_ratio = nominator_counts.sum() / (denominator_counts.sum() + nominator_counts)
+            sum_ratio = nominator_counts.sum() / (denominator_counts.sum() + nominator_counts.sum())
 
             stat, pval = chisquare(
                 f_obs=[
