@@ -104,15 +104,14 @@ It sets a new virtual environment `.venv` in `./.venv` using [.venv](https://pac
 To run tests, you can use `Makefile` as well.
 
 ```bash
-poetry shell  # activate python environment
+uv sync  # activate python environment
 make check
 ```
 
 To run a development version of ep-stats do
 
 ```bash
-poetry shell
-python -m epstats
+uv run python -m epstats
 ```
 
 ### Documentation
@@ -120,7 +119,7 @@ python -m epstats
 To update documentation run
 
 ```bash
-mkdocs gh-deploy
+uv run mkdocs gh-deploy
 ```
 
 It updates documentation in GitHub pages stored in branch `gh-pages`.
