@@ -1,6 +1,4 @@
 [![PyPI version](https://img.shields.io/pypi/v/ep-stats?color=green)](https://pypi.org/project/ep-stats/)
-[![Python versions](https://img.shields.io/pypi/pyversions/ep-stats?color=green)](https://pypi.org/project/ep-stats/)
-![](https://img.shields.io/github/languages/code-size/avast/ep-stats?color=green)
 <img src="theme/experiment_b.png" align="right" />
 
 # ep-stats
