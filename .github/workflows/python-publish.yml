@@ -26,4 +26,5 @@ jobs:
         UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USERNAME }}
         UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
+        uv build
         uv publish
