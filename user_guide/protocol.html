@@ -1,0 +1,1365 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Evaluation package for experimentation platform.">
+      
+      
+        <meta name="author" content="Team Doodlebug">
+      
+      
+        <link rel="canonical" href="https://github.com/avast/ep-stats/user_guide/protocol.html">
+      
+      
+        <link rel="prev" href="quick_start.html">
+      
+      
+        <link rel="next" href="ep_in_python.html">
+      
+      
+      <link rel="icon" href="../experiment_b.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>Experimentation Protocol - Ep-Stats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#experimentation-protocol" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ep-Stats" class="md-header__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ep-Stats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Experimentation Protocol
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ep-Stats" class="md-nav__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    Ep-Stats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../principles.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Principles
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="quick_start.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Experimentation Protocol
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="protocol.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Experimentation Protocol
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#experimentation-protocol-in-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experimentation Protocol in Depth
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formulate-hypothesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Formulate Hypothesis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pick-primary-metric" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pick Primary Metric
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-experiment-duration-before-starting-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set Experiment Duration Before Starting It
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-guardrail-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Guardrail Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Check Guardrail Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-ratio-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Ratio Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pros-and-cons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pros and Cons
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ep_in_python.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using Ep-Stats from Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ab_test_simple_evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ad-hoc A/B test evaluation using Ep-Stats
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="aggregation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aggregation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="configuring_api.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuring API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Test Data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stats/basics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stats/sample_size.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Size
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stats/sequential.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sequential Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stats/ctr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CTR Metric Redefined
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stats/multiple.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple Comparison Correction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stats/compound_metrics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compound Metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/metric.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metric
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/experiment.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/statistics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/check.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Check
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dao
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao_factory.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DaoFactory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TestData
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Presentations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Presentations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../presentations/architecture/architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#experimentation-protocol-in-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experimentation Protocol in Depth
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formulate-hypothesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Formulate Hypothesis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pick-primary-metric" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pick Primary Metric
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-experiment-duration-before-starting-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set Experiment Duration Before Starting It
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-guardrail-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Guardrail Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Check Guardrail Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-ratio-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Ratio Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pros-and-cons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pros and Cons
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="experimentation-protocol">Experimentation Protocol<a class="headerlink" href="#experimentation-protocol" title="Permanent link">&para;</a></h1>
+<p>We try to be well aware that implementation of experimentation protocol is what all of us experimenters will find the most difficult to understand and get done correctly when running experiments in teams and scaling the experimentation up to the whole companies.</p>
+<p>The experimentation protocol we are implementing is here to rather enable us to safely run and evaluate more experiments than to limit us from expanding our experimentation.</p>
+<p>Experimentation is a work with uncertainty where errors and erroneous decisions were and will be a necessary part of it. When experimenting on a larger scale, errors happen. It’s no longer a “small chance of error” in case when I am running one or two experiments. Errors happen with a specific chance. This chance must be monitored and controlled for.</p>
+<p>It will always be true that we will be making wrong decisions based on experiment data. There is no way out of it. We can only control it. It is not about being statistically correct, it is that we can and should know that we are making the right decision 95 times and the wrong one 5 times out of every 100 decisions we make. Not knowing and controlling for this, we are playing a game where we do not know our odds of a good or a bad decision.</p>
+<blockquote>
+<p>Only by joint effort among systems, data, and experimenters, we can guarantee to keep  erroneous decisions at bay.</p>
+</blockquote>
+<p><img alt="protocol" src="images/protocol.png" /></p>
+<p>Decisions we make are the most important outcome from experimenting, we need to keep bad decisions at bay. To do that, we need to set experiment duration upfront and follow the experimentation protocol. Following experimentation protocol is not special to us, it is a proven concept from clinical trials and also from online controlled experiments, it ensures that we are making the right decisions most of the time.</p>
+<p>Setting experiment duration upfront is certainly the most difficult point. We are not sure if current implementation (still in development) is the best one, we will need to iterate based on your feedback. We will have a calculator that helps to set duration almost in a conversational manner. In future iterations, we can run automated pre-tests to determine audience sizes and baseline conversion rates, we can improve the statistics, we can make it a lot easier and relax experimenters from filling up what we have to do today.</p>
+<p>There is one more immediate benefit from setting the duration upfront, we are able to stop experiments early much before the set duration if results are good (or bad) enough. And we can do early stopping safely with again keeping errors at bay below 5%. I personally believe that this possibility of early stopping without introduction of further error into our decision making is worth it.</p>
+<h2 id="experimentation-protocol-in-depth">Experimentation Protocol in Depth<a class="headerlink" href="#experimentation-protocol-in-depth" title="Permanent link">&para;</a></h2>
+<p>General aim of experimenting is to test a new idea (feature) on a fraction of users. Based on observed behavior of users exposed to the experiment, we want to infer what will happen if we full-scale the change to the whole user base. We are looking for the best option as well as we are limiting a risk of full-scaling harmful ideas (features). The experimenting is a work with uncertainty and thus it includes inevitable errors.</p>
+<p>We distinguish two types of errors in experimenting:</p>
+<ol>
+<li>Type I error (False-positive error)<ul>
+<li>We DO detect falsely significant result as significant</li>
+<li>Null hypothesis is true and we reject it</li>
+</ul>
+</li>
+<li>Type II error (False-negative error)<ul>
+<li>We DO NOT detect truly significant result as significant</li>
+<li>Null hypothesis is false and we do not reject it</li>
+</ul>
+</li>
+</ol>
+<p>The Experimentation Platform keeps false-positive errors below 5% by</p>
+<ol>
+<li>Implementation of sound statistical evaluation (engineers and data people).</li>
+<li>Asking experimenters to (dully) follow <em>Experimentation Protocol</em>.</li>
+</ol>
+<p>By ignoring Experimentation Protocol you can drastically increase false-positive errors (even multiple times) making results of the experiment highly misleading! There should not be done any business decision based on such results.</p>
+<p>When implementing the experimentation protocol, we followed a meta-study <a href="https://www.researchgate.net/publication/333614384_Three_Key_Checklists_and_Remedies_for_Trustworthy_Analysis_of_Online_Controlled_Experiments_at_Scale">Three Key Checklists and Remedies for Trustworthy Analysis of Online Controlled Experiments at Scale</a> that collects best-practices from the leading experimentation platforms in Booking.com, Microsoft, Intuit and others. We also studied how online platforms like Optimizely, Google Optimize, VWO, AB Smartly implement experimentation protocols to come up with the meaningful yet powerful minimum.</p>
+<p>The experimentation protocol requires the experimenter to adhere to following steps:</p>
+<ol>
+<li>Formulate Hypothesis</li>
+<li>Pick Primary Metric</li>
+<li>Set Experiment Duration</li>
+<li>Check Guardrail Metrics</li>
+</ol>
+<h2 id="formulate-hypothesis">Formulate Hypothesis<a class="headerlink" href="#formulate-hypothesis" title="Permanent link">&para;</a></h2>
+<p>Experiment hypothesis should be defined and should be falsifiable. Experiment analysis begins with the transformation of an idea for testing into an experiment. The first step in this process is the impact analysis. Every change for testing should be introduced with a description of what the change that will be evaluated is, who will see the change, what the expected impact is, and how this impact is connected to the top-level business goals (increase in revenue). Most importantly, an impact analysis should contain a line of reasoning – belief - that explains why a change is expected to have an impact. Common questions that help in evaluating this item are “Why are we improving this?”, “Why is existing state not good enough?”, “Why will the change make a difference?”, “Will it help the users, the business, or both?”<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<h2 id="pick-primary-metric">Pick Primary Metric<a class="headerlink" href="#pick-primary-metric" title="Permanent link">&para;</a></h2>
+<p>Picking primary metric helps to frame the experiment by determining what is the most important to measure. It also helps to think about possible next steps after the experiment will be over. Think about what you will do in all 3 possible experiment results:</p>
+<ol>
+<li>Significant positive impact</li>
+<li>Significant negative impact</li>
+<li>Inconclusive results</li>
+</ol>
+<h2 id="set-experiment-duration-before-starting-it">Set Experiment Duration Before Starting It<a class="headerlink" href="#set-experiment-duration-before-starting-it" title="Permanent link">&para;</a></h2>
+<p>The length of the experiment must be set upfront (before starting the experiment). If we do not set it up, then when should we stop? Immediately when the difference in the primary metric is significant? Or should we wait two more days and stop it then?</p>
+<p>Imagine you are developing a new version of a drug (medicament) and now you want to test a new version versus an old version. How will you proceed? Probably you will select a group of people and test it on them. If the difference between old and new versions is not statistically significant in a selected group of people, you end up experimenting with the result that the new drug is not outperforming the old one. But definitely you will not be adding more and more people to the experiment just to prove the new one is better. The same holds for online experiments.</p>
+<p>The experimenter must estimate the necessary duration of the experiment carefully. The best way to do it is to use the Sample Size Calculator implemented right in the Experimentation Platform, or ask colleagues, or ping EP Support team.</p>
+<p>The Experimentation Platform supports safe <em>early-stopping</em> of the experiment. If the experiment is performing really great or really poor, we can stop it right now and make a decision. We do not need to wait until the end of the experiment. For the right and safe set up of early-stopping criteria, we need experimenters to set up the appropriate duration of the experiment upfront. This is alpha and omega of controlling false-positive errors - falsely claiming untrue effect to be a true effect.</p>
+<p>See <a href="../stats/sequential.html">Sequential Analysis</a> for detailed explanation.</p>
+<h2 id="check-guardrail-metrics">Check Guardrail Metrics<a class="headerlink" href="#check-guardrail-metrics" title="Permanent link">&para;</a></h2>
+<p>Many things can go wrong during the experiment running phase. We might not get IID exposures in variants, data pipelines could fail, there could be client-side bugs in the experiment implementation. It is necessary to check for possible bugs before evaluating the experiment.</p>
+<p>While EP is not a platform to check all possible errors, it does the best to highlight and warn about them. EP does <em>Sample Ratio Mismatch</em> check for all experiments by default and it offers several guardrail metrics that could be part of the secondary metric definition.</p>
+<h3 id="sample-ratio-mismatch">Sample Ratio Mismatch<a class="headerlink" href="#sample-ratio-mismatch" title="Permanent link">&para;</a></h3>
+<p>Checking for SRM-Sample Ratio Mismatch, is an important test everyone doing experimenting should do. If you designed your experiment with equal percentages and got 821,588 vs. 815,482 users (50.2% instead of 50%), stop and find the bug<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>.</p>
+<p>Failing SRM check tells us there is some underlying problem in the experiment randomization. Experiments with failed SRM check should not be evaluated at all.</p>
+<p>See <a href="../stats/basics.html#sample-ratio-mismatch-check">SRM</a> for details about EP implementation.</p>
+<h2 id="pros-and-cons">Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Permanent link">&para;</a></h2>
+<p>On one hand we require experimenters to set experiment duration upfront, on the other hand we allow for safely calling the experiment off any time when measured differences are big enough.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://www.researchgate.net/publication/333614384_Three_Key_Checklists_and_Remedies_for_Trustworthy_Analysis_of_Online_Controlled_Experiments_at_Scale">Three Key Checklists and Remedies for Trustworthy Analysis of Online Controlled Experiments at Scale</a>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://twitter.com/ronnyk/status/932798952679776256">R. Kohavi, Sample Ratio Mismatch</a>&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021 Maintained by <a href="https://github.com/avast">Avast</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>

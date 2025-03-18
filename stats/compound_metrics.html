@@ -1,0 +1,1690 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Evaluation package for experimentation platform.">
+      
+      
+        <meta name="author" content="Team Doodlebug">
+      
+      
+        <link rel="canonical" href="https://github.com/avast/ep-stats/stats/compound_metrics.html">
+      
+      
+        <link rel="prev" href="multiple.html">
+      
+      
+        <link rel="next" href="../api/metric.html">
+      
+      
+      <link rel="icon" href="../experiment_b.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>Compound Metrics - Ep-Stats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#compound-metrics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ep-Stats" class="md-header__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ep-Stats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Compound Metrics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ep-Stats" class="md-nav__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    Ep-Stats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../principles.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Principles
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/quick_start.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/protocol.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experimentation Protocol
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ep_in_python.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using Ep-Stats from Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ab_test_simple_evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ad-hoc A/B test evaluation using Ep-Stats
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/aggregation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aggregation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/configuring_api.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuring API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Test Data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="basics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sample_size.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Size
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sequential.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sequential Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ctr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CTR Metric Redefined
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="multiple.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple Comparison Correction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Compound Metrics
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="compound_metrics.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Compound Metrics
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simple-vs-compound-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple vs Compound Metrics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solutions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#let-it-be-as-it-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      Let it be as it is
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute-value-squared-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compute Value Squared correctly
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correct-the-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      Correct the error
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-adjustment-subtraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error adjustment - subtraction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error adjustment - subtraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#only-one-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      Only one user
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple users
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-adjustment-summation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error adjustment - summation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error adjustment - summation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#only-one-user_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Only one user
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-users_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple users
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/metric.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metric
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/experiment.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/statistics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/check.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Check
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dao
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao_factory.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DaoFactory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TestData
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Presentations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Presentations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../presentations/architecture/architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simple-vs-compound-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple vs Compound Metrics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solutions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#let-it-be-as-it-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      Let it be as it is
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute-value-squared-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compute Value Squared correctly
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correct-the-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      Correct the error
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-adjustment-subtraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error adjustment - subtraction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error adjustment - subtraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#only-one-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      Only one user
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple users
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-adjustment-summation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error adjustment - summation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error adjustment - summation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#only-one-user_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Only one user
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-users_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple users
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="compound-metrics">Compound Metrics<a class="headerlink" href="#compound-metrics" title="Permanent link">&para;</a></h1>
+<p>There are metrics in Experimentation Platform, which are compounded, i.e. the nominator does not consist of value or count from a single goal, but it is composed from multiple goals. However, when we combine multiple goals into one, there might occur issues with standard deviation (variance).</p>
+<p>In data pipeline we save goals in multiple stages of aggregation:</p>
+<ol>
+<li>
+<p><strong>Tracking table</strong> <code>tracking</code>:
+Basically raw data, no aggregation applied. Usually one line, one goal.</p>
+</li>
+<li>
+<p><strong>Aggregated Unit Goals table</strong> <code>agg_unit_goals</code>:
+Goals are aggregated (grouped by) with respect to <code>experiment_id</code>, <code>variant_id</code>, <code>goal</code> and <code>guid</code>.</p>
+</li>
+<li>
+<p><strong>Aggregated Goals table</strong> <code>agg_goals</code>:
+Goals are aggregated (grouped by) with respect to <code>experiment_id</code>, <code>variant_id</code> and <code>goal</code>.</p>
+</li>
+</ol>
+<p>In statistical evaluation in EP we use tables <code>agg_unit_goals</code> and <code>agg_goals</code>, which contain pre-aggregated goals. We do not use table <code>tracking</code> with raw goals. This is mainly due to optimality of SQL queries.</p>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
+<p>We illustrate differences between tables on the following example. Assume we have two users, Sam and Mike. Sam bought three products for $10, $20 and $50. Than he refunded two of them - the one for $10 and the one for $20. Mike bought two products for $20 and $30. Later he refunded the cheaper one. They are both in A variant of our imaginary experiment.</p>
+<p><strong>Tracking table</strong> <code>tracking</code></p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>User</th>
+<th>Goal</th>
+<th>Count</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>1</td>
+<td>$10</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>1</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>1</td>
+<td>$50</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span> refund</td>
+<td>1</td>
+<td>$10</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span> refund</td>
+<td>1</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Mike</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>1</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Mike</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>1</td>
+<td>$30</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Mike</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span> refund</td>
+<td>1</td>
+<td>$20</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aggregated Unit Goals table</strong> <code>agg_unit_goals</code></p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>User</th>
+<th>Goal</th>
+<th>Count</th>
+<th>Value</th>
+<th>Value Squared</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>3</td>
+<td>$80</td>
+<td>6,400 (80 * 80)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span> refund</td>
+<td>2</td>
+<td>$30</td>
+<td>900 (30 * 30)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Mike</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>2</td>
+<td>$50</td>
+<td>2,500 (50 * 50)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Mike</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span> refund</td>
+<td>1</td>
+<td>$20</td>
+<td>400 (20 * 20)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aggregated Goals table</strong> <code>agg_goals</code></p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Goal</th>
+<th>Count</th>
+<th>Value</th>
+<th>Value Squared</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span> purchase</td>
+<td>5</td>
+<td>$130</td>
+<td>8,900 (6,400 + 2,500)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span> refund</td>
+<td>3</td>
+<td>$50</td>
+<td>1,300 (900 + 400)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="simple-vs-compound-metrics">Simple vs Compound Metrics<a class="headerlink" href="#simple-vs-compound-metrics" title="Permanent link">&para;</a></h2>
+<p>From table <code>agg_goals</code> it is easy to compute simple "per User" metrics such as <strong>Bookings per User</strong> or <strong>Refunds per User</strong>.
+For example total bookings equals to $130 ($80 Sam + $50 Mike) with sample variance 8,900 (6,400 Sam + 2,500 Mike). Analogously total refunds equals to $50 ($30 Sam + $20 Mike) with sample variance 1,300 (900 Sam + 400 Mike).</p>
+<p>The issues might arise when we think about compound metrics. Let assume we are interested in metric <strong>Net Bookings per User</strong>. In this metric we do not want to count purchases which were later refunded.
+Ideal situation would be if we had goal <code>net purchases</code>. This goal would be defined as <code>purchases</code> - <code>refunds</code>. If we compute <code>net purchases</code> from already aggregated goals, we overestimate the sample variance (<code>Value Squared</code>).</p>
+<p><strong>Aggregated Unit Goals table</strong> <code>agg_unit_goals</code>
+(Overestimating sample variance - the way how we compute it now)</p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>User</th>
+<th>Goal</th>
+<th>Count</th>
+<th>Value</th>
+<th>Value Squared</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.41 13.41 6 19l1.41-1.42L1.83 12m20.41-6.42L11.66 16.17 7.5 12l-1.43 1.41L11.66 19l12-12M18 7l-1.41-1.42-6.35 6.35 1.42 1.41z"/></svg></span> net purchases</td>
+<td>1</td>
+<td>$50</td>
+<td>5,500 (6,400 - 900)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Mike</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.41 13.41 6 19l1.41-1.42L1.83 12m20.41-6.42L11.66 16.17 7.5 12l-1.43 1.41L11.66 19l12-12M18 7l-1.41-1.42-6.35 6.35 1.42 1.41z"/></svg></span> net purchases</td>
+<td>1</td>
+<td>$30</td>
+<td>2,100 (2,500 - 400)</td>
+</tr>
+</tbody>
+</table>
+<p>This is exactly what we get if we use <code>agg_unit_goals</code> table. Now look closer. Sam bought three items for $10, $20 and $50. He refunded two of them for $10 and $20. In summary, Sam made one valid purchase for $50. Mike bought two items for $20 and $30. He refunded the first one. So do Mike made only one valid purchase for $30. Therefore, the <code>agg_unit_goals</code> table for (non-existing) goal <code>net purchases</code> should looks like this.</p>
+<p><strong>Aggregated Unit Goals table</strong> <code>agg_unit_goals</code>
+(True sample variance - the way how we should compute it)</p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>User</th>
+<th>Goal</th>
+<th>Count</th>
+<th>Value</th>
+<th>Value Squared</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Sam</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.41 13.41 6 19l1.41-1.42L1.83 12m20.41-6.42L11.66 16.17 7.5 12l-1.43 1.41L11.66 19l12-12M18 7l-1.41-1.42-6.35 6.35 1.42 1.41z"/></svg></span> net purchases</td>
+<td>1</td>
+<td>$50</td>
+<td>2,500 (50 * 50)</td>
+</tr>
+<tr>
+<td>A</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.23 7.23 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg></span> Mike</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.41 13.41 6 19l1.41-1.42L1.83 12m20.41-6.42L11.66 16.17 7.5 12l-1.43 1.41L11.66 19l12-12M18 7l-1.41-1.42-6.35 6.35 1.42 1.41z"/></svg></span> net purchases</td>
+<td>1</td>
+<td>$30</td>
+<td>900 (30 * 30)</td>
+</tr>
+</tbody>
+</table>
+<p>Now when we compute metric <strong>Net Bookings per User</strong> from the first table, we end up with two purchases with total value of $80 and <strong>total sample variance 7,600</strong>.</p>
+<p>When we compute the same metric from the second table, we end up with two purchases with total value of $80 and <strong>total sample variance 3,400</strong>.</p>
+<p>In this specific case <strong>we overestimated sample variance by 4,200 - by 124%</strong>!</p>
+<h2 id="solutions">Solutions<a class="headerlink" href="#solutions" title="Permanent link">&para;</a></h2>
+<p>There exists three possible solutions of this issue.</p>
+<h3 id="let-it-be-as-it-is">Let it be as it is<a class="headerlink" href="#let-it-be-as-it-is" title="Permanent link">&para;</a></h3>
+<p>We can just let it be as it is now. Actually, there are two scenarios what can happen. We can either overestimate true sample variance or underestimate it.</p>
+<p>Overestimating sample variance is not as harmful as underestimating. Overestimating causes we end up with higher p-value and wider confidence intervals. In a nutshell, we are more conservative.
+Underestimating is much worse. In this case we have no guarantee our results are trustworthy anymore.</p>
+<p>We overestimate the true sample variance if compound metric is subtraction of goals. We underestimate the true sample variance if compound metric is summation of goals. We can both underestimate or overestimate the true sample variance if compound metric is both subtraction and summation of goals.</p>
+<h3 id="compute-value-squared-correctly">Compute Value Squared correctly<a class="headerlink" href="#compute-value-squared-correctly" title="Permanent link">&para;</a></h3>
+<p>We can compute <code>Value Squared</code> correctly and avoid all these problems. Unfortunately, this straightforward solution is pretty tricky. It demands non-trivial implementation in EP SQL queries. The interim table <code>agg_unit_goals</code> must join itself as many times as many goals compound metric contains.</p>
+<p>On the other hand, this is a general solution, and it would solve all problems connected with compound metrics and their sample variances.</p>
+<h3 id="correct-the-error">Correct the error<a class="headerlink" href="#correct-the-error" title="Permanent link">&para;</a></h3>
+<p>In the next sections we will explicitly derive the error in sample variance. We can adjust the overestimated (underestimated) sample variance using this error. Then we end up with correct value of sample variance. However, this might be messy for compound metrics with more than two goals.</p>
+<h2 id="error-adjustment-subtraction">Error adjustment - subtraction<a class="headerlink" href="#error-adjustment-subtraction" title="Permanent link">&para;</a></h2>
+<p>When the compound metric consists of subtraction of two goals, we overestimate the true sample variance. Firstly, we derive the error for one user. Secondly, we derive the error form multiple users.</p>
+<h3 id="only-one-user">Only one user<a class="headerlink" href="#only-one-user" title="Permanent link">&para;</a></h3>
+<p>Let assume we have only one user. The user made <span class="arithmatex">\(P\)</span> purchases and <span class="arithmatex">\(R\)</span> refunds, where <span class="arithmatex">\(R \leq P\)</span>. We denote values of purchases by <span class="arithmatex">\(p_{i}, \, i = 1, \dots, P\)</span> and values of refunds by <span class="arithmatex">\(r_{j}, \, j = 1, \dots, R\)</span>.</p>
+<p>We want to prove that if we compute sample variance of <code>net purchases</code> from <code>agg_unit_goals</code> table, we will overestimate the true sample variance (right side of inequality). The true sample variance is on the left side of the inequality.</p>
+<div class="arithmatex">\[\begin{split}
+\big( \sum_{i = 1}^{P} p_{i} - \sum_{j = 1}^{R} r_{j} \big)^{2} &amp; \leq \big( \sum_{i = 1}^{P} p_{i} \big)^{2} - \big( \sum_{j = 1}^{R} r_{j} \big)^{2}, \\
+\big( \sum_{i = 1}^{P} p_{i} \big)^{2} + \big( \sum_{j = 1}^{R} r_{j} \big)^{2} - 2 \sum_{i = 1}^{P} p_{i} \sum_{j = 1}^{R} r_{j} &amp; \leq \big( \sum_{i = 1}^{P} p_{i} \big)^{2} - \big( \sum_{j = 1}^{R} r_{j} \big)^{2}, \\
+\big( \sum_{j = 1}^{R} r_{j} \big)^{2} - 2 \sum_{i = 1}^{P} p_{i} \sum_{j = 1}^{R} r_{j} &amp; \leq - \big( \sum_{j = 1}^{R} r_{j} \big)^{2}, \\
+0 &amp; \leq 2 \sum_{j = 1}^{R} r_{j} \big( \sum_{i = 1}^{P} p_{i} - \sum_{j = 1}^{R} r_{j} \big).
+\end{split}\]</div>
+<p>Since <span class="arithmatex">\(p_{i} \geq 0\)</span> for <span class="arithmatex">\(i = 1, \dots, P\)</span> and <span class="arithmatex">\(r_{j} \geq 0\)</span> for <span class="arithmatex">\(j = 1, \dots, R\)</span>, the right side on the last line is greater or equal to zero. We have proved that the original inequality holds - we overestimate the true sample variance. Next, we have explicitly derived the error term</p>
+<div class="arithmatex">\[ 2 \sum_{j = 1}^{R} r_{j} \big( \sum_{i = 1}^{P} p_{i} - \sum_{j = 1}^{R} r_{j} \big). \]</div>
+<h3 id="multiple-users">Multiple users<a class="headerlink" href="#multiple-users" title="Permanent link">&para;</a></h3>
+<p>In case of multiple users the problem complicates only slightly. Let assume we have <span class="arithmatex">\(N\)</span> users. So the inequality is following</p>
+<div class="arithmatex">\[ \sum_{n = 1}^{N} \Big( \sum_{i = 1}^{P_{n}} p_{i,n} - \sum_{j = 1}^{R_{n}} r_{j,n} \Big)^{2} \leq \sum_{n = 1}^{N} \Big( \big( \sum_{i = 1}^{P_{n}} p_{i,n} \big)^{2} - \big( \sum_{j = 1}^{R_{n}} r_{j,n} \big)^{2} \Big). \]</div>
+<p>Since the inequality holds for every single user, it must also holds if we sum them up.</p>
+<p>Also the error by how much do we differ is the sum of single errors</p>
+<div class="arithmatex">\[ \sum_{n = 1}^{N} \Big( 2 \sum_{j = 1}^{R_{n}} r_{j,n} \big( \sum_{i = 1}^{P_{n}} p_{i,n} - \sum_{j = 1}^{R_{n}} r_{j,n} \big) \Big). \]</div>
+<h2 id="error-adjustment-summation">Error adjustment - summation<a class="headerlink" href="#error-adjustment-summation" title="Permanent link">&para;</a></h2>
+<p>This time we derive error term when we sum two goals. Let assume we want to compute compound metric <strong>All bookings per User</strong> which is defined as purchases plus trial conversions. The compound goal <code>all purchases</code> equals to <code>purchases</code> + <code>trails</code>. In this case we show by how much we underestimate the true sample variance.</p>
+<h3 id="only-one-user_1">Only one user<a class="headerlink" href="#only-one-user_1" title="Permanent link">&para;</a></h3>
+<p>Again let assume we have only one user. The user made <span class="arithmatex">\(P\)</span> purchases and <span class="arithmatex">\(T\)</span> trial conversions. We denote values of purchases by <span class="arithmatex">\(p_{i}, \, i = 1, \dots, P\)</span> and values of trial conversions by <span class="arithmatex">\(t_{k}, \, k = 1, \dots, T\)</span>.</p>
+<p>We want to prove that if we compute sample variance of <code>all purchases</code> from <code>agg_unit_goals</code> table, we will underestimate the true sample variance (right side of inequality). The true sample variance is on the left side of the inequality.</p>
+<div class="arithmatex">\[\begin{split}
+\big( \sum_{i = 1}^{P} p_{i} + \sum_{k = 1}^{T} t_{k} \big)^{2} &amp; \geq \big( \sum_{i = 1}^{P} p_{i} \big)^{2} + \big( \sum_{k = 1}^{T} t_{k} \big)^{2}, \\
+\big( \sum_{i = 1}^{P} p_{i} \big)^{2} + \big( \sum_{k = 1}^{T} t_{k} \big)^{2} + 2 \sum_{i = 1}^{P} p_{i} \sum_{k = 1}^{T} t_{k} &amp; \geq \big( \sum_{i = 1}^{P} p_{i} \big)^{2} + \big( \sum_{k = 1}^{T} t_{k} \big)^{2}, \\
+2 \sum_{i = 1}^{P} p_{i} \sum_{k = 1}^{T} t_{k} &amp; \geq 0.
+\end{split}\]</div>
+<p>Since <span class="arithmatex">\(p_{i} \geq 0\)</span> for <span class="arithmatex">\(i = 1, \dots, P\)</span> and <span class="arithmatex">\(t_{k} \geq 0\)</span> for <span class="arithmatex">\(k = 1, \dots, T\)</span>, the left side on the last line is greater or equal to zero. We have proved that the original inequality holds - we underestimate the true sample variance. Next, we have explicitly derived the error term</p>
+<div class="arithmatex">\[ 2 \sum_{i = 1}^{P} p_{i} \sum_{k = 1}^{T} t_{k}. \]</div>
+<h3 id="multiple-users_1">Multiple users<a class="headerlink" href="#multiple-users_1" title="Permanent link">&para;</a></h3>
+<p>In case of multiple users the problem complicates only slightly. Let assume we have <span class="arithmatex">\(N\)</span> users. So the inequality is following</p>
+<div class="arithmatex">\[ \sum_{n = 1}^{N} \Big( \sum_{i = 1}^{P_{n}} p_{i,n} + \sum_{k = 1}^{T_{n}} t_{k,n} \Big)^{2} \geq \sum_{n = 1}^{N} \Big( \big( \sum_{i = 1}^{P_{n}} p_{i,n} \big)^{2} + \big( \sum_{k = 1}^{T_{n}} t_{k, n} \big)^{2} \Big). \]</div>
+<p>Since the inequality holds for every single user, it must also holds if we sum them up.</p>
+<p>Also the error by how much do we differ is the sum of single errors</p>
+<div class="arithmatex">\[ \sum_{n = 1}^{N} \Big( 2 \sum_{i = 1}^{P_{n}} p_{i,n} \sum_{k = 1}^{T_{n}} t_{k,n} \Big). \]</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021 Maintained by <a href="https://github.com/avast">Avast</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>

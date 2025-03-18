@@ -1,0 +1,1593 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Evaluation package for experimentation platform.">
+      
+      
+        <meta name="author" content="Team Doodlebug">
+      
+      
+        <link rel="canonical" href="https://github.com/avast/ep-stats/stats/multiple.html">
+      
+      
+        <link rel="prev" href="ctr.html">
+      
+      
+        <link rel="next" href="compound_metrics.html">
+      
+      
+      <link rel="icon" href="../experiment_b.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>Multiple Comparison Correction - Ep-Stats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#multiple-comparison-correction" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ep-Stats" class="md-header__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ep-Stats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Multiple Comparison Correction
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ep-Stats" class="md-nav__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    Ep-Stats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../principles.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Principles
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/quick_start.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/protocol.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experimentation Protocol
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ep_in_python.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using Ep-Stats from Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ab_test_simple_evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ad-hoc A/B test evaluation using Ep-Stats
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/aggregation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aggregation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/configuring_api.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuring API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Test Data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="basics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sample_size.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Size
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sequential.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sequential Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ctr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CTR Metric Redefined
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Multiple Comparison Correction
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="multiple.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Multiple Comparison Correction
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-comparisons-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Comparisons Problem
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonferroni-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bonferroni correction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bonferroni correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#holmbonferroni-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      HolmBonferroni method
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HolmBonferroni method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idk-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      idk correction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="idk correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-for-alpha" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm (for \(\alpha\))
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-for-p-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm (for p-values)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#confidence-interval-adjustment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Confidence Interval Adjustment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Confidence Interval Adjustment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python package
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="compound_metrics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compound Metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/metric.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metric
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/experiment.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/statistics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/check.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Check
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dao
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao_factory.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DaoFactory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TestData
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Presentations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Presentations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../presentations/architecture/architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-comparisons-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Comparisons Problem
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonferroni-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bonferroni correction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bonferroni correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#holmbonferroni-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      HolmBonferroni method
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HolmBonferroni method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idk-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      idk correction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="idk correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-for-alpha" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm (for \(\alpha\))
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-for-p-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm (for p-values)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#confidence-interval-adjustment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Confidence Interval Adjustment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Confidence Interval Adjustment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python package
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="multiple-comparison-correction">Multiple Comparison Correction<a class="headerlink" href="#multiple-comparison-correction" title="Permanent link">&para;</a></h1>
+<p>Multiple comparisons problem is a problem, when we perform instead of one statistical test (i.e. difference between A and B variant) multiple statistical tests (i.e. difference between A and B, A and C, A and D). Some of them may have p-values less than 0.05 purely by chance, even if all our null hypotheses are really true.</p>
+<p>There exist various solutions. They differ mainly in power and implementation difficulty. We present one-by-one Bonferroni correction, HolmBonferroni method and Sidak correction. We summarize pros and cons of methods and provide step-by-step algorithms. Finally we present simple example in order to compare suggested methods.</p>
+<p>Generally HolmBonferroni method and the idk correction are universally more powerful procedures than the Bonferroni correction. Bonferroni correction is the most conservative one and suitable for independent tests.</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>After taking into account computational difficulty and results from a simple, but quite real example, we suggest to use Holm-Bonferroni method.</p>
+<h2 id="multiple-comparisons-problem">Multiple Comparisons Problem<a class="headerlink" href="#multiple-comparisons-problem" title="Permanent link">&para;</a></h2>
+<p>Source <a href="https://en.wikipedia.org/wiki/Multiple_comparisons_problem">Multiple comparisons problem (Wikipedia)</a>.</p>
+<p>Let assume we want to test <span class="arithmatex">\(m\)</span> null hypotheses <span class="arithmatex">\(H_{0}^{1}, \dots, H_{0}^{m}\)</span>. Let denote by <span class="arithmatex">\(\alpha\)</span> our overall level of significance. Typically we set <span class="arithmatex">\(\alpha = 0.05\)</span>. For each hull hypotheses we calculate p-values <span class="arithmatex">\(p_{1}, \dots, p_{m}\)</span>. We need to adjust these p-values for individual hypotheses <span class="arithmatex">\(H_{0}^{i}\)</span>, <span class="arithmatex">\(i = 1, \dots, m\)</span> in order to satisfy overall level of significance <span class="arithmatex">\(\alpha\)</span>.</p>
+<h2 id="bonferroni-correction">Bonferroni correction<a class="headerlink" href="#bonferroni-correction" title="Permanent link">&para;</a></h2>
+<p>Source <a href="https://en.wikipedia.org/wiki/Bonferroni_correction">Bonferroni correction (Wikipedia)</a>.</p>
+<p>This is the simplest way how to deal with Multiple comparisons problem. It is easy to implement, on the other hand, it is too conservative and tests loose too much power. This correction works in the worst-case scenario that all tests are independent. Since we test difference between A and B, A and C, A and D variant, these tests are dependent and therefore this correction is too stringent.</p>
+<h3 id="algorithm">Algorithm<a class="headerlink" href="#algorithm" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Compute p-values <span class="arithmatex">\(p_{1}, \dots, p_{m}\)</span> for all <span class="arithmatex">\(m\)</span> hypotheses <span class="arithmatex">\(H_{0}^{1}, \dots, H_{0}^{m}\)</span>.</li>
+<li>Compute adjusted p-values using formula</li>
+</ol>
+<div class="arithmatex">\[\tilde{p}_{i} = \min \big\{ m \, p_{i}, 1 \big\}, \,\,\, i = 1, \dots, m\]</div>
+<ol>
+<li>Reject null hypothesis <span class="arithmatex">\(H_{0}^{i}\)</span> if and only if <span class="arithmatex">\(\tilde{p}_{i} \leq \alpha\)</span>.</li>
+</ol>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.stats.multitest</span>
+<span class="n">pvals</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">]</span>
+
+<span class="n">decision</span><span class="p">,</span> <span class="n">adj_pvals</span><span class="p">,</span> <span class="n">sidak_aplha</span><span class="p">,</span> <span class="n">bonf_alpha</span> <span class="o">=</span> <span class="n">statsmodels</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">multitest</span><span class="o">.</span><span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">pvals</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bonferroni&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Original p-values: </span><span class="se">\t</span><span class="s1"> </span><span class="si">{</span><span class="n">pvals</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adjusted p-values: </span><span class="se">\t</span><span class="s1"> </span><span class="si">{</span><span class="n">adj_pvals</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Original p-values:   [0.01, 0.04, 0.03]
+Adjusted p-values:   [0.03 0.12 0.09]
+</code></pre></div>
+<h2 id="holmbonferroni-method">HolmBonferroni method<a class="headerlink" href="#holmbonferroni-method" title="Permanent link">&para;</a></h2>
+<p>Source <a href="https://en.wikipedia.org/wiki/HolmBonferroni_method">HolmBonferroni method (Wikipedia)</a>.</p>
+<p>Holm-Bonferroni method is more powerful than Bonferroni and it is valid under the same assumptions.</p>
+<h3 id="algorithm_1">Algorithm<a class="headerlink" href="#algorithm_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Compute p-values <span class="arithmatex">\(p_{1}, \dots, p_{m}\)</span> for all <span class="arithmatex">\(m\)</span> hypotheses <span class="arithmatex">\(H_{0}^{1}, \dots, H_{0}^{m}\)</span>.</li>
+<li>Order p-values from lowest to highest <span class="arithmatex">\(p_{(1)} \leq \dots \leq p_{(m)}\)</span></li>
+<li>Let <span class="arithmatex">\(k\)</span> be the minimal index such that <span class="arithmatex">\(p_{k} (m + 1 - k) &gt; \alpha\)</span>.</li>
+<li>Reject the null hypotheses <span class="arithmatex">\(H_{0}^{(1)}, \dots, H_{0}^{(k-1)}\)</span> and do not reject <span class="arithmatex">\(H_{0}^{(k)}, \dots, H_{0}^{(m)}\)</span>.</li>
+<li>If <span class="arithmatex">\(k = 1\)</span> then do not reject any of the null hypotheses and if no such <span class="arithmatex">\(k\)</span> index exist then reject all of the null hypotheses.</li>
+</ol>
+<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code><span class="n">decision</span><span class="p">,</span> <span class="n">adj_pvals</span><span class="p">,</span> <span class="n">sidak_aplha</span><span class="p">,</span> <span class="n">bonf_alpha</span> <span class="o">=</span> <span class="n">statsmodels</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">multitest</span><span class="o">.</span><span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">pvals</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;holm&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Original p-values: </span><span class="se">\t</span><span class="s1"> </span><span class="si">{</span><span class="n">pvals</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adjusted p-values: </span><span class="se">\t</span><span class="s1"> </span><span class="si">{</span><span class="n">adj_pvals</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div>
+    Original p-values:   [0.01, 0.04, 0.03]
+    Adjusted p-values:   [0.03 0.06 0.06]</p>
+<h2 id="idk-correction">idk correction<a class="headerlink" href="#idk-correction" title="Permanent link">&para;</a></h2>
+<p>Source <a href="https://en.wikipedia.org/wiki/idk_correction">idk correction (Wikipedia)</a>.</p>
+<p>idk correction keeps Type I error rate of exactly <span class="arithmatex">\(\alpha\)</span> when the tests are independent from each other and all null hypotheses are true. It is less stringent than the Bonferroni correction, but only slightly.</p>
+<h3 id="algorithm-for-alpha">Algorithm (for <span class="arithmatex">\(\alpha\)</span>)<a class="headerlink" href="#algorithm-for-alpha" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Compute p-values <span class="arithmatex">\(p_{1}, \dots, p_{m}\)</span> for all <span class="arithmatex">\(m\)</span> hypotheses <span class="arithmatex">\(H_{0}^{1}, \dots, H_{0}^{m}\)</span>.</li>
+<li>Reject null hypothesis <span class="arithmatex">\(H_{0}^{i}\)</span> if and only if associated p-value <span class="arithmatex">\(p_{i}\)</span> is lower or equal than <span class="arithmatex">\(\alpha_{SID} = 1 - (1 - \alpha)^{\frac{1}{m}}\)</span>.</li>
+</ol>
+<h3 id="algorithm-for-p-values">Algorithm (for p-values)<a class="headerlink" href="#algorithm-for-p-values" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Compute p-values <span class="arithmatex">\(p_{1}, \dots, p_{m}\)</span> for all <span class="arithmatex">\(m\)</span> hypotheses <span class="arithmatex">\(H_{0}^{1}, \dots, H_{0}^{m}\)</span>.</li>
+<li>Order p-values from lowest to highest <span class="arithmatex">\(p_{(1)} \leq \dots \leq p_{(m)}\)</span></li>
+<li>Calculate adjusted p-values <span class="arithmatex">\(\tilde{p}_{(i)}\)</span> using formula
+$$
+ \tilde{p}<em _i_="(i)">{(i)}=
+     \begin{cases}
+        1 - (1 - p</em> &amp; \text{for })^{m<span class="arithmatex">\(i = 1\)</span>},\
+        \max \big{ \tilde{p}<em _i_="(i)">{(i-1)}, 1 - (1 - p</em> \big} &amp; \text{for })^{m-i+1<span class="arithmatex">\(i = 2, \dots, m\)</span>}.
+     \end{cases}
+$$</li>
+</ol>
+<h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code><span class="n">decision</span><span class="p">,</span> <span class="n">adj_pvals</span><span class="p">,</span> <span class="n">sidak_aplha</span><span class="p">,</span> <span class="n">bonf_alpha</span> <span class="o">=</span> <span class="n">statsmodels</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">multitest</span><span class="o">.</span><span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">pvals</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sidak&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Original p-values: </span><span class="se">\t</span><span class="s1"> </span><span class="si">{</span><span class="n">pvals</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adjusted p-values: </span><span class="se">\t</span><span class="s1"> </span><span class="si">{</span><span class="n">adj_pvals</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div>
+    Original p-values:   [0.01, 0.04, 0.03]
+    Adjusted p-values:   [0.029701 0.115264 0.087327]</p>
+<h2 id="confidence-interval-adjustment">Confidence Interval Adjustment<a class="headerlink" href="#confidence-interval-adjustment" title="Permanent link">&para;</a></h2>
+<p>After p-values adjustment for Multiple comparisons problem it is also necessary to appropriately adjust confidence intervals. Fortunately this is an easy problem and it does not depend on chosen method. We use duality between p-values and confidence intervals.</p>
+<h3 id="algorithm_2">Algorithm<a class="headerlink" href="#algorithm_2" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Compute (original) p-values <span class="arithmatex">\(p_{1}, \dots, p_{m}\)</span> for all <span class="arithmatex">\(m\)</span> hypotheses <span class="arithmatex">\(H_{0}^{1}, \dots, H_{0}^{m}\)</span>.</li>
+<li>Based on chosen method compute adjusted p-values <span class="arithmatex">\(\tilde{p}_{1}, \dots, \tilde{p}_{m}\)</span>.</li>
+<li>Compute adjustment ratios <span class="arithmatex">\(r_{1}, \dots, r_{m}\)</span> such that</li>
+</ol>
+<div class="arithmatex">\[r_{i} = \frac{p_{i}}{\tilde{p}_{i}}, \,\,\, i = 1, \dots, m.\]</div>
+<ol>
+<li>Let denote desired confidence level(s) as usual by <span class="arithmatex">\(\alpha\)</span>, e.g. <span class="arithmatex">\(\alpha = 0.05\)</span>. More precisely let assume <span class="arithmatex">\(\alpha_{1}, \dots, \alpha_{m}\)</span>.</li>
+<li>Compute adjusted confidence levels <span class="arithmatex">\(\tilde{\alpha}_{1}, \dots, \tilde{\alpha}_{m}\)</span> such that</li>
+</ol>
+<div class="arithmatex">\[\tilde{\alpha_{i}} = r \, \alpha_{i}.\]</div>
+<ol>
+<li>Compute <span class="arithmatex">\((1 - \alpha_{i})\)</span>-confidence intervals such that you use <span class="arithmatex">\(\tilde{\alpha}_{i}\)</span> instead of <span class="arithmatex">\(\alpha_{i}\)</span>.</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Computed confidence intervals using <span class="arithmatex">\(\tilde{\alpha}_{i}\)</span> instead of <span class="arithmatex">\(\alpha_{i}\)</span> are actually <span class="arithmatex">\((1 - \alpha_{i})\)</span>-confidence intervals. Levels of significance DO NOT change, they are still <span class="arithmatex">\(1 - \alpha_{i}\)</span>, not <span class="arithmatex">\(1 - \tilde{\alpha}_{i}\)</span>.</p>
+</div>
+<h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
+<p>Unadjusted p-value is <span class="arithmatex">\(p_{i} = 0.01\)</span>. Adjusted p-value is <span class="arithmatex">\(\tilde{p}_{i} = 0.03\)</span>. Adjustment ratio is <span class="arithmatex">\(r = 1/3\)</span>. Desired level of significance is <span class="arithmatex">\(\alpha = 0.05\)</span>. Adjusted level of significance is <span class="arithmatex">\(\tilde{\alpha} = 0.05 \cdot 1/3 = 0.01667\)</span>. So we need to compute <span class="arithmatex">\(1 - 0.01667 = 0.983 = 98.3\%\)</span>-confidence interval in order to get <span class="arithmatex">\(95\%\)</span>-confidence interval.</p>
+<h2 id="python-package">Python package<a class="headerlink" href="#python-package" title="Permanent link">&para;</a></h2>
+<p>Link to documentation of <a href="https://www.statsmodels.org/dev/generated/statsmodels.stats.multitest.multipletests.html">Statsmodels package</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021 Maintained by <a href="https://github.com/avast">Avast</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>

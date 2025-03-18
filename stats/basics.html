@@ -1,0 +1,1406 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Evaluation package for experimentation platform.">
+      
+      
+        <meta name="author" content="Team Doodlebug">
+      
+      
+        <link rel="canonical" href="https://github.com/avast/ep-stats/stats/basics.html">
+      
+      
+        <link rel="prev" href="../user_guide/test_data.html">
+      
+      
+        <link rel="next" href="sample_size.html">
+      
+      
+      <link rel="icon" href="../experiment_b.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>Basics - Ep-Stats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#statistics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ep-Stats" class="md-header__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ep-Stats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Basics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ep-Stats" class="md-nav__button md-logo" aria-label="Ep-Stats" data-md-component="logo">
+      
+  <img src="../experiment_w.png" alt="logo">
+
+    </a>
+    Ep-Stats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/avast/ep-stats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    avast/ep-stats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../principles.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Principles
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/quick_start.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/protocol.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experimentation Protocol
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ep_in_python.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using Ep-Stats from Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/ab_test_simple_evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ad-hoc A/B test evaluation using Ep-Stats
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/aggregation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aggregation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/configuring_api.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuring API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Test Data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="basics.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#point-estimates-confidence-intervals-and-hypothesis-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Point Estimates, Confidence Intervals and Hypothesis Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pitfalls-and-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pitfalls and Corrections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pitfalls and Corrections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#absolute-vs-relative-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Absolute vs. Relative Difference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#independent-and-identically-distributed-observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Independent and Identically Distributed Observations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-comparisons-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Comparisons Problem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-experiment-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-time Experiment Evaluation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-quality-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Checks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Quality Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-ratio-mismatch-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Ratio Mismatch Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sum-ratio-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sum Ratio Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sample_size.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Size
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sequential.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sequential Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ctr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CTR Metric Redefined
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="multiple.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple Comparison Correction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="compound_metrics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compound Metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/metric.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metric
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/experiment.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/evaluation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/statistics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/check.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Check
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dao
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/dao_factory.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DaoFactory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/test_data.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TestData
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Presentations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Presentations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../presentations/architecture/architecture.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#point-estimates-confidence-intervals-and-hypothesis-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Point Estimates, Confidence Intervals and Hypothesis Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pitfalls-and-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pitfalls and Corrections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pitfalls and Corrections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#absolute-vs-relative-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Absolute vs. Relative Difference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#independent-and-identically-distributed-observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Independent and Identically Distributed Observations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-comparisons-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Comparisons Problem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-experiment-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-time Experiment Evaluation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-quality-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Checks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Quality Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-ratio-mismatch-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Ratio Mismatch Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sum-ratio-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sum Ratio Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="statistics">Statistics<a class="headerlink" href="#statistics" title="Permanent link">&para;</a></h1>
+<p>We want to test, whether the difference between treatment and control variant in chosen metric is statistically significant or not. From statistical point of view, we deal with point estimates, confidence intervals and hypothesis testing. Confidence level is set by default to 95%, i.e. we talk about 95%-confidence intervals and hypothesis testing on 5% level of significance.</p>
+<p>We also run various data quality checks to guarantee trustworthiness of presented data.</p>
+<h2 id="point-estimates-confidence-intervals-and-hypothesis-testing">Point Estimates, Confidence Intervals and Hypothesis Testing<a class="headerlink" href="#point-estimates-confidence-intervals-and-hypothesis-testing" title="Permanent link">&para;</a></h2>
+<p>Assume we have one control variant (usually denoted by <span class="arithmatex">\(A\)</span>) and one or more treatment variants (usually denoted by <span class="arithmatex">\(B\)</span>, <span class="arithmatex">\(C\)</span>, <span class="arithmatex">\(D\)</span>, ...). We calculate point estimate for relative difference between treatment and control variant in chosen metric. Next we calculate confidence interval for the relative difference. Finally, we want to test whether estimated relative difference is significantly significant.</p>
+<p>Formula for relative difference is straightforward: <span class="arithmatex">\((B - A) / A * 100\)</span>. To be more precise, point estimate is only the estimate of true relative difference between treatment and control variant. The true relative difference is unknown! The point estimate is the best possible estimate of the true (unknown) relative difference using available data from the experiment.</p>
+<p>We implemented Welch's t-test<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> to test the significance of point estimate in EP Stats engine. Delta method is necessary, since standard Welch's test works well only for absolute differences, i.e. <span class="arithmatex">\(B - A\)</span>. We use quantiles from Student's t-distribution which approximate normal distribution.</p>
+<h2 id="pitfalls-and-corrections">Pitfalls and Corrections<a class="headerlink" href="#pitfalls-and-corrections" title="Permanent link">&para;</a></h2>
+<p>We summarize all corrections implemented next to Welch's t-test in this part. Generally Welch's t-test assumes we have two samples, i.e. we have two sequences of independent and identically distributed random variables with finite variance. The variances between the variants may not be equal.</p>
+<p>Unfortunately assumptions above are often violated in practice and appropriate corrections are necessary to guarantee desired level of significance.</p>
+<h3 id="absolute-vs-relative-difference">Absolute vs. Relative Difference<a class="headerlink" href="#absolute-vs-relative-difference" title="Permanent link">&para;</a></h3>
+<p>Two-sample t-test is only correct when we deal with absolute difference, i.e. <span class="arithmatex">\(B - A\)</span>. But it does not hold any more when we deal with relative difference. In order to be statistically correct, <a href="ctr.html#relative-difference">delta method for relative difference</a> is necessary.</p>
+<h3 id="independent-and-identically-distributed-observations">Independent and Identically Distributed Observations<a class="headerlink" href="#independent-and-identically-distributed-observations" title="Permanent link">&para;</a></h3>
+<p>Welch's t-test assumes that observations are independent and identically distributed (i.i.d.). Unfortunately this assumption does not hold always.</p>
+<p>Let's assume Click-through rate metric (i.e. clicks / views). Since multiple views (and clicks) from the same user (user being randomization unit here) are allowed, the assumption of independence is violated. Multiple observations from the same user are not independent. <a href="ctr.html#asymptotic-distribution-of-ctr">Delta method for iid</a> is necessary (has not been implemented yet).</p>
+<h3 id="multiple-comparisons-problem">Multiple Comparisons Problem<a class="headerlink" href="#multiple-comparisons-problem" title="Permanent link">&para;</a></h3>
+<p>If we have only one control <span class="arithmatex">\(A\)</span> and one treatment <span class="arithmatex">\(B\)</span> variant, we need to run just one Welch's t-test, i.e. relative difference between <span class="arithmatex">\(B\)</span> and <span class="arithmatex">\(A\)</span>. If we have multiple treatment variants, e.g. <span class="arithmatex">\(B\)</span>, <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(D\)</span>, we need to run three Welch's t-tests, i.e. relative difference between <span class="arithmatex">\(B\)</span> and <span class="arithmatex">\(A\)</span>, <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(A\)</span>, <span class="arithmatex">\(D\)</span> and <span class="arithmatex">\(A\)</span>. If we run every single test on 5% level of significance, the overall level of significance is lower. The probability of false-positive error (i.e. we wrongly reject at least one null hypothesis) is higher than required 5% level.</p>
+<p>In ep-stats engine, we implemented <a href="multiple.html#holmbonferroni-method">HolmBonferroni p-value correction</a>. Single tests are more conservative and so overall level of confidence is satisfied.</p>
+<h3 id="real-time-experiment-evaluation">Real-time Experiment Evaluation<a class="headerlink" href="#real-time-experiment-evaluation" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Time is Money</p>
+</blockquote>
+<p>One of the main goals in Experimentation Platform was to develop real-time data pipelines. Standard Welch's t-test assumes you evaluate experiment only once, after you collect all data. If you evaluate experiment more than once, than the false-positive error (wrongly rejecting null hypothesis) grows enormously<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>.</p>
+<p>We implemented <a href="sequential.html">Sequential testing</a> procedure to tackle this issue. It allows us to evaluate experiments (hypothesis) real-time during the experiment period without exceeding false-positive errors.</p>
+<p>The solution itself is pretty simple. In the beginning (circa first half of the experiment period) the decision rule is very conservative and only great differences can be called statistically significant. As we approach the end of the experiment the decision rule is less and less stringent. If we have enough evidence, the difference can be statistically significant and we can end up the experiment earlier.</p>
+<p>Main disadvantage is that the <a href="../user_guide/protocol.html#set-experiment-duration-before-starting-it">length of the experiment must be set in advance</a> - before starting the experiment. This is very annoying for the experimenters (test owners) but right now this is the only way, how to deal with this issue. If we do not use Sequential testing, our false-positive errors could be somewhere between 20-30%, instead of required below 5%. It means one third of all presented results are wrong and without any chance to fix them. In other words, one third of decisions are wrong.</p>
+<h2 id="data-quality-checks">Data Quality Checks<a class="headerlink" href="#data-quality-checks" title="Permanent link">&para;</a></h2>
+<p>Experimentation Platform is very complex. From data collection to statistical evaluation, there are many intermediate steps. All of these steps must be checked regularly in order to guarantee trustworthiness of presented results.</p>
+<h3 id="sample-ratio-mismatch-check">Sample Ratio Mismatch Check<a class="headerlink" href="#sample-ratio-mismatch-check" title="Permanent link">&para;</a></h3>
+<p>Sample Ratio Mismatch check<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup> (SRM Check) checks the quality of randomization. Randomization is absolutely crucial. Wrong randomization can have fatal consequences and results might be highly misleading. SRM check checks whether we have the same number of users in each variant. Chi-square[^6] test is implemented.</p>
+<p>In this check we require high reliability. Therefore the confidence level is set to 99.9%. If SRM check fails, presented results should not be taken into account and any decisions based on this experiment should not be done!</p>
+<h3 id="sum-ratio-check">Sum Ratio Check<a class="headerlink" href="#sum-ratio-check" title="Permanent link">&para;</a></h3>
+<p>Computes ratios of two goal counts summed across all variants.</p>
+<p>In EP this is used for the Experiment Variant Assignment Consistency Check (EVA Check), which evaluates
+how many unit ids are assigned to more than one experiment variant.</p>
+<h3 id="data-quality">Data Quality<a class="headerlink" href="#data-quality" title="Permanent link">&para;</a></h3>
+<p>We have not implemented any automatic data quality checks yet. The plan is to check all parts of data pipelines.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://en.wikipedia.org/wiki/Welch%27s_t-test">Welch's t-test</a>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://twitter.com/ronnyk/status/932798952679776256?lang=cs">Ronny Kohavi, Sample Ratio Mismatch</a>&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://en.wikipedia.org/wiki/Chi-squared_test">Wikipedia, Chi-square test</a>&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021 Maintained by <a href="https://github.com/avast">Avast</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["tabs"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>
