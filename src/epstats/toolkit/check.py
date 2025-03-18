@@ -31,7 +31,9 @@ class Check:
         """
         return self._goals
 
-    def evaluate_agg(self, goals: pd.DataFrame, default_exp_variant_id: str) -> pd.DataFrame:
+    def evaluate_agg(
+        self, goals: pd.DataFrame, default_exp_variant_id: str
+    ) -> pd.DataFrame:
         """
         Evaluate this check from pre-aggregated goals.
 
@@ -56,7 +58,9 @@ class Check:
         """
         raise NotImplementedError()
 
-    def evaluate_by_unit(self, goals: pd.DataFrame, default_exp_variant_id: str) -> pd.DataFrame:
+    def evaluate_by_unit(
+        self, goals: pd.DataFrame, default_exp_variant_id: str
+    ) -> pd.DataFrame:
         """
         Evaluate this check from goals aggregated by unit.
 
@@ -113,7 +117,9 @@ class SrmCheck(Check):
         super().__init__(id, name, denominator)
         self.confidence_level = confidence_level
 
-    def evaluate_agg(self, goals: pd.DataFrame, default_exp_variant_id: str) -> pd.DataFrame:
+    def evaluate_agg(
+        self, goals: pd.DataFrame, default_exp_variant_id: str
+    ) -> pd.DataFrame:
         """
         See [`Check.evaluate_agg`][epstats.toolkit.check.Check.evaluate_agg].
         """
@@ -147,7 +153,9 @@ class SrmCheck(Check):
         )
         return r
 
-    def evaluate_by_unit(self, goals: pd.DataFrame, default_exp_variant_id: str) -> pd.DataFrame:
+    def evaluate_by_unit(
+        self, goals: pd.DataFrame, default_exp_variant_id: str
+    ) -> pd.DataFrame:
         """
         See [`Check.evaluate_by_unit`][epstats.toolkit.check.Check.evaluate_by_unit].
         """
@@ -247,7 +255,9 @@ class SumRatioCheck(Check):
         self._nominator_parser = Parser(nominator, nominator)
         self._goals = self._goals.union(self._nominator_parser.get_goals())
 
-    def evaluate_agg(self, goals: pd.DataFrame, default_exp_variant_id: str) -> pd.DataFrame:
+    def evaluate_agg(
+        self, goals: pd.DataFrame, default_exp_variant_id: str
+    ) -> pd.DataFrame:
         """
         See [`Check.evaluate_agg`][epstats.toolkit.check.Check.evaluate_agg].
         """
@@ -257,18 +267,17 @@ class SumRatioCheck(Check):
 
         # chi-square test
         with np.errstate(divide="ignore", invalid="ignore"):
-            sum_ratio = nominator_counts.sum() / (denominator_counts.sum() + nominator_counts.sum())
+            sum_ratio = nominator_counts.sum() / (
+                denominator_counts.sum() + nominator_counts.sum()
+            )
 
             stat, pval = chisquare(
-                f_obs=[
-                    denominator_counts.sum() + 1,
-                    nominator_counts.sum() + 1,
-                ],
-                f_exp=[
-                    denominator_counts.sum() + nominator_counts.sum() + 1,
-                    1,
-                ],
+                [
+                    denominator_counts.sum(),
+                    np.abs(denominator_counts.sum() - nominator_counts.sum()),
+                ]
             )
+
         r = pd.DataFrame(
             {
                 "check_id": self.id,
