@@ -9,6 +9,11 @@ from statsmodels.stats.multitest import multipletests
 DEFAULT_CONFIDENCE_LEVEL = 0.95
 DEFAULT_POWER = 0.8
 
+# Maximum confidence level the sequential analysis adjustment can produce.
+# It must stay below 1.0, otherwise t-quantiles and confidence intervals
+# computed from the adjusted confidence level become infinite.
+MAX_SEQUENTIAL_CONFIDENCE_LEVEL = 0.9999
+
 
 class Statistics:
     """
@@ -105,12 +110,16 @@ class Statistics:
                 # There could be division by zero here which is expected as we return
                 # nan or inf values to the caller.
                 # np.round() in case of roundoff errors, e.g. f = 9.999999998 => trunc(round(f, 5)) = 10
-                f = np.trunc(np.round(num / den, 5))  # (rounded & truncated) degrees of freedom
+                f = np.trunc(
+                    np.round(num / den, 5)
+                )  # (rounded & truncated) degrees of freedom
 
             # t-quantile
             with warnings.catch_warnings():
                 warnings.filterwarnings("ignore", category=RuntimeWarning)
-                t_quantile = st.t.ppf(conf_level + (1 - conf_level) / 2, f)  # right quantile
+                t_quantile = st.t.ppf(
+                    conf_level + (1 - conf_level) / 2, f
+                )  # right quantile
 
             # relative difference and test statistics
             with np.errstate(divide="ignore", invalid="ignore"):
@@ -120,7 +129,10 @@ class Statistics:
                 rel_diff = (mean_treat - mean_cont) / np.abs(mean_cont)
                 # standard error for relative difference
                 rel_se = (
-                    np.sqrt((mean_treat * std_cont) ** 2 / (mean_cont**2 * count_cont) + (std_treat**2 / count_treat))
+                    np.sqrt(
+                        (mean_treat * std_cont) ** 2 / (mean_cont**2 * count_cont)
+                        + (std_treat**2 / count_treat)
+                    )
                     / mean_cont
                 )
                 test_stat = rel_diff / rel_se
@@ -203,18 +215,28 @@ class Statistics:
             index_to = (m + 1) * n_variants - 1
 
             # p-value adjustment
-            pvals = df.loc[index_from:index_to, "p_value"].to_list()  # select old p-values
-            adj_pvals = multipletests(pvals=pvals, alpha=alpha, method="holm")[1]  # compute adjusted p-values
+            pvals = df.loc[
+                index_from:index_to, "p_value"
+            ].to_list()  # select old p-values
+            adj_pvals = multipletests(pvals=pvals, alpha=alpha, method="holm")[
+                1
+            ]  # compute adjusted p-values
 
             # confidence interval adjustment
             # we set ratio to 1 when test_stat is so big that pvals are zero, no reason to update ci
             adj_ratio = np.nan_to_num(pvals / adj_pvals, nan=1)  # adjustment ratio
             adj_alpha = adj_ratio * alpha  # adjusted level alpha
 
-            f = df.loc[index_from:index_to, "degrees_of_freedom"].to_list()  # degrees of freedom
-            se = df.loc[index_from:index_to, "standard_error"].to_list()  # standard error
+            f = df.loc[
+                index_from:index_to, "degrees_of_freedom"
+            ].to_list()  # degrees of freedom
+            se = df.loc[
+                index_from:index_to, "standard_error"
+            ].to_list()  # standard error
 
-            t_quantile = st.t.ppf(np.ones(n_variants - 1) - adj_alpha + adj_alpha / 2, f)  # right t-quantile
+            t_quantile = st.t.ppf(
+                np.ones(n_variants - 1) - adj_alpha + adj_alpha / 2, f
+            )  # right t-quantile
             adj_conf_int = se * t_quantile  # adjusted confidence interval
 
             # replace (unadjusted) p-values and confidence intervals with new adjusted ones
@@ -223,7 +245,9 @@ class Statistics:
         return df
 
     @classmethod
-    def obf_alpha_spending_function(cls, confidence_level: int, total_length: int, actual_day: int) -> int:
+    def obf_alpha_spending_function(
+        cls, confidence_level: int, total_length: int, actual_day: int
+    ) -> int:
         """
         [O'Brien-Fleming alpha spending function](https://online.stat.psu.edu/stat509/lesson/9/9.6/).
         We adjust confidence level in time in experiment. Confidence level in this setting is
@@ -236,13 +260,14 @@ class Statistics:
 
         Returns:
             adjusted confidence level with respect to actual day of the experiment and total
-            length of the experiment.
+            length of the experiment, capped at `MAX_SEQUENTIAL_CONFIDENCE_LEVEL` so that
+            confidence intervals stay finite even early in the experiment.
         """
         alpha = 1 - confidence_level
         t = actual_day / total_length  # t in (0, 1]
         q = st.norm.ppf(1 - alpha / 2)  # quantile of normal distribution
         alpha_adj = 2 - 2 * st.norm.cdf(q / np.sqrt(t))
-        return np.round(1 - alpha_adj, decimals=4)
+        return min(np.round(1 - alpha_adj, decimals=4), MAX_SEQUENTIAL_CONFIDENCE_LEVEL)
 
     @staticmethod
     def required_sample_size_per_variant(
@@ -425,11 +450,14 @@ class Statistics:
         if n_variants < 2 or required_sample_size_per_variant == 0:
             return np.nan
 
-        required_sample_size_ratio = sample_size_per_variant / required_sample_size_per_variant
+        required_sample_size_ratio = (
+            sample_size_per_variant / required_sample_size_per_variant
+        )
         alpha = (1 - required_confidence_level) / (n_variants - 1)
 
         return st.norm.cdf(
-            np.sqrt(required_sample_size_ratio) * (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(required_power))
+            np.sqrt(required_sample_size_ratio)
+            * (st.norm.ppf(1 - alpha / 2) + st.norm.ppf(required_power))
             - st.norm.ppf(1 - alpha / 2)
         )
 
