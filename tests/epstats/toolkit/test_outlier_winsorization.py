@@ -100,8 +100,11 @@ def test_winsorization_disabled_keeps_raw_values():
 def test_disabled_matches_zero_percentiles():
     goals = _by_unit_goals({"a": list(range(1, 101)), "b": list(range(50, 150))})
 
-    disabled = _evaluate(goals)
-    zero = _evaluate(goals, outlier_upper_percentile=0, outlier_lower_percentile=0)
+    # `timestamp` is stamped from `datetime.now()` at evaluation time, so drop it before comparing.
+    disabled = _evaluate(goals).drop(columns="timestamp")
+    zero = _evaluate(
+        goals, outlier_upper_percentile=0, outlier_lower_percentile=0
+    ).drop(columns="timestamp")
 
     pd.testing.assert_frame_equal(disabled, zero)
 
