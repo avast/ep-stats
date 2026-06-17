@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/Lucas-C/pre-commit-hooks
-  rev: v1.5.5
+  rev: v1.5.6
   hooks:
     - id: forbid-crlf
     - id: remove-crlf
@@ -9,7 +9,7 @@ repos:
     - id: remove-tabs
       exclude: '\.csv$'
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
     - id: trailing-whitespace
     - id: end-of-file-fixer
@@ -17,7 +17,7 @@ repos:
     - id: check-yaml
       args: [--unsafe]
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.4.5
+  rev: v0.15.17
   hooks:
     - id: ruff
       args: [ --fix ]
