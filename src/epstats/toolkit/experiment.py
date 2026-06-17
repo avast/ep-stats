@@ -1,4 +1,5 @@
 import logging
+import warnings
 from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime
@@ -17,7 +18,9 @@ from .parser import AggType, EpGoal, Goal, Parser, UnitType
 from .statistics import DEFAULT_CONFIDENCE_LEVEL, DEFAULT_POWER, Statistics
 from .utils import get_utc_timestamp, goals_wide_to_long
 
-check_evaluation_errors_metric = get_prometheus_metric("check_evaluation_errors_total", PrometheusCounter)
+check_evaluation_errors_metric = get_prometheus_metric(
+    "check_evaluation_errors_total", PrometheusCounter
+)
 
 
 class Evaluation:
@@ -25,7 +28,9 @@ class Evaluation:
     Results of an experiment evaluation.
     """
 
-    def __init__(self, metrics: pd.DataFrame, checks: pd.DataFrame, exposures: pd.DataFrame):
+    def __init__(
+        self, metrics: pd.DataFrame, checks: pd.DataFrame, exposures: pd.DataFrame
+    ):
         self.metrics = metrics
         self.checks = checks
         self.exposures = exposures
@@ -168,10 +173,20 @@ class Experiment:
         self.metrics = metrics
         self._check_metric_ids_unique()
         self.checks = checks
-        self.date_from = datetime.strptime(date_from, "%Y-%m-%d").date() if date_from is not None else None
-        self.date_to = datetime.strptime(date_to, "%Y-%m-%d").date() if date_to is not None else None
+        self.date_from = (
+            datetime.strptime(date_from, "%Y-%m-%d").date()
+            if date_from is not None
+            else None
+        )
+        self.date_to = (
+            datetime.strptime(date_to, "%Y-%m-%d").date()
+            if date_to is not None
+            else None
+        )
         self.date_for = (
-            datetime.strptime(date_for, "%Y-%m-%d").date() if date_for is not None else datetime.today().date()
+            datetime.strptime(date_for, "%Y-%m-%d").date()
+            if date_for is not None
+            else datetime.today().date()
         )
         self.confidence_level = confidence_level
         self.variants = variants
@@ -201,7 +216,9 @@ class Experiment:
         id_counts = Counter(metric.id for metric in self.metrics)
         for id_, count in id_counts.items():
             if count > 1:
-                raise ValueError(f"Metric ids must be unique. Id={id_} found more than once.")
+                raise ValueError(
+                    f"Metric ids must be unique. Id={id_} found more than once."
+                )
 
     def _update_dimension_to_value(self):
         """
@@ -531,7 +548,11 @@ class Experiment:
         Evaluates checks from already aggregated goals.
         """
         checks_df = (
-            goals[(goals["unit_type"] == unit_type) & (goals["agg_type"] == "global") & (goals["goal"] == "exposure")]
+            goals[
+                (goals["unit_type"] == unit_type)
+                & (goals["agg_type"] == "global")
+                & (goals["goal"] == "exposure")
+            ]
             .groupby("exp_variant_id")
             .agg(exposures=("count", "sum"))
             .reset_index()
@@ -544,16 +565,22 @@ class Experiment:
         """
         Evaluates checks from already aggregated goals.
         """
-        checks_df = goals[(goals["unit_type"] == unit_type) & (goals["agg_type"] == "unit")][
-            [("exp_variant_id", ""), ("exposure", "count")]
-        ]
+        checks_df = goals[
+            (goals["unit_type"] == unit_type) & (goals["agg_type"] == "unit")
+        ][[("exp_variant_id", ""), ("exposure", "count")]]
         checks_df = checks_df.droplevel(0, axis=1)
         checks_df.columns = ["exp_variant_id", "exposures"]
-        d = checks_df.groupby("exp_variant_id").agg(exposures=("exposures", "sum")).reset_index()
+        d = (
+            checks_df.groupby("exp_variant_id")
+            .agg(exposures=("exposures", "sum"))
+            .reset_index()
+        )
         d["exp_id"] = exp_id
         return d
 
-    def _evaluate(self, goals: pd.DataFrame, metrics_column_fce, checks_fce, exposures_fce):
+    def _evaluate(
+        self, goals: pd.DataFrame, metrics_column_fce, checks_fce, exposures_fce
+    ):
         metrics = self._evaluate_metrics(goals, metrics_column_fce)
         checks = self._evaluate_checks(goals, checks_fce)
         exposures = self._evaluate_exposures(goals, exposures_fce)
@@ -570,10 +597,16 @@ class Experiment:
                 r["exp_id"] = self.id
                 res.append(r)
             except Exception as e:
-                self._logger.warning(f"Cannot evaluate check [{c.id} in experiment [{self.id}] because of {e}")
+                self._logger.warning(
+                    f"Cannot evaluate check [{c.id} in experiment [{self.id}] because of {e}"
+                )
                 check_evaluation_errors_metric.inc()
 
-        c = pd.concat(res, axis=0) if res != [] else pd.DataFrame([], columns=Evaluation.check_columns())
+        c = (
+            pd.concat(res, axis=0)
+            if res != []
+            else pd.DataFrame([], columns=Evaluation.check_columns())
+        )
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
         return c[Evaluation.check_columns()]
 
@@ -624,7 +657,9 @@ class Experiment:
         )
 
         for dimension in self.get_dimension_columns():
-            empty_df[dimension] = np.repeat([g.dimension_to_value.get(dimension, "") for g in ngs], lnvs)
+            empty_df[dimension] = np.repeat(
+                [g.dimension_to_value.get(dimension, "") for g in ngs], lnvs
+            )
 
         # join to existing data and use zeros for only missing variants and goals
         m = (
@@ -677,10 +712,14 @@ class Experiment:
         )
 
         for dimension in self.get_dimension_columns():
-            empty_df[dimension] = np.repeat([g.dimension_to_value.get(dimension, "") for g in ngs], lnvs)
+            empty_df[dimension] = np.repeat(
+                [g.dimension_to_value.get(dimension, "") for g in ngs], lnvs
+            )
 
         # join to existing data and use zeros for only missing variants and goals
-        m = pd.concat([g, empty_df], axis=0).fillna({d: "" for d in self.get_dimension_columns()})
+        m = pd.concat([g, empty_df], axis=0).fillna(
+            {d: "" for d in self.get_dimension_columns()}
+        )
         return m[
             [
                 "exp_id",
@@ -711,9 +750,15 @@ class Experiment:
         # to the sample size. In such case we do not evaluate the required sample size.
         # TODO: add suport for value() denominator metrics,
         # parser will return an additional column equal to count or count_unique.
-        sample_size = metric_row["count"] if metric_id not in metrics_with_value_denominator else np.nan
+        sample_size = (
+            metric_row["count"]
+            if metric_id not in metrics_with_value_denominator
+            else np.nan
+        )
 
-        if metric_row["exp_variant_id"] == self.control_variant or pd.isna(minimum_effect):
+        if metric_row["exp_variant_id"] == self.control_variant or pd.isna(
+            minimum_effect
+        ):
             return pd.Series([np.nan, sample_size, np.nan], index)
 
         metric_id = metric_row["metric_id"]
@@ -734,7 +779,9 @@ class Experiment:
             index,
         )
 
-    def _get_required_sample_sizes(self, metrics: pd.DataFrame, n_variants: int) -> pd.DataFrame:
+    def _get_required_sample_sizes(
+        self, metrics: pd.DataFrame, n_variants: int
+    ) -> pd.DataFrame:
         controls = {
             r["metric_id"]: {"mean": r["mean"], "std": r["std"]}
             for _, r in metrics.iterrows()
@@ -743,7 +790,9 @@ class Experiment:
 
         minimum_effects = {m.id: m.minimum_effect for m in self.metrics}
         metrics_with_value_denominator = {
-            m.id for m in self.metrics if m.denominator.startswith("value(") and not isinstance(m, SimpleMetric)
+            m.id
+            for m in self.metrics
+            if m.denominator.startswith("value(") and not isinstance(m, SimpleMetric)
         }
 
         return metrics.apply(
@@ -757,7 +806,9 @@ class Experiment:
             axis=1,
         )
 
-    def _get_power_from_required_sample_sizes(self, metrics: pd.DataFrame, n_variants: int) -> pd.Series:
+    def _get_power_from_required_sample_sizes(
+        self, metrics: pd.DataFrame, n_variants: int
+    ) -> pd.Series:
         return metrics.apply(
             lambda metric_row: Statistics.power_from_required_sample_size_per_variant(
                 n_variants=n_variants,
@@ -785,6 +836,28 @@ class Experiment:
     def _get_false_positive_risks(self, metrics: pd.DataFrame) -> pd.Series:
         return metrics.apply(self._get_false_positive_risk, axis=1)
 
+    def _warn_on_negative_variance(self, var: np.array) -> None:
+        """
+        Warns about metrics with a negative variance estimate of shape (metrics, variants).
+
+        Negative variance estimate means that `sum_sqr_value` is not a sum of squared
+        per-unit goal totals. This usually happens when a metric matches multiple
+        pre-aggregated rows per unit, e.g. when a dimensional goal sums multiple
+        dimension values per unit and `sum_sqr_value` was squared per dimension value,
+        not per unit.
+        """
+        affected = np.unique(np.nonzero(var < 0)[0])
+        if affected.size:
+            metric_names = [self.metrics[i].name for i in affected]
+            warnings.warn(
+                f"Negative variance estimate of metrics {metric_names}. `sum_sqr_value` of these metrics"
+                " is not a sum of squared per-unit goal totals, this usually happens when a metric matches"
+                " multiple pre-aggregated rows per unit, e.g. when a dimensional goal sums multiple dimension"
+                " values per unit. Standard deviations, p-values and confidence intervals of affected metrics"
+                " will be NaN. Pre-aggregate `sum_sqr_value` from per-unit goal totals or evaluate using"
+                " `evaluate_by_unit`."
+            )
+
     def _evaluate_metrics(self, goals: pd.DataFrame, column_fce) -> pd.DataFrame:
         if not self.metrics:
             return pd.DataFrame([], columns=Evaluation.metric_columns())
@@ -805,26 +878,45 @@ class Experiment:
             # There could be division by zero here which is expected as we return
             # nan or inf values to the caller.
             mean = sum_value / count
-            std = np.sqrt((sum_sqr_value - sum_value * sum_value / count) / (count - 1))
+            var = (sum_sqr_value - sum_value * sum_value / count) / (count - 1)
+            std = np.sqrt(var)
+
+        self._warn_on_negative_variance(var)
 
         # sequential testing correction
         if self.date_from is not None and self.date_to is not None:
             # Parameters
-            test_length = (self.date_to - self.date_from).days + 1  # test length in days
-            actual_day = (self.date_for - self.date_from).days + 1  # day(s) since beginning of the test
-            actual_day = min(actual_day, test_length)  # actual day of evaluation must be in interval [1, test_length]
+            test_length = (
+                self.date_to - self.date_from
+            ).days + 1  # test length in days
+            actual_day = (
+                self.date_for - self.date_from
+            ).days + 1  # day(s) since beginning of the test
+            actual_day = min(
+                actual_day, test_length
+            )  # actual day of evaluation must be in interval [1, test_length]
 
             # confidence level adjustment - applied when actual_day < test_length (test is still running)
-            confidence_level = Statistics.obf_alpha_spending_function(self.confidence_level, test_length, actual_day)
+            confidence_level = Statistics.obf_alpha_spending_function(
+                self.confidence_level, test_length, actual_day
+            )
         else:
             confidence_level = self.confidence_level  # no change
 
-        stats = np.dstack((count, mean, std, sum_value, np.ones(count.shape) * confidence_level))
+        stats = np.dstack(
+            (count, mean, std, sum_value, np.ones(count.shape) * confidence_level)
+        )
         stats = np.dstack(
             (
-                np.repeat([m.id for m in self.metrics], n_variants).reshape(metrics, n_variants, -1),
-                np.repeat([m.name for m in self.metrics], n_variants).reshape(metrics, n_variants, -1),
-                np.tile(goals["exp_variant_id"].unique(), metrics).reshape(metrics, n_variants, -1),
+                np.repeat([m.id for m in self.metrics], n_variants).reshape(
+                    metrics, n_variants, -1
+                ),
+                np.repeat([m.name for m in self.metrics], n_variants).reshape(
+                    metrics, n_variants, -1
+                ),
+                np.tile(goals["exp_variant_id"].unique(), metrics).reshape(
+                    metrics, n_variants, -1
+                ),
                 stats,
             )
         )
@@ -836,11 +928,15 @@ class Experiment:
 
         # multiple variants (comparisons) correction - applied when we have multiple treatment variants
         if n_variants > 2:
-            c = Statistics.multiple_comparisons_correction(c, n_variants, metrics, confidence_level)
+            c = Statistics.multiple_comparisons_correction(
+                c, n_variants, metrics, confidence_level
+            )
 
         c["exp_id"] = self.id
         c["timestamp"] = round(get_utc_timestamp(datetime.now()).timestamp())
-        c[["minimum_effect", "sample_size", "required_sample_size"]] = self._get_required_sample_sizes(c, n_variants)
+        c[["minimum_effect", "sample_size", "required_sample_size"]] = (
+            self._get_required_sample_sizes(c, n_variants)
+        )
         c["power"] = self._get_power_from_required_sample_sizes(c, n_variants)
         c["false_positive_risk"] = self._get_false_positive_risks(c)
         return c[Evaluation.metric_columns()]
