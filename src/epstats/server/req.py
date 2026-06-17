@@ -49,6 +49,27 @@ class Metric(BaseModel):
         description=f"""The minimum effect of interest is the smallest relative difference that is meaningful to detect,
         defining it allows us to estimate the size of the sample data required to reach {DEFAULT_POWER:.0%} power.""",
     )
+    outlier_upper_percentile: Optional[float] = Field(
+        None,
+        ge=0,
+        lt=50,
+        title="Upper-tail winsorization percentile",
+        description="""Percentage (`0`-`50`) of the upper tail to winsorize (cap) before the metric is evaluated.
+        E.g. `1` caps every per-unit value above the 99th percentile down to the 99th percentile value. The threshold
+        is computed once from the pooled per-unit values across all variants and applied identically to every variant,
+        so it makes the evaluation robust to extreme outliers without biasing the comparison between variants. Units
+        are kept (only their extreme values are capped). Applies only to by-unit evaluation. Defaults to no
+        winsorization.""",
+    )
+    outlier_lower_percentile: Optional[float] = Field(
+        None,
+        ge=0,
+        lt=50,
+        title="Lower-tail winsorization percentile",
+        description="""Percentage (`0`-`50`) of the lower tail to winsorize (floor), analogous to
+        `outlier_upper_percentile`. Usually left empty because heavy-tailed metrics only have outliers in the upper
+        tail. Applies only to by-unit evaluation. Defaults to no winsorization.""",
+    )
 
     @model_validator(mode="after")
     def check_nominator_denominator(self):
@@ -60,10 +81,14 @@ class Metric(BaseModel):
         try:
             parser = Parser(nominator, denominator)
             if not parser.get_goals():
-                raise ValueError("We expect the metric to have at least one goal in nominator and denominator")
+                raise ValueError(
+                    "We expect the metric to have at least one goal in nominator and denominator"
+                )
             return self
         except ParseException as e:
-            raise ValueError(f"Cannot parse nominator '{nominator}' or '{denominator}' because of '{e}'")
+            raise ValueError(
+                f"Cannot parse nominator '{nominator}' or '{denominator}' because of '{e}'"
+            )
 
     def to_metric(self):
         return EvMetric(
@@ -72,6 +97,8 @@ class Metric(BaseModel):
             nominator=self.nominator,
             denominator=self.denominator,
             minimum_effect=self.minimum_effect,
+            outlier_upper_percentile=self.outlier_upper_percentile,
+            outlier_lower_percentile=self.outlier_lower_percentile,
         )
 
 
@@ -125,7 +152,9 @@ class Check(BaseModel):
         try:
             parser = Parser(value, value)
             if not parser.get_goals():
-                raise ValueError(f"We expect the check to have at least one goal in {which}")
+                raise ValueError(
+                    f"We expect the check to have at least one goal in {which}"
+                )
             return value
         except ParseException as e:
             raise ValueError(f"Cannot parse '{value}' because of '{e}'")
@@ -163,7 +192,9 @@ class Filter(BaseModel):
 
     value: Optional[List[Any]] = Field(None, title="List of possible values")
 
-    goal: Optional[str] = Field(None, title="Specify goals if filter scope is `trigger`")
+    goal: Optional[str] = Field(
+        None, title="Specify goals if filter scope is `trigger`"
+    )
 
     @model_validator(mode="after")
     def check_trigger(self):
@@ -197,7 +228,9 @@ class Experiment(BaseModel):
     )
 
     variants: Optional[List[str]] = Field(
-        None, title="Variants", description="""List of experiment variants to evaluate for."""
+        None,
+        title="Variants",
+        description="""List of experiment variants to evaluate for.""",
     )
 
     unit_type: str = Field(
@@ -305,8 +338,12 @@ class Experiment(BaseModel):
 
     @model_validator(mode="after")
     def check_date_from_to(self):
-        if self.date_for is not None and (self.date_from is None or self.date_to is None):
-            raise ValueError("date_for requires date_from and date_to to be present as well")
+        if self.date_for is not None and (
+            self.date_from is None or self.date_to is None
+        ):
+            raise ValueError(
+                "date_for requires date_from and date_to to be present as well"
+            )
         if self.date_from is not None and self.date_to is not None:
             try:
                 df = datetime.strptime(self.date_from, "%Y-%m-%d")  # noqa: PD901
@@ -319,11 +356,17 @@ class Experiment(BaseModel):
                 except ValueError:
                     raise ValueError("cannot parse date_for")
                 if dfor < df:
-                    raise ValueError("we expect date_for to be greater or equal to date_from")
+                    raise ValueError(
+                        "we expect date_for to be greater or equal to date_from"
+                    )
                 if dfor > dt:
-                    raise ValueError("we expect date_for to be less or equal to date_to")
+                    raise ValueError(
+                        "we expect date_for to be less or equal to date_to"
+                    )
             if dt < df:
-                raise ValueError("we expect date_to to be greater or equal to date_from")
+                raise ValueError(
+                    "we expect date_to to be greater or equal to date_from"
+                )
 
         return self
 

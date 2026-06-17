@@ -112,13 +112,22 @@ class Parser:
         count = self._denominator_expr.evaluate_agg(goals)
         return count, sum_value, sum_sqr_value
 
-    def evaluate_by_unit(self, goals: pd.DataFrame):
+    def evaluate_by_unit(
+        self,
+        goals: pd.DataFrame,
+        lower_quantile: float = 0.0,
+        upper_quantile: float = 1.0,
+    ):
         """
         Get `count`, `sum_value`, `sum_value_sqr` numpy array of shape (variants, metrics) after
         evaluating nominator and denominator expressions from goals aggregated by unit.
 
         Arguments:
             goals: one row per experiment variant
+            lower_quantile: per-unit nominator values below this pooled quantile (in `[0, 1]`) are capped
+                (winsorized) to it. `0.0` caps nothing.
+            upper_quantile: per-unit nominator values above this pooled quantile (in `[0, 1]`) are capped
+                (winsorized) to it. `1.0` caps nothing.
 
         See [`Experiment.evaluate_agg`][epstats.toolkit.experiment.Experiment.evaluate_by_unit] for details
         on `goals` at input.
@@ -130,6 +139,10 @@ class Parser:
         value_variants, value = self._nominator_expr.evaluate_by_unit(
             goals, "sum_value"
         )
+
+        if lower_quantile > 0.0 or upper_quantile < 1.0:
+            value = self._winsorize(value, lower_quantile, upper_quantile)
+
         value_df = (
             pd.DataFrame(
                 {
@@ -151,6 +164,25 @@ class Parser:
 
         metrics_df = value_df.join(count_df)
         return metrics_df["count"], metrics_df["sum_value"], metrics_df["sum_sqr_value"]
+
+    @staticmethod
+    def _winsorize(
+        value: pd.Series,
+        lower_quantile: float,
+        upper_quantile: float,
+    ) -> pd.Series:
+        """
+        Cap per-unit `value`s to the `[lower_quantile, upper_quantile]` range (winsorization).
+
+        The capping thresholds are computed once from the pooled per-unit values across all variants
+        and applied identically to every variant. Because the same absolute threshold is used for all
+        variants, winsorization makes the evaluation robust to extreme outliers without biasing the
+        comparison between variants. Units are kept (only their extreme values are capped), so the
+        denominator / sample size is preserved.
+        """
+        lower = value.quantile(lower_quantile) if lower_quantile > 0.0 else None
+        upper = value.quantile(upper_quantile) if upper_quantile < 1.0 else None
+        return value.clip(lower=lower, upper=upper)
 
     def get_goals(self) -> Set:
         """

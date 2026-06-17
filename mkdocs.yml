@@ -28,6 +28,7 @@ nav:
       - CTR Metric Redefined: 'stats/ctr.md'
       - Multiple Comparison Correction: 'stats/multiple.md'
       - Compound Metrics: 'stats/compound_metrics.md'
+      - Outlier Winsorization: 'stats/outliers.md'
   - API:
     - Metric: 'api/metric.md'
     - Experiment: 'api/experiment.md'
