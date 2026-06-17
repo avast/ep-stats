@@ -1,3 +1,5 @@
+import numpy as np
+import pandas as pd
 import pytest
 
 from src.epstats.toolkit.check import SimpleSrmCheck, SrmCheck
@@ -74,7 +76,9 @@ def test_update_dimension_to_value(unit_type):
 
 
 def test_binary_valued(dao, metrics, checks, unit_type):
-    experiment = Experiment("test-conversion", "a", metrics, checks, unit_type=unit_type)
+    experiment = Experiment(
+        "test-conversion", "a", metrics, checks, unit_type=unit_type
+    )
     evaluate_experiment_agg(experiment, dao)
 
 
@@ -149,6 +153,111 @@ def test_real_by_unit(dao, unit_type):
         unit_type=unit_type,
     )
     evaluate_experiment_by_unit(experiment, dao)
+
+
+def test_by_unit_sums_unit_rows_before_squaring(unit_type):
+    """
+    A unit can be split into multiple rows of the same goal and dimension value, e.g.
+    when unit goals are pre-aggregated at a finer granularity than the experiment
+    dimensions. `evaluate_by_unit` must sum the values of the same unit before
+    squaring them, otherwise variance estimates can go negative resulting in NaN
+    standard deviations, p-values and confidence intervals.
+    """
+    goals = pd.DataFrame(
+        {
+            "exp_id": "test-by-unit-sums",
+            "exp_variant_id": ["a", "a", "a", "a", "a", "b", "b", "b", "b", "b"],
+            "unit_type": unit_type,
+            "agg_type": "unit",
+            "unit_id": ["u1", "u1", "u1", "u2", "u2", "u3", "u3", "u3", "u4", "u4"],
+            "goal": [
+                "exposure",
+                "conversion",
+                "conversion",
+                "exposure",
+                "conversion",
+                "exposure",
+                "conversion",
+                "conversion",
+                "exposure",
+                "conversion",
+            ],
+            "product": ["", "p_1", "p_1", "", "p_1", "", "p_1", "p_1", "", "p_1"],
+            "count": 1,
+            "sum_value": [1, 2, 3, 1, 1, 1, 2, 2, 1, 2],
+        }
+    )
+    experiment = Experiment(
+        "test-by-unit-sums",
+        "a",
+        [
+            Metric(
+                1,
+                "Conversions per Exposure of Product p_1",
+                "value(test_unit_type.unit.conversion(product=p_1))",
+                "count(test_unit_type.unit.exposure)",
+            ),
+        ],
+        [],
+        unit_type=unit_type,
+    )
+    metrics = experiment.evaluate_by_unit(goals).metrics.set_index(
+        ["metric_id", "exp_variant_id"]
+    )
+
+    # per-unit conversion totals are a: (5, 1), b: (4, 2); squaring the individual
+    # rows instead of the per-unit totals would give a negative variance in variant a
+    assert metrics.loc[(1, "a"), "mean"] == pytest.approx(3.0)
+    assert metrics.loc[(1, "a"), "std"] == pytest.approx(np.sqrt(8.0))
+    assert metrics.loc[(1, "b"), "mean"] == pytest.approx(3.0)
+    assert metrics.loc[(1, "b"), "std"] == pytest.approx(np.sqrt(2.0))
+    assert np.isfinite(metrics["p_value"].astype(float)).all()
+
+
+def test_agg_warns_on_negative_variance(unit_type):
+    """
+    Pre-aggregated goals can carry `sum_sqr_value` that is not a sum of squared
+    per-unit totals, e.g. when a dimensional goal is summed over multiple dimension
+    values per unit but squared per dimension value. The variance estimate is then
+    negative and the evaluation must warn about it instead of failing silently
+    with NaN results.
+    """
+    goals = pd.DataFrame(
+        {
+            "exp_id": "test-agg-negative-variance",
+            "exp_variant_id": ["a", "a", "a", "b", "b", "b"],
+            "unit_type": unit_type,
+            "agg_type": "unit",
+            "goal": ["exposure", "conversion", "conversion"] * 2,
+            "product": ["", "p_1", "p_2"] * 2,
+            # `sum_sqr_value` of conversion is squared per (unit, product) row, the
+            # sum of squared per-unit totals would be much higher
+            "count": [1000, 1000, 1000] * 2,
+            "sum_sqr_count": [1000, 1000, 1000] * 2,
+            "sum_value": [1000, 1000, 1000] * 2,
+            "sum_sqr_value": [1000, 1.5, 1.5] * 2,
+            "count_unique": [1000, 1000, 1000] * 2,
+        }
+    )
+    experiment = Experiment(
+        "test-agg-negative-variance",
+        "a",
+        [
+            Metric(
+                1,
+                "Conversions per Exposure",
+                "value(test_unit_type.unit.conversion)",
+                "count(test_unit_type.unit.exposure)",
+            ),
+        ],
+        [],
+        unit_type=unit_type,
+    )
+    with pytest.warns(UserWarning, match="Negative variance estimate"):
+        metrics = experiment.evaluate_agg(goals).metrics.set_index(
+            ["metric_id", "exp_variant_id"]
+        )
+    assert np.isnan(float(metrics.loc[(1, "a"), "std"]))
 
 
 def test_different_control_variant(dao, checks, unit_type):

@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+import scipy.stats as st
 from statsmodels.stats.power import TTestIndPower
 
 from src.epstats.toolkit.statistics import Statistics
@@ -24,13 +25,13 @@ def _assert_sample_sizes_equal_within_tolerance(x, y, n_variants):
 @pytest.mark.parametrize(
     "test_length, actual_day, expected",
     [
-        (14, 0, 1.00),
-        (14, 1, 1.00),
-        (14, 2, 1.00),
-        (14, 3, 1.00),
+        (14, 0, 0.9999),
+        (14, 1, 0.9999),
+        (14, 2, 0.9999),
+        (14, 3, 0.9999),
         (14, 14, 0.95),
-        (7, 1, 1.00),
-        (28, 4, 1.00),
+        (7, 1, 0.9999),
+        (28, 4, 0.9999),
         (28, 8, 0.9998),
         (28, 28, 0.95),
     ],
@@ -38,6 +39,21 @@ def _assert_sample_sizes_equal_within_tolerance(x, y, n_variants):
 def test_obf_alpha_spending_function(test_length, actual_day, expected):
     alpha = Statistics.obf_alpha_spending_function(0.95, test_length, actual_day)
     assert alpha == expected
+
+
+@pytest.mark.parametrize("test_length, actual_day", [(14, 1), (28, 4), (365, 1)])
+def test_obf_alpha_spending_function_keeps_confidence_intervals_finite(
+    test_length, actual_day
+):
+    """
+    Early in the experiment, the adjusted confidence level must stay below 1.0,
+    otherwise t-quantiles and confidence intervals become infinite.
+    """
+    confidence_level = Statistics.obf_alpha_spending_function(
+        0.95, test_length, actual_day
+    )
+    assert confidence_level < 1.0
+    assert np.isfinite(st.t.ppf(confidence_level + (1 - confidence_level) / 2, 100))
 
 
 @pytest.mark.parametrize(
@@ -57,7 +73,9 @@ def test_obf_alpha_spending_function(test_length, actual_day, expected):
         (4, 0.10, 0.2, 2.0, 208576),
     ],
 )
-def test_required_sample_size_per_variant_equal_variance(n_variants, minimum_effect, mean, std, expected):
+def test_required_sample_size_per_variant_equal_variance(
+    n_variants, minimum_effect, mean, std, expected
+):
     sample_size_per_variant = Statistics.required_sample_size_per_variant(
         n_variants=n_variants,
         minimum_effect=minimum_effect,
@@ -75,8 +93,12 @@ def test_required_sample_size_per_variant_equal_variance(n_variants, minimum_eff
         nobs1=None,
     )
 
-    _assert_sample_sizes_equal(sample_size_per_variant, round(expected_from_statsmodels))
-    _assert_sample_sizes_equal_within_tolerance(sample_size_per_variant, expected, n_variants)
+    _assert_sample_sizes_equal(
+        sample_size_per_variant, round(expected_from_statsmodels)
+    )
+    _assert_sample_sizes_equal_within_tolerance(
+        sample_size_per_variant, expected, n_variants
+    )
 
 
 @pytest.mark.parametrize(
@@ -86,7 +108,9 @@ def test_required_sample_size_per_variant_equal_variance(n_variants, minimum_eff
         (0.05, 0.3, 2.0, 2.5),
     ],
 )
-def test_required_sample_size_per_variant_unequal_variance(minimum_effect, mean, std, std_2):
+def test_required_sample_size_per_variant_unequal_variance(
+    minimum_effect, mean, std, std_2
+):
     sample_size_per_variant = Statistics.required_sample_size_per_variant(
         n_variants=2,
         minimum_effect=minimum_effect,
@@ -109,7 +133,9 @@ def test_required_sample_size_per_variant_unequal_variance(minimum_effect, mean,
         nobs1=None,
     )
 
-    _assert_sample_sizes_equal(sample_size_per_variant, round(expected_from_statsmodels))
+    _assert_sample_sizes_equal(
+        sample_size_per_variant, round(expected_from_statsmodels)
+    )
 
 
 @pytest.mark.parametrize(
@@ -122,7 +148,9 @@ def test_required_sample_size_per_variant_unequal_variance(minimum_effect, mean,
         (4, 0.10, 0.1, None, 19596),
     ],
 )
-def test_required_sample_size_per_variant_bernoulli(n_variants, minimum_effect, mean, std, expected):
+def test_required_sample_size_per_variant_bernoulli(
+    n_variants, minimum_effect, mean, std, expected
+):
     sample_size_per_variant = Statistics.required_sample_size_per_variant_bernoulli(
         n_variants=n_variants,
         minimum_effect=minimum_effect,
@@ -145,8 +173,12 @@ def test_required_sample_size_per_variant_bernoulli(n_variants, minimum_effect, 
         nobs1=None,
     )
 
-    _assert_sample_sizes_equal(sample_size_per_variant, round(expected_from_statsmodels))
-    _assert_sample_sizes_equal_within_tolerance(sample_size_per_variant, expected, n_variants)
+    _assert_sample_sizes_equal(
+        sample_size_per_variant, round(expected_from_statsmodels)
+    )
+    _assert_sample_sizes_equal_within_tolerance(
+        sample_size_per_variant, expected, n_variants
+    )
 
 
 @pytest.mark.parametrize(
@@ -157,7 +189,9 @@ def test_required_sample_size_per_variant_bernoulli(n_variants, minimum_effect, 
         (2, 0.1, 10.1, None, Statistics.required_sample_size_per_variant_bernoulli),
     ],
 )
-def test_required_sample_size_per_variant_raises_exception(n_variants, minimum_effect, mean, std, f):
+def test_required_sample_size_per_variant_raises_exception(
+    n_variants, minimum_effect, mean, std, f
+):
     args = {"minimum_effect": minimum_effect, "mean": mean, "n_variants": n_variants}
 
     if std is not None:
@@ -177,7 +211,9 @@ def test_required_sample_size_per_variant_raises_exception(n_variants, minimum_e
         (np.nan, np.nan, np.nan, np.isnan),
     ],
 )
-def test_required_sample_size_per_variant_not_valid(minimum_effect, mean, std, expected):
+def test_required_sample_size_per_variant_not_valid(
+    minimum_effect, mean, std, expected
+):
     assert expected(
         Statistics.required_sample_size_per_variant(
             minimum_effect=minimum_effect,
@@ -198,7 +234,9 @@ def test_required_sample_size_per_variant_not_valid(minimum_effect, mean, std, e
         (4, 300000),
     ],
 )
-def test_power_from_required_sample_size_per_variant(n_variants, sample_size_per_variant):
+def test_power_from_required_sample_size_per_variant(
+    n_variants, sample_size_per_variant
+):
     mean = 0.2
     std = 2.0
     minimum_effect = 0.05
@@ -256,6 +294,8 @@ def test_power_from_required_sample_size_per_variant_is_nan(args):
 
 
 def test_false_positive_risk():
-    false_positive_risk = Statistics.false_positive_risk(null_hypothesis_rate=1 - 0.33, power=0.8, p_value=0.025)
+    false_positive_risk = Statistics.false_positive_risk(
+        null_hypothesis_rate=1 - 0.33, power=0.8, p_value=0.025
+    )
 
     assert false_positive_risk == 0.05966162065894922
