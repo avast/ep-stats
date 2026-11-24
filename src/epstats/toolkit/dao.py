@@ -30,7 +30,7 @@ class Dao:
 
     def close(self) -> None:
         """
-        Close underlying data source connection and frees resources (if any).
+        Close underlying data source connection and free resources (if any).
         """
         pass
 
