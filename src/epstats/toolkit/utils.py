@@ -41,7 +41,7 @@ def goals_wide_to_long(wide_df: pd.DataFrame, unit_type: str = "test_unit_type")
     )
 
     # DataFrame `sum_sqr_value` to long format
-    # Select squared columns and swich from long to wide
+    # Select squared columns and switch from long to wide
     cols_squared = [col for col in wide_df.columns.to_list()[2:] if "square" in col]
     df_long_sqr = pd.melt(
         wide_df,

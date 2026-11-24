@@ -31,7 +31,7 @@ class Metric:
         Parameters `nominator` and `denominator` specify exactly type of data and aggregation of the metric nominator
         and denominator.
 
-        Parameters `format` and `multiplier` does not play any role in metric evaluation. They are used independently
+        Parameters `format` and `multiplier` do not play any role in metric evaluation. They are used independently
         after the metric evaluation.
 
         Arguments:

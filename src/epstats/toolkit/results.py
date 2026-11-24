@@ -90,7 +90,7 @@ def format_results(
     metrics.columns.names = ["Metric", "Statistics"]
     metrics.index.names = ["Experiment Id", "Variant"]
 
-    # How should mean (metric value) formatted
+    # How should mean (metric value) be formatted
     format_mean = [metric.metric_format for metric in experiment.metrics]
     metric_mean_multipliers = [metric.metric_value_multiplier for metric in experiment.metrics]
 
@@ -152,7 +152,7 @@ def format_metrics_long(
         }
     )
 
-    # How should mean (metric value) formatted
+    # How should mean (metric value) be formatted
     format_mean_df = pd.DataFrame(
         [{"Metric Id": metric.id, "metric_format": metric.metric_format} for metric in experiment.metrics]
     )
